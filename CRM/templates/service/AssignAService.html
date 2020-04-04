@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load TextUtils %}
+{% block title %}
+    {% trans 'select service' %}
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+
+    <div class="ibox-content">
+        <div class="row">
+            <div class="col-md-4">
+                <form action="/service/assign/" method="post">
+                    <input type="hidden" value="{{ current_selected }}" name="cbPriceList"/>
+
+                    {% if perms.CRM.add_servicegroups and user.is_staff %}
+                        <div class="form-group">
+                            <label>{% trans 'service group' %}</label>
+                            <select data-select="1" id="cbPrices" class="form-control">
+                                <option>-</option>
+                                {% for o in groups %}
+                                    <option value="{{ o.pk }}" {% if o.pk == current_selected %}selected{% endif %}>{{ o.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                    {% else %}
+
+                    {% endif %}
+                    <div class="form-group">
+                        <label>{% trans 'service name' %}:</label>
+                        <select data-select="1" name="srv2" id="srv2" onchange="showValues();">
+                            <option value="">-</option>
+                            {% for s in services %}
+                                <option value="{{ s.pk }}" {% if s.pk == selected_service %}selected{% endif %}>{{ s.name }}</option>
+                            {% endfor %}
+                        </select>
+
+                        {% csrf_token %}
+                        <input type="hidden" name="uid" value="{{ u }}"/>
+                    </div>
+                    <div class="form-group">
+                        <label>{% trans 'price list' %}</label>
+                        {% if service_prs.count == 1 %}
+                            <input type="hidden" value="{{ service_prs.0.pk }}" name="pr" id="slServices"/>
+                            <label>{{ service_prs.0.name }}</label>
+
+                        {% else %}
+                            <select class="form-control" data-select="1" name="pr" onchange="slChanged()" id="slServices">
+                                <option>-</option>
+                                {% for sp in service_prs %}
+                                    <option value="{{ sp.pk }}">{{ sp.name }}</option>
+                                {% endfor %}
+                            </select>
+                        {% endif %}
+
+                    </div>
+                    <table class="table">
+                        <tr>
+                            <td><span>{% trans 'band width' %}</span></td>
+                            <td><span id="spSpeed"></span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>{% trans 'service price' %}</span>
+                            </td>
+                            <td><span id="spPrice"></span></td>
+                        </tr>
+                        <tr>
+                            <td><span>{% trans 'duration' %}</span></td>
+                            <td><span id="spDuration"></span></td>
+                        </tr>
+                        <tr>
+                            <td><span>{% trans 'package credit' %}</span></td>
+                            <td><span id="spAmount"></span></td>
+                        </tr>
+                    </table>
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> {% trans 'save' %}</button>
+                </form>
+                <input id="-1" value=",,," type="hidden"/>
+                {% for s in service_prs %}
+                    <input type="hidden" value="{{ s.base_price }} {% trans 'toman' %},{{ s.period }} {% trans 'days' %},{% if s.initial_package > 0 %}{{ s.initial_package|convert_credit }}{% else %}{% trans 'unlimited' %}{% endif %},{{ s.bandwidth }}" id="{{ s.pk }}"/>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+    </div>
+
+{% endblock %}
+{% block script %}
+    <script language="JavaScript" type="text/javascript">
+    function plist(){
+        document.location = '?u={{ u }}&pl='+document.getElementById("cbPrices").value;
+    }
+    function slChanged(){
+        var sl = document.getElementById('slServices').value;
+        var data = document.getElementById(sl).value;
+        $('#spPrice')[0].innerHTML = data.split(',')[0];
+        $('#spDuration')[0].innerHTML = data.split(',')[1];
+        $('#spAmount')[0].innerHTML = data.split(',')[2];
+        $('#spSpeed')[0].innerHTML = data.split(',')[3];
+    }
+    function showValues(){
+        var sl2 = document.getElementById('srv2');
+        document.location = '?u={{ u }}&pl={{ current_selected }}&srv=' + sl2.value;
+    }
+    $(function(){
+       $('#cbPrices').on('change', function(e){
+            document.location = '?u={{ u }}&pl='+ e.target.value;
+       });
+       $('#srv2').on('change', function(e){
+           document.location='?u={{ u }}&srv='+e.target.value+'&pl={{ current_selected }}';
+       });
+    });
+    </script>
+    <script language="JavaScript">
+        $(document).ready(function(){
+            slChanged();
+        });
+    </script>
+{% endblock %}

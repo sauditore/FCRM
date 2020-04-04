@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+{% trans 'dedicate service management' %}
+{% endblock %}
+{% block page %}
+    {% trans 'dedicate service management' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'service' %}</li>
+    <li>{% trans 'dedicated' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+{% block body %}
+<div class="ibox">
+<div class="ibox-title">
+    <h5>{% trans 'dedicated service' %}</h5>
+    <div class="ibox-tools">
+        {% if perms.CRM.add_dedicatedservice %}
+            <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#mAdd"> <span>{% trans 'add' %}</span></button>
+        {% endif %}
+    </div>
+</div>
+    <div class="ibox-content">
+        <table class="table table-striped" data-toggle="grid" id="tDService">
+            <thead>
+            <tr>
+                <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric"
+                    data-identifier="true">{% trans 'id' %}
+                </th>
+                <th data-align="right" data-header-align="right" data-column-id="name">{% trans 'name' %}</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script language="javascript" type="text/javascript" src="{% static 'js/system/services/DedicatedServices.js' %}"></script>
+{% endblock %}
+{% block modals %}
+    {% if perms.CRM.add_dedicatedservice or perms.CRM.change_dedicatedserivce %}
+        {% include 'service/dedicated/AddDedicateServiceModal.html' %}
+    {% endif %}
+{% endblock %}
+{% block actions %}
+{% if perms.CRM.add_dedicatedservice or perms.CRM.change_dedicatedserivce %}
+    <button type="button" class="btn btn-sm btn-info" data-need-pk="1" data-pk="" data-toggle="modal" data-target="#mAdd"><i class="fa fa-edit"></i> <span class="hidden-sm hidden-xs">{% trans 'edit' %}</span></button>
+{% endif %}
+{% if perms.CRM.delete_dedicatedservice %}
+    <button data-action="del" data-url="{% url 'service_dedicate_delete' %}" type="button" class="btn btn-sm btn-danger" data-need-pk="1" data-toggle="modal" data-target="#mBaseDel"><i class="fa fa-trash"></i> <span class="hidden-xs hidden-sm">{% trans 'delete' %}</span></button>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+{% trans 'view users' %}
+{% endblock %}
+{% block page %}
+    {% trans 'view users' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'users' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'view users' %}</h5>
+        </div>
+        <div class="ibox-content">
+            <input type="hidden" id="hut" value="{{ user_type }}"/>
+            <table class="table table-striped" data-toggle="grid">
+                <thead>
+                <tr>
+                    <th data-align="center" data-header-align="center" data-column-id="user__pk" data-type="numeric"
+                        data-identifier="true">{% trans 'id' %}
+                    </th>
+                    <th data-align="center" data-header-align="center" data-column-id="user__first_name">{% trans 'first name' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="user__fk_ibs_user_info_user__ibs_uid" {% if user_type != 4 and user_type != 6 %}data-visible="false"{% endif %}>{% trans 'ibs uid' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="user__username" {% if user_type == 6 %}data-visible="false"{% endif %}>{% trans 'username' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="user__fk_user_debit_user__amount">{% trans 'debit' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="user__email" {% if user_type == 6 %} data-visible="false" {% endif %}>{% trans 'email' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="mobile">{% trans 'mobile' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="telephone" data-visible="true">{% trans 'telephone' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="address" data-visible="false">{% trans 'address' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="user__fk_user_current_service_user__service__name" {% if user_type != 4 %}data-visible="false"{% endif %}>{% trans 'service' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="user__fk_user_current_service_user__expire_date" {% if user_type != 4 and user_type != 6 %}data-visible="false"{% endif %}>{% trans 'expire date' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="user__is_active" data-formatter="is_active" {% if user_type == 6 %}data-visible="false"{% endif %}>{% trans 'active' %}</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script language="javascript" type="text/javascript" src="{% static 'js/system/users/ViewUsers.js' %}"></script>
+{% endblock %}

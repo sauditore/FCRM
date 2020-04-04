@@ -1,0 +1,87 @@
+{% load static %}
+{% load i18n %}
+<script language="javascript" type="text/javascript">
+    $(function(){
+        $('#dvEditTowerData').on('show.bs.modal', function(a){
+            var p = $(a.relatedTarget).data('pk');
+            var m = $(a.target);
+            var al = m.find('.alert');
+            al.addClass('hidden');
+            $('#fEditTowerData').on('submit', function(f){
+                f.preventDefault();
+                var fr = $(f.target);
+                var dx = fr.serialize();
+                $.ajax({
+                    url: fr.attr('action'),
+                    data: dx,
+                    method: 'post',
+                    success: function(){
+                        m.modal('hide');
+                        $($(a.relatedTarget).data('action-reload')).bootgrid('reload');
+                    },
+                    error: function(er){
+                        al.find('span').html(er.responseText);
+                        al.removeClass('hidden');
+                    }
+                });
+            });
+            $.ajax({
+                method: 'get',
+                dataType: "json",
+                url: "{% url 'tower_detail_json' %}?t=" + p,
+                success: function(x){
+                    m.find('#n').val(x.name);
+                    m.find('#d').val(x.description);
+                    m.find('#ad').val(x.address);
+                    m.find('#i').val(x.id);
+                },
+                error: function(er){
+                    al.find('span').html(er.responseText);
+                    al.removeClass('hidden')
+                }
+            });
+
+
+        });
+    });
+</script>
+<form method="post" action="{% url 'tower_update' %}" id="fEditTowerData">
+<div class="modal fade" id="dvEditTowerData">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" aria-label="Close" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">{% trans 'edit tower data' %}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger hidden">
+                    <i class="glyphicon glyphicon-warning-sign"></i>
+                    <span></span>
+                </div>
+
+                    <div class="form-horizontal">
+                        <div class="input-group">
+                            <label class="input-group-addon"><i class="glyphicon glyphicon-text-color"></i></label>
+                            <input type="text" name="n" id="n" placeholder="{% trans 'name' %}" class="form-control"/>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-group-addon"><i class="glyphicon glyphicon-text-width"></i></label>
+                            <textarea name="d" id="d" placeholder="{% trans 'description' %}" class="form-control"></textarea>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-group-addon">
+                                <i class="glyphicon glyphicon-info-sign"></i>
+                            </label>
+                            <input type="text" value="" name="ad" id="ad" class="form-control" placeholder="{% trans 'address' %}"/>
+                        </div>
+                        <input type="hidden" value="" name="t" id="i"/>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-info">{% trans 'submit' %}</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'cancel' %}</button>
+            </div>
+        </div>
+    </div>
+</div>
+</form>

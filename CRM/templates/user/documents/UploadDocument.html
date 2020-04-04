@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'upload document' %}
+{% endblock %}
+{% block bodyblock %}
+    <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <fieldset class="enter_data">
+        <legend>{% trans 'upload documents' %}</legend>
+        <table>
+            <tr>
+                <td><span>{% trans 'file 1' %}</span></td>
+                <td>
+                    <input type="file" name="file1" accept="image/gif, image/jpeg"/>
+                </td>
+            </tr>
+            <tr>
+                <td><span>{% trans 'file 2' %}</span></td>
+                <td>
+                    <input type="file" name="file2" accept="image/gif, image/jpeg"/>
+                </td>
+            </tr>
+            <tr>
+                <td><span>{% trans 'file 3' %}</span></td>
+                <td>
+                    <input type="file" name="file3" accept="image/gif, image/jpeg"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <br/><br/>
+    <input type="submit" value="{% trans 'upload' %}"/>
+    </form>
+{% endblock %}

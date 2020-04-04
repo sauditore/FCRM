@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+{% trans 'custom option management' %}
+{% endblock %}
+{% block page %}
+    {% trans 'custom option management' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'service' %}</li>
+    <li>{% trans 'float service' %}</li>
+    <li>{% trans 'custom option' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+    <div class="ibox-title">
+        <h5>{% trans 'custome option' %}</h5>
+        <div class="ibox-tools">
+            {% if perms.CRM.add_customoption %}
+                <button class="btn btn-xs btn-primary" type="button" data-toggle="modal" data-target="#mAddCustomOption"><span>{% trans 'add' %}</span></button>
+            {% endif %}
+        </div>
+    </div>
+        <div class="ibox-content">
+            <table class="table table-striped" id="tCustomOptions" data-toggle="grid">
+                <thead>
+                <tr>
+                    <th data-align="center" data-header-align="center" data-column-id="pk" data-type="numeric"
+                        data-identifier="true">{% trans 'id' %}
+                    </th>
+                    <th data-align="center" data-header-align="center" data-column-id="name">{% trans 'name' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="min_value">{% trans 'mix value' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="max_value">{% trans 'max value' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="var_name">{% trans 'variable' %}</th>
+                    <th data-align="center" data-header-align="center" data-formatter="service_type" data-column-id="group_type">{% trans 'service type' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="package__name">{% trans 'package' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="pool__name">{% trans 'ip pool' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="group__name">{% trans 'group' %}</th>
+                    <th data-align="center" data-header-align="center" data-formatter="is_custom" data-column-id="is_custom_value">{% trans 'custom value' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="custom_value_min">{% trans 'min value' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="custom_value_max">{% trans 'max value' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="help_text">{% trans 'help' %}</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+<script language="javascript" type="text/javascript" src="{% static 'js/system/services/FloatServiceManagement.js' %}"></script>
+{% endblock %}
+{% block modals %}
+    {% if perms.CRM.add_customoption or perms.CRM.change_customoption%}
+        {% include 'service/float_service/custom_options/AddCustomOptionModal.html' %}
+        {% include 'service/float_service/custom_options/MapServicesModal.html' %}
+    {% endif %}
+{% endblock %}
+{% block actions %}
+    {% if perms.CRM.change_customoption %}
+        <button class="btn btn-info btn-sm" data-need-pk="1" data-toggle="modal" data-target="#mAddCustomOption"><i class="fa fa-edit"></i> <span class="hidden-sm hidden-xs">{% trans 'edit' %}</span></button>
+        <button class="btn btn-primary btn-sm" data-need-pk="1" data-toggle="modal" data-target="#mMapService"><i class="fa fa-edit"></i> <span class="hidden-sm hidden-xs">{% trans 'services' %}</span></button>
+    {% endif %}
+    {% if perms.CRM.delete_customoption %}
+        <button data-action="del" class="btn btn-sm btn-danger" data-url="{% url 'service_float_option_remove' %}" data-need-pk="1"><i class="fa fa-trash"></i> <span class="hidden-sm hidden-xs">{% trans 'delete' %}</span></button>
+    {% endif %}
+{% endblock %}

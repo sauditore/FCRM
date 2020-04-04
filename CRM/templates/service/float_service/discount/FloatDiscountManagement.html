@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+{% trans 'discount management' %}
+{% endblock %}
+{% block page %}
+{% trans 'discount management' %}
+{% endblock %}
+{% block sitemap %}
+<li>{% trans 'service' %}</li>
+<li>{% trans 'float service' %}</li>
+<li>{% trans 'discount' %}</li>
+<li>{% trans 'view' %}</li>
+{% endblock %}
+{% block header %}
+
+{% endblock %}
+{% block body %}
+<div class="ibox float-e-margin">
+    <div class="ibox-title">
+        <h5>{% trans 'float service discount' %}</h5>
+        <div class="ibox-tools">
+            {% if perms.CRM.add_floatdiscount %}
+            <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#mAdd">
+                <span>{% trans 'add' %}</span></button>
+            {% endif %}
+        </div>
+    </div>
+    <div class="ibox-content">
+        <table class="table" data-toggle="grid">
+            <thead>
+            <tr>
+                <th data-align="center" data-header-align="right" data-column-id="pk" data-type="numeric"
+                    data-identifier="true">{% trans 'id' %}
+                </th>
+                <th data-align="center" data-header-align="center" data-column-id="name">{% trans 'name' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="charge_month">{% trans 'charge_month' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="extra_charge">{% trans 'extra_charge' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="extra_package">{% trans 'extra package' %}</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script language="javascript" type="text/javascript" src="{% static 'js/system/services/FloatServiceDiscount.js' %}"></script>
+{% endblock %}
+{% block modals %}
+{% if perms.CRM.add_floatdiscount %}
+    {% include 'service/float_service/discount/AddNewDiscountModal.html' %}
+{% endif %}
+{% endblock %}
+{% block actions %}
+    {% if perms.CRM.change_floatdiscount %}
+        <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-need-pk="1" data-target="#mAdd"><i class="fa fa-edit"></i> <span class="hidden-sm hidden-xs">{% trans 'edit' %}</span></button>
+    {% endif %}
+    {% if perms.CRM.delete_floatdiscount %}
+        <button data-url="{% url 'service_float_discount_delete' %}" type="button" class="btn btn-sm btn-danger" data-action="del" data-need-pk="1"><i class="fa fa-trash"></i> <span class="hidden-xs hidden-sm">{% trans 'delete' %}</span></button>
+    {% endif %}
+{% endblock %}
+

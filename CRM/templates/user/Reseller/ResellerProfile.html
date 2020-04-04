@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% load TextUtils %}
+{% load humanize %}
+{% load assets %}
+{% block title %}
+    {% trans 'reseller profile' %}
+{% endblock %}
+{% block styles %}
+    {% assets filters='cssmin', output='rsl.css', 'css/system/x-editable/bootstrap-editable.css' %}
+        <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}"/>
+    {% endassets %}
+{% endblock %}
+{% block page %}
+    {% trans 'reseller profile' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'reseller' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-title">
+            {% trans 'status' %}
+            <input type="hidden" id="uid" value="{{ uid }}"/>
+        </div>
+        <div class="ibox-content">
+            <table class="table table-hover table-striped">
+                <thead>
+                <tr>
+                    <th>{% trans 'deposit' %}</th>
+                    <th>{% trans 'total users' %}</th>
+                    <th>{% trans 'invoices' %}</th>
+                    <th>{% trans 'invoice users' %}</th>
+                    <th>{% trans 'total sell' %}</th>
+                    <th>{% trans 'package profit percent' %}</th>
+                    <th>{% trans 'package profit' %}</th>
+                    <th>{% trans 'service profit' %}</th>
+                    <th>{% trans 'service price' %}</th>
+                    <th>{% trans 'max negative credit' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ data.reseller_deposit|floatformat:0|intcomma:False }} {% trans 'toman' %}&nbsp;&nbsp;
+                        {% if perms.CRM.buy_price_package %}
+                            <a href="{% url 'debit_charge_buy' %}?u={{ user.pk }}" class="label label-success">{% trans 'charge' %}</a>
+                        {% endif %}
+                    </td>
+                    <td>{{ data.total_users }}</td>
+                    <td>{{ data.total_invoice|floatformat:0|intcomma:False }}</td>
+                    <td>{{ data.invoice_users|floatformat:0|intcomma:False }}</td>
+                    <td>{{ data.total_price|floatformat:0|intcomma:False }}</td>
+                    <td>
+                        {% if perms.CRM.edit_reseller_profit %}
+                            <span id="pck" data-edit="1" data-pk="{{ uid }}" data-url="{% url 'reseller_update_profit' %}">{{ data.package_profit }}</span>
+                        {% else %}
+                            <span>{{ data.package_profit }} %</span>{% endif %}
+                    </td>
+                    <td>{{ data.total_package_price|floatformat:0|intcomma:False }}</td>
+                    <td>
+                        {% if perms.CRM.edit_reseller_profit %}
+                            <span id="srv" data-edit="1" data-pk="{{ uid }}" data-url="{% url 'reseller_update_profit' %}">{{ data.service_profit }}</span>
+                        {% else %}
+                            <span>{{ data.service_profit }} %</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ data.total_service_price|floatformat:0|intcomma:False }}</td>
+                    <td>
+                        {% if perms.CRM.edit_reseller_profit %}
+                            <span id="ngv" data-edit="1" data-pk="{{ uid }}" data-url="{% url 'reseller_update_profit' %}">{{ data.max_neg_credit }}</span> - {% trans 'toman' %}
+                        {% else %}
+                            <span>{{ data.max_neg_credit|floatformat:0|intcomma:False }}- {% trans 'toman' %}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="ibox-content">
+            <table class="table table-hover table-striped" id="tResellerHistory">
+                <thead>
+                <tr>
+                    <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric" data-identifier="true">{% trans 'id' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="update_date" data-type="string">{% trans 'last update' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="old_value" data-type="string">{% trans 'old value' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="new_value" data-type="string">{% trans 'new value' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    {% assets filters='jsmin', output='xedit.js', 'js/plugins/x-editable/bootstrap-editable.min.js' %}
+        <script language="javascript" type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+    {% assets filters='jsmin', output='rsls.js', 'js/system/reseller/ResellerManagement.js' %}
+        <script language="javascript" type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+{% endblock %}

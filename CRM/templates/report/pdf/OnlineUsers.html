@@ -1,0 +1,35 @@
+{% load i18n %}
+{% load DateConverter %}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>{% trans 'online users' %}</title>
+</head>
+<body>
+ <table>
+    <tr>
+        <td><span>{% trans 'ibs id' %}</span></td>
+        <td><span>{% trans 'username' %}</span></td>
+        <td><span>{% trans 'ip address'%}</span></td>
+        <td><span>{% trans 'station' %}</span></td>
+        <td><span>{% trans 'ras' %}</span></td>
+        <td><span>{% trans 'isp name' %}</span></td>
+        <td><span>{% trans 'connect time' %}</span></td>
+    </tr>
+    {% for u in users %}
+        {% if u.0 %}
+        <tr class="{% cycle 'rows0' 'rows1' %}">
+        <td><span><a href="{% url 'show user navigation menu' %}?iid={{ u.0.user_id }}">{{ u.0.user_id }}</a></span></td>
+        <td><span>{{ u.0.normal_username }}</span></td>
+        <td><span>{{ u.0.attrs.ippool_assigned_ip }}</span></td>
+        <td><span>{{ u.0.attrs.station_ip }}</span></td>
+        <td><span>{{ u.0.ras_description }}</span></td>
+        <td><span>{{ u.0.isp_name }}</span></td>
+        <td><span>{{ u.0.login_time|convert_date }}</span></td>
+        </tr>
+        {% endif %}
+    {% endfor %}
+    </table><br/><br/>
+</body>
+</html>

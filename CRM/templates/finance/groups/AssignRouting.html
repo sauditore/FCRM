@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'assign routing' %}
+{% endblock %}
+{% block page %}
+    {% trans 'assign routing' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'financial' %}</li>
+    <li>{% trans 'service groups' %}</li>
+    <li>{% trans 'assign routing' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+    <div class="ibox-title">
+        <h5>{% trans 'routes' %}</h5>
+    </div>
+    <div class="ibox-content">
+        <table class="table">
+            <tr>
+                <th>{% trans 'price list' %}</th>
+                <th>{% trans 'bank name' %}</th>
+            </tr>
+            {% for r in routing %}
+                <tr>
+                    <td>{{ r.name }}<input type="hidden" id="h{{ forloop.counter }}" value="{{ r.pk }}"/> </td>
+                    <td>
+                        <select id="{{ forloop.counter }}" data-select="1">
+                            <option value=""></option>
+                            {% for b in banks %}
+                                <option value="{{ b.internal_value }}" {% if b.internal_value == r.fk_service_group_routing_group.get.bank %}selected{% endif %}>{{ b.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script language="javascript">
+    $(function (){
+        $('select').on('change', function (e){
+            $.ajax({
+                method: 'get',
+                url: "?a=a&b=" + $(this).val() + "&p=" + $('#h' + e.target.id).val(),
+                success: function(){
+                    sAlert('', 2);
+                },
+                error: function(er){
+                    show_error(er.responseText);
+                }
+            });
+        });
+    });
+
+    </script>
+{% endblock %}

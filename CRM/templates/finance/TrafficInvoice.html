@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load MathTags %}
+{% load humanize %}
+{% block title%}
+    {% trans 'traffic invoice' %}
+{% endblock %}
+{% block page %}
+    {% trans 'traffic invoice' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'service' %}</li>
+    <li>{% trans 'package' %}</li>
+    <li>{% trans 'buy' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="row">
+    <div class="col-md-5 col-lg-5 col-md-offset-3">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h4 class="panel-title">{% trans 'traffic invoice' %}</h4>
+            </div>
+            <div class="panel-body">
+                <form action="" method="post">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td><span>{% trans 'traffic name' %}</span></td>
+                            <td><span>{{ s.name }}</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>{% trans 'amount' %}</span></td>
+                            <td><span>{{ s.amount }}</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>{% trans 'base service price' %}</span></td>
+                            <td><span>{{ base_service_price|floatformat:0|intcomma:False }} {% trans 'toman' %}</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>{% trans 'extra traffic' %}</span></td>
+                            <td><span>{{ extra_amount }}</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>{% trans 'discount price' %}</span>
+                            </td>
+                            <td><span>{{ discounted_price|floatformat:0|intcomma:False }} {% trans 'toman' %}</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>{% trans 'tax' %}</span>
+                            </td>
+                            <td><span>{{ tax|floatformat:0|intcomma:False }} {% trans 'toman' %}</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>{% trans 'debit' %}</span></td>
+                            <td><span>{{ debit|floatformat:0|intcomma:False }} {% trans 'toman' %}</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>{% trans 'final price' %}</span>
+                            </td>
+                            <td><span>{{ price|floatformat:0|intcomma:False }} {% trans 'toman' %}</span>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="text-center">
+                        <input class="btn btn-sm btn-info" type="submit" value="{% trans 'buy traffic' %}"/>
+                        <a class="btn btn-sm btn-default" href="javascript:window.history.back()">{% trans 'cancel' %}</a>
+                        <input type="hidden" name="uid" value="{{ u }}"/>
+                        <input type="hidden" name="sid" value="{{ s.pk }}"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}

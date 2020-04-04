@@ -1,0 +1,32 @@
+{% load i18n %}
+{% load static %}
+<script language="javascript" type="text/javascript" src="{% static 'js/system/workbench/dashboardAddTransport.js' %}"></script>
+    <div class="modal fade" id="mAddJobTransport" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form id="fAddJobTransport">
+                    <table id="tJobTransport" class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>{% trans 'name' %}</th>
+                            <th>{% trans 'transport type' %}</th>
+                            <th>{% trans 'description' %}</th>
+                            <th>{% trans 'actions' %}</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <input type="hidden" name="t"/>
+                    <input type="hidden" name="j"/>
+                        <input type="hidden" value="" id="slx"/>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove"></i><span class="hidden-xs hidden-sm">{% trans 'cancel' %}</span></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

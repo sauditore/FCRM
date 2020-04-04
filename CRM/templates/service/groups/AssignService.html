@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'assign service to package list' %}
+{% endblock %}
+{% block bodyblock %}
+    <div class="table-list">
+    <table>
+        <tr>
+            <th>{% trans 'service name' %}</th>
+            <th>{% trans 'action' %}</th>
+        </tr>
+        {% for s in services %}
+            <tr>
+            <td>{{ s.name }} | {{ s.description }}</td>
+            <td>{% if s.pk not in current_selected %}
+                <a href="{% url 'assign_service_to_list' %}?s={{ s.pk }}&l={{ list_name }}&a=a">{% trans 'assign' %}</a>
+            {% else %}
+                <a href="{% url 'assign_service_to_list' %}?s={{ s.pk }}&l={{ list_name }}&a=d">{% trans 'remove' %}</a>
+            {% endif %}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    </div>
+{% endblock %}

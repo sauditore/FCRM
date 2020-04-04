@@ -1,0 +1,148 @@
+﻿{% load static %}
+{% load assets %}
+{% load i18n%}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+        {% assets 'css_all' %}
+            <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}">
+        {% endassets %}
+        <link type="text/css" rel="stylesheet" href="{% static 'css/system/Fonts.css' %}"/>
+    {% block styles %}
+    {% endblock %}
+</head>
+<body class="rtls">
+<div id="wrapper">
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav metismenu" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element">
+                        <span>
+{#                            <img class="img-circle" src="https://lh3.googleusercontent.com/-7TXtQ5YGec4/AAAAAAAAAAI/AAAAAAAABig/HX9aAlobSDA/s120-c/photo.jpg"/>#}
+                        </span>
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">{{ user.first_name }}</strong>
+                             </span> <span class="text-muted text-xs block">{{ user.username }} <b class="caret"></b></span> </span> </a>
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                {% if user.is_authenticated and not ip_login %}
+                                <li><a href="{% url 'logout' %}">{% trans 'logout' %}</a></li>
+                                {% else %}
+                                    <li><a href="{% url 'login' %}?skip=1">{% trans 'login' %}</a></li>
+                                {% endif %}
+                            </ul>
+                    </div>
+                    <div class="logo-element">
+                        F +
+                    </div>
+                </li>
+                {% include 'menu.html' %}
+            </ul>
+        </div>
+    </nav>
+    <div id="page-wrapper" class="gray-bg">
+        <div class="row border-bottom">
+            <nav id="nTopNav" class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+                    {% if user.is_staff and perms.CRM.search_users %}
+                    <form role="search" class="navbar-form-custom" method="get" action="{% url 'search for users' %}">
+                        <div class="form-group">
+                            <input type="text" placeholder="{% trans 'search' %}..." class="form-control" name="iTMS" id="top-search">
+                        </div>
+                    </form>
+                    {% endif %}
+                </div>
+                <ul class="nav navbar-top-links navbar-right">
+                    <li>
+                        <span class="m-r-sm text-muted welcome-message">{% trans 'welcome to faratar crm' %}</span>
+                    </li>
+                    {% if user.is_staff %}
+                    <li class="dropdown">
+                        <a class="dropdown-toggle count-info" data-toggle="dropdown" href="{% url 'view_dashboard' %}">
+                            <i class="fa fa-bell"></i>  <span class="label label-primary" data-dashboard-counter="1">0</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-alerts">
+                            <li>
+                                <a href="{% url 'view_dashboard' %}">
+                                    <div>
+                                        <i class="fa fa-envelope fa-fw"></i> {% trans 'view dashboard' %}
+                                        <span class="pull-right text-muted small">{% trans 'now' %}</span>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                    <li>
+                        {% if user.is_authenticated and not ip_login %}
+                        <a href="{% url 'logout' %}">
+                            <i class="fa fa-sign-out"></i> {% trans 'logout' %}
+                        </a>
+                        {% else %}
+                        <a href="{% url 'login' %}?skip=1">
+                            <i class="fa fa-sign-in"></i> {% trans 'login' %}
+                        </a>
+                        {% endif %}
+                    </li>
+                </ul>
+
+            </nav>
+        </div>
+        <div class="row wrapper border-bottom white-bg page-heading">
+            <div class="col-md-10">
+                <h2>{% block page %}{% endblock %}</h2>
+                <ol class="breadcrumb">
+                    <li>{% trans 'home' %}</li>
+                    {% block sitemap %}{% endblock %}
+                </ol>
+            </div>
+            <input type="hidden" id="fSdx" value="{{ pre_search }}"/>
+            {% if has_nav %}
+            <div class="col-md-2">
+                <div class="btn-pinned bg-info">
+                    <a href="#dSearch" data-toggle="collapse"><i class="fa fa-cogs fa-spin"></i></a>
+                </div>
+            </div>
+            <div id="dSearch" class="col-md-12 collapse">
+                <hr/>
+                {% block header %}
+                {% endblock %}
+            </div>
+            {% endif %}
+        </div>
+        <div class="wrapper wrapper-content animated fadeIn">
+            <div class="row" id="body">
+                {% block body %}
+                {% endblock %}
+            </div>
+        </div>
+        <div class="footer fixed hidden-xs hidden-xs">
+            <div>
+                <strong>{% trans 'all rights reserved for Gostaresh Ertebatat e Nour' %} 1395</strong>
+                {% if normal_id > 0 %}
+                    <strong class="pull-right animated flash"><a class="text-danger" href="{% url 'logout' %}">{% trans 'switcher is active. click here to exit' %}</a></strong>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</div>
+{% assets "js_all" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+{% block script %}
+{% endblock %}
+{% block modals %}
+{% endblock %}
+<div style="display: none" id="dACTS">
+<hr/>
+{% block actions %}
+{% endblock %}
+</div>
+</body>
+
+</html>

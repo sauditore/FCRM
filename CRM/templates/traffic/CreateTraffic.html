@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load TextUtils %}
+{% block title %}
+    {% trans 'create package' %}
+{% endblock %}
+{% block page %}
+    {% trans 'create package' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'traffic' %}</li>
+    <li>{% trans 'create' %}</li>
+{% endblock %}
+{% block body %}
+
+<div class="table-form mini">
+    <h2>{% trans 'create package' %}</h2>
+    <form method="post">
+        <div class="ibox">
+            <div class="ibox-heading">
+                <div class="ibox-title">
+                    {% trans 'create package' %}
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>{% trans 'traffic name' %}</label>
+                            {% if step_two %}
+                                <input placeholder="{% trans 'traffic name' %}" type="text" value="{{ traffic.name }}" class="form-control" readonly="readonly" disabled="disabled"/>
+                            {% else %}
+                                <input class="form-control" type="text" value="{{ traffic.name }}" name="txtName" placeholder="{% trans 'name' %}"/>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label>{% trans 'description' %}</label>
+                            {% if step_two %}
+                                <input type="text" value="{{ traffic.description }}" placeholder="{% trans 'description' %}" class="form-control" disabled="disabled" readonly="readonly"/>
+                            {% else %}
+                                <input name="txtDescription" type="text" value="{{ traffic.description }}" placeholder="{% trans 'description' %}" class="form-control"/>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label>{% trans 'service group' %}</label>
+                            {% if step_two %}
+                                <input type="text" value="{{ traffic.fk_package_groups_package.get.group.name }}" class="form-control" readonly="readonly" disabled="disabled"/>
+                            {% else %}
+                                <select name="svg" class="form-control" data-select="1">
+                                    {% for g in service_groups %}
+                                        <option value="{{ g.pk }}" {% if g.pk == selected_groups %}selected{% endif %}>{{ g.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label>{% trans 'amount' %}</label>
+                            {% if step_two %}
+                                <input type="text" value="{{ traffic.amount|convert_credit }}" class="form-control" placeholder="{% trans 'amount' %}" readonly="readonly" disabled="disabled"/>
+                            {% else %}
+                                <input class="form-control" type="text" name="txtAmount" value="{{ traffic.amount }}" placeholder="{% trans 'amount' %}"/>
+                            {% endif %}
+                        </div>
+                        {% if step_two %}
+                            <div class="form-group">
+                                <label for="vip">{% trans 'set to vip package' %}</label>
+                                <select class="form-control" data-select="1" name="vip" id="vip">
+                                    <option value="">-</option>
+                                    {% for v in vip_groups %}
+                                        <option value="{{ v.pk }}" {% if v.pk == traffic.fk_vip_packages_package.get.group_id %} selected{% endif %}>{{ v.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>{% trans 'vip package price' %}</label>
+                                <input class="form-control" type="text" name="vipPrice" value="{{ traffic.price }}" placeholder="{% trans 'vip package price' %}"/>
+                                <input type="hidden" name="stp" value="1"/>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="ibox-footer">
+                <button type="submit" class="btn btn-sm btn-info"><i class="fa fa-save"></i> {% trans 'save' %}</button>
+            </div>
+        </div>
+        <input type="hidden" value="{{ traffic.pk }}" name="tid">
+    {% csrf_token %}
+
+    </form>
+</div>
+{% endblock %}
+
+{% block scriptblock %}
+{% endblock %}

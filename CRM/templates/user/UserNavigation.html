@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load assets %}
+{% load static %}
+{% load DateConverter %}
+{% load MathTags %}
+{% load humanize %}
+{% load TextUtils %}
+{% block title %}
+    {% trans 'user navigation' %} - {% if tu.fk_ibs_user_info_user.get.ibs_uid %}{{ tu.fk_ibs_user_info_user.get.ibs_uid }}{% else %}{{ tu.first_name }}{% endif %}
+{% endblock %}
+{% block page %}
+    {% trans 'user navigation' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'user' %}</li>
+    <li>{{ tu.first_name }}</li>
+{% endblock %}
+{% block styles %}
+    {% assets filters='cssmin', output='navs.css', 'css/system/nav/tabs.css', 'css/system/x-editable/bootstrap-editable.css' %}
+        <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}"/>
+    {% endassets %}
+{% endblock %}
+{% block body %}
+    {% if not user.is_staff %}
+{#        <div  class="text-center">#}
+{#            <div class="modal fade" id="mNewOffer">#}
+{#                <div class="modal-dialog modal-sm">#}
+{#                    <div class="modal-content">#}
+{#                        <div class="modal-body">#}
+{#                            <img width="250" height="300" src="{% static 'img/system/offer.jpg' %}"/>#}
+{#                            <img width="250" height="300" src="{% static 'img/system/offer2.jpg' %}"/>#}
+{#                        </div>#}
+{#                        <div class="modal-footer">#}
+{#                            <div class="text-center">#}
+{#                                <button data-dismiss="modal" type="button" class="btn btn-xs btn-info"><i class="fa fa-remove"></i> <span>{% trans 'close' %}</span></button>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+    {% endif %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 bhoechie-tab-container">
+                <div class="col-lg-2 col-md-3 col-sm-3 col-xs-3 bhoechie-tab-menu">
+                    <div class="list-group">
+                        {% include 'user/navigator/DashboardHeader.html' %}
+                        {% include 'user/navigator/UserProfileHeader.html' %}
+                        {% include 'user/navigator/ServiceHeader.html' %}
+                        {% include 'user/navigator/InvoiceHeader.html' %}
+                        {% include 'user/navigator/HelpDeskHeader.html' %}
+                        {% include 'user/navigator/UserActivityHeader.html' %}
+                        {% include 'user/navigator/NotificationHeader.html' %}
+                        {% include 'user/navigator/ActivateInternetHeader.html' %}
+                    </div>
+                </div>
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 bhoechie-tab">
+                        {% include 'user/navigator/DashboardBody.html' %}
+                        {% include 'user/navigator/UserProfileBody.html' %}
+                        {% include 'user/navigator/ServiceInformationBody.html' %}
+                        {% include 'user/navigator/InvoiceBody.html' %}
+                        {% include 'user/navigator/HelpDeskBody.html' %}
+                        {% include 'user/navigator/ActivityBody.html' %}
+                        {% include 'user/navigator/NotificationBody.html' %}
+                        {% include 'user/navigator/ActivateInternetBody.html' %}
+                    </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <hr>
+    {% if not tu.is_staff %}
+        <div class="footer hidden-md hidden-lg">
+            <div class="text-center">
+                <div class="col-md-2 col-sm-12 col-xs-12">
+                    <button data-toggle="modal" data-target="#mToturial" type="button" class="btn btn-warning btn-block btn-info"><i class="fa fa-star"></i> <span>نحوه شارژ سرویس</span></button>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+{% block script %}
+    {% assets filters='jsmin', output='js/nav.js', 'js/plugins/x-editable/bootstrap-editable.min.js' %}
+        <script language="javascript" type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+    {% assets filters='jsmin', output='unav.js', 'js/system/users/navigation.js' %}
+        <script language="javascript" type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+    <script language="JavaScript" src="{% static 'js/system/print/print.js' %}"></script>
+    <script type="text/javascript" language="javascript">
+        $(document).ready(function() {
+            $('[data-edit=1]').editable();
+            $("div.bhoechie-tab-menu>div.list-group>a").click(function(e) {
+                e.preventDefault();
+                $(this).siblings('a.active').removeClass("active");
+                $(this).addClass("active");
+                var index = $(this).index();
+                $("div.bhoechie-tab>div.bhoechie-tab-content").removeClass("active");
+                $("div.bhoechie-tab>div.bhoechie-tab-content").eq(index).addClass("active animated fadeIn");
+                bindDelete($('body'));
+            });
+            $('#mNewOffer').modal('show');
+        });
+    </script>
+
+{% endblock %}
+{% block modals %}
+    {% if contracts %}
+        <div class="modal fade" id="mContracts">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h5>{{ contracts.title }}</h5>
+                        <h4>{{ contracts.message }}</h4>
+                        <div class="form-group">
+                            <textarea style="height: 200px" class="form-control" placeholder="{% trans 'text' %}" readonly="readonly">{{ contracts.body }}</textarea>
+                        </div>
+                        <form method="get" id="fContracts" action="{% url 'contract_add_user' %}">
+                            <input type="hidden" value="{{ tu.pk }}" name="u"/>
+                            <input type="hidden" value="{{ contracts.ext }}" name="pk"/>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-sm btn-info"><i class="fa fa-check"></i> <span>{% trans 'ok' %}</span></button>
+                                <button data-dismiss="modal" type="button" class="btn btn-sm btn-default"><i class="fa fa-remove"></i> <span>{% trans 'cancel' %}</span></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if user.is_staff and perms.CRM.view_user_debit %}
+        {% include 'finance/debit/AddNewModal.html' %}
+    {% endif %}
+    {% if perms.CRM.change_userowner %}
+        {% include 'user/Reseller/ChangeOwnerModal.html' %}
+    {% endif %}
+    {% if perms.CRM.change_usertower %}
+        {% include 'towers/AssignUserToTowerModal.html' %}
+    {% endif %}
+    {% if perms.CRM.add_dedicateduserprofile %}
+        {% include 'user/modals/SetDedicated.html' %}
+    {% endif %}
+    {% if perms.CRM.add_companydata and not tu.is_staff and not profile.is_company %}
+        {% include 'user/modals/SetCompany.html' %}
+    {% endif %}
+    {% if current and current.is_float %}
+        {% include 'service/float_service/template/AssignedTemplateModal.html' %}
+    {% endif %}
+    {% if perms.CRM.visitor_checkout %}
+        {% include 'user/visitor/checkout.html' %}
+    {% endif %}
+    {% if perms.CRM.add_useripstatic %}
+        {% include 'service/IPStatic/BuyIpModal.html' %}
+    {% endif %}
+    {% if not tu.is_staff %}
+        <div class="modal fade" id="mToturial">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    </div>
+                    <iframe frameborder="0" src="http://faratar.net/ch-help/BUY-temp_player.html?embedIFrameId=embeddedSmartPlayerInstance" width="100%" height="350px"></iframe>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

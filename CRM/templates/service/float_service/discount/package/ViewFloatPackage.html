@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+{% trans 'view float package discount' %}
+{% endblock %}
+{% block page %}
+{% trans 'view float package discount' %}
+{% endblock %}
+{% block sitemap %}
+<li>{% trans 'service' %}</li>
+<li>{% trans 'float' %}</li>
+<li>{% trans 'discount' %}</li>
+<li>{% trans 'package' %}</li>
+{% endblock %}
+{% block header %}
+
+{% endblock %}
+{% block body %}
+<div class="ibox float-e-margin">
+    <div class="ibox-title">
+        <h5>{% trans 'package discount' %}</h5>
+        <div class="ibox-tools">
+            {% if perms.CRM.add_floatpackagediscount %}
+            <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#mAdd">
+                <span>{% trans 'add' %}</span></button>
+            {% endif %}
+        </div>
+    </div>
+    <div class="ibox-content">
+        <table class="table" data-toggle="grid">
+            <thead>
+            <tr>
+                <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric"
+                    data-identifier="true">{% trans 'id' %}
+                </th>
+                <th data-align="right" data-header-align="right" data-column-id="charge_amount">{% trans 'charge amount' %}</th>
+                <th data-align="right" data-header-align="right" data-column-id="extra_charge">{% trans 'extra charge' %}</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+    <script language="javascript" type="text/javascript" src="{% static 'js/system/services/packagDiscount.js' %}"></script>
+{% endblock %}
+{% block modals %}
+    {% if perms.CRM.add_floatpackagediscount %}
+        {% include 'service/float_service/discount/package/AddNewPackage.html' %}
+    {% endif %}
+{% endblock %}
+{% block actions %}
+    {% if perms.CRM.delete_floatpackagediscount %}
+        <button data-need-pk="1" data-action="del" data-url="{% url 'service_float_discount_package_delete' %}" type="button" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> <span>{% trans 'delete' %}</span></button>
+    {% endif %}
+    {% if perms.CRM.change_floatpackagediscount %}
+        <button data-need-pk="1" data-pk="" data-target="#mAdd" data-toggle="modal" type="button" class="btn btn-sm btn-info"><i class="fa fa-edit"></i> <span>{% trans 'edit' %}</span></button>
+    {% endif %}
+{% endblock %}

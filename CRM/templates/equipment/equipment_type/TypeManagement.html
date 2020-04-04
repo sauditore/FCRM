@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+    {% trans 'type maanagement' %}
+{% endblock %}
+{% block page %}
+    {% trans 'type maanagement' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'equipment' %}</li>
+    <li>{% trans 'type' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'equipment type' %}</h5>
+            <div class="ibox-tools">
+                {% if perms.CRM.add_equipmenttype %}
+                    <button data-toggle="modal" data-target="#mAddNewEquipmentType" type="button" class="btn btn-primary btn-xs"><span class="">{% trans 'add' %}</span></button>
+                {% endif %}
+            </div>
+        </div>
+        <div class="ibox-content">
+            <table class="table table-striped" id="tTypes" data-toggle="grid">
+                <thead>
+                    <tr>
+                        <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric"
+                            data-identifier="true">{% trans 'id' %}
+                        </th>
+                        <th data-align="right" data-header-align="right" data-column-id="name">{% trans 'name' %}</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            {% if perms.CRM.add_equipmentorder %}
+                <form id="fAddOrderForTypes" class="hidden">
+                    <table class="table table-striped" id="tSubGroup">
+                        <thead>
+                            <tr>
+                                <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric"
+                                    data-identifier="true">{% trans 'id' %}
+                                </th>
+                                <th data-align="right" data-header-align="right" data-column-id="name">{% trans 'name' %}</th>
+                                <th data-align="right" data-header-align="right" data-column-id="code__code">{% trans 'sell code' %}</th>
+                                <th data-align="right" data-header-align="right" data-column-id="remain_items">{% trans 'remain items' %}</th>
+                                <th data-align="right" data-header-align="right" data-formatter="price" data-column-id="code__sell_price">{% trans 'sell price' %}</th>
+                                <th data-align="right" data-header-align="right" data-column-id="used_remain_items">{% trans 'used remain items' %}</th>
+                                <th data-align="right" data-header-align="right" data-formatter="price" data-column-id="code__used_sell_price">{% trans 'used sell price' %}</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                     </table>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="panel panel-primary hidden" id="dOrderContainer">
+                                <div class="panel-heading">
+                                    <span>{% trans 'order for' %}</span>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <div class="radio radio-inline radio-rtl">
+                                            <input id="towers" data-target="#sTower" type="radio" name="rt" value="1"/>
+                                            <label for="towers">{% trans 'select for a tower' %}</label>
+                                        </div>
+                                        <select name="t" data-need-toggle="1" id="sTower" disabled="disabled" class="form-control" style="width: 100%"></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="radio radio-rtl radio-inline">
+                                            <input id="rUsers" data-target="#slUsers" type="radio" name="rt" value="2"/>
+                                            <label for="rUsers">{% trans 'select for a user' %}</label>
+                                        </div>
+                                        <select id="slUsers" disabled="disabled" data-need-toggle="1" name="u" class="form-control input-sm" style="width: 100%;"></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="radio radio-inline radio-rtl">
+                                            <input id="cPopSite" data-target="#slPopSite" type="radio" name="rt" value="3"/>
+                                            <label for="cPopSite">{% trans 'select for a popsite' %}
+                                            </label>
+                                        </div>
+                                        <select id="slPopSite" disabled="disabled" data-need-toggle="1" class="form-control" name="ps" style="width: 100%;"></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="checkbox checkbox-inline checkbox-rtl checkbox-info">
+                                            <input id="cB" type="checkbox" name="cB" value="1"/>
+                                            <label for="cB">{% trans 'borrow this equipment' %}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <div class="panel panel-info hidden" id="dOrders">
+                                <div class="panel-heading">
+                                    <span>{% trans 'selected equipment' %}</span>
+                                </div>
+                                <div class="panel-body">
+
+                                </div>
+                                <div class="panel-footer">
+                                    <button type="submit" class="btn btn-info btn-sm"><i class="fa fa-send"></i> <span class="hidden-sm hidden-xs">{% trans 'done' %}</span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+        <script language="javascript" type="text/javascript" src="{% static 'js/system/equipment/EquipmentType.js' %}"></script>
+{% endblock %}
+
+{% block modals %}
+    {% if perms.CRM.add_equipmenttype or perms.CRM.change_equipmenttype %}
+        {% include 'equipment/equipment_type/AddNewTypeModal.html' %}
+    {% endif %}
+{% endblock %}
+
+{% block actions %}
+    {% if perms.CRM.change_equipmenttype %}
+        <button data-need-pk="1" type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#mAddNewEquipmentType"><i class="fa fa-edit"></i> <span class="hidden-xs hidden-sm">{% trans 'edit' %}</span></button>
+    {% endif %}
+    {% if perms.CRM.delete_equipmenttype %}
+        <button data-need-pk="1" type="button" class="btn btn-danger btn-sm" data-action="del" data-url="{% url 'equipment_type_delete' %}"><i class="fa fa-trash"></i> <span class="hidden-sm hidden-xs">{% trans 'delete' %}</span></button>
+    {% endif %}
+    {% if perms.CRM.add_equipmentorder %}
+        <button data-need-pk="1" type="button" class="btn btn-sm btn-success" id="bOrders"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm">{% trans 'order' %}</span></button>
+    {% endif %}
+{% endblock %}

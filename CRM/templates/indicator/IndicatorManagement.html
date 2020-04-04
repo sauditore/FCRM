@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+{% trans 'indicator management' %}
+{% endblock %}
+{% block styles %}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/system/persianDate/persianDatepicker-default.css' %}"/>
+{% endblock %}
+{% block page %}
+    {% trans 'indicator management' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'indicator' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+{% block header %}
+<form>
+<div class="form-group col-md-2">
+    <input type="text" name="t" placeholder="{% trans 'title' %}" maxlength="500" class="form-control"/>
+</div>
+<div class="form-group col-md-2">
+    <input type="text" name="searchPhrase" placeholder="{% trans 'person' %}" maxlength="255" class="form-control"/>
+</div>
+<div class="form-group col-md-2">
+    <input data-date="1" type="text" name="s" placeholder="{% trans 'send date' %}" maxlength="12" class="form-control"/>
+</div>
+<div class="form-group col-md-2">
+    <input type="text" name="c" placeholder="{% trans 'create date' %}" maxlength="12" data-date="1" class="form-control"/>
+</div>
+<div class="text-center col-md-12">
+    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i><span class="hidden-xs hidden-sm">{% trans 'search' %}</span></button>
+</div>
+</form>
+{% endblock %}
+{% block body %}
+    <div class="ibox float-e-margins">
+    <div  class="ibox-title">
+        <h5>{% trans 'indicator' %}</h5>
+        <div class="ibox-tools">
+            <button class="btn btn-xs btn-primary" type="button" data-toggle="modal" data-target="#mAdd">{% trans 'add' %}</button>
+        </div>
+    </div>
+    <div class="ibox-content">
+        <table class="table table-striped table-condensed" id="tData" data-toggle="grid">
+            <thead>
+            <tr>
+                <th data-align="center" data-header-align="center" data-column-id="pk" data-type="numeric"
+                    data-identifier="true">{% trans 'id' %}
+                </th>
+                <th data-align="center" data-header-align="center" data-column-id="code">{% trans 'code' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="create_date">{% trans 'create date' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="target">{% trans 'person' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="related_person">{% trans 'related person' %}</th>
+                <th data-align="center" data-header-align="center" data-formatter="bool" data-column-id="has_attachment">{% trans 'attachment' %}</th>
+                <th data-align="center" data-header-align="center" data-formatter="letter_type" data-column-id="book_type">{% trans 'type' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="send_date">{% trans 'send date' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="receive_date">{% trans 'checkout date' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="pocket__name">{% trans 'pocket book' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="letter_file__name">{% trans 'letter file' %}</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    </div>
+{% endblock %}
+{% block script %}
+<script language="JavaScript" type="text/javascript" src="{% static 'js/system/persianDatepicker/persianDatepicker.min.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'js/system/indicator/IndicatorManagement.js' %}"></script>
+{% endblock %}
+{% block modals %}
+    {% if perms.CRM.add_indicatorbook or perms.CRM.change_indicatorbook %}
+        {% include 'indicator/AddIndicatorModal.html' %}
+    {% endif %}
+    {% if perms.CRM.upload_file %}
+        {% include 'upload/UploadModal.html' %}
+    {% endif %}
+    {% if perms.CRM.view_uploaded_files %}
+        {% include 'upload/ViewFilesModal.html' %}
+    {% endif %}
+    {% if perms.CRM.change_indicatorbook %}
+        {% include 'indicator/SetReceivedModal.html' %}
+    {% endif %}
+{% endblock %}
+{% block actions %}
+<div class="text-center">
+{% if perms.CRM.change_indicatorbook %}
+    <button type="button" data-manual="1" data-need-pk="1" data-pk="" class="btn btn-sm btn-default" data-toggle="modal" data-target="#mSR"><i class="glyphicon glyphicon-calendar"></i> <span class="hidden-sm hidden-xs">{% trans 'received' %}</span></button>
+{% endif %}
+{% if perms.CRM.delete_indicatorbook %}
+    <button  data-action="del" type="button" data-url="{% url 'indicator_rm' %}" class="btn btn-sm btn-danger" data-need-pk="1"><i class="glyphicon glyphicon-transfer"></i> <span class="hidden-sm hidden-xs">{% trans 'delete' %}</span></button>
+{% endif %}
+{% if perms.CRM.upload_file %}
+    <button type="button" class="btn btn-default btn-sm" data-need-pk="1" data-pk="" data-toggle="modal" data-target="#mUploader"><i class="glyphicon glyphicon-upload"></i> <span class="hidden-sm hidden-xs">{% trans 'upload' %}</span></button>
+{% endif %}
+{% if perms.CRM.view_uploaded_files %}
+    <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#mUploaded" data-need-pk="1" data-pk=""><i class="glyphicon glyphicon-list"></i> <span class="hidden-xs hidden-sm">{% trans 'files' %}</span></button>
+{% endif %}
+</div>
+{% endblock %}

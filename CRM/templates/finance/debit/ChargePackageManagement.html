@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+    {% trans 'charge package management' %}
+{% endblock %}
+{% block page %}
+    {% trans 'charge package management' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'financial' %}</li>
+    <li>{% trans 'virtual bank' %}</li>
+    <li>{% trans 'charge packages' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+    <div class="ibox-title">
+        <h5>{% trans 'packages' %}</h5>
+    </div>
+        <div class="ibox-content">
+            <form id="fAddPricePack">
+                <table class="table table-hover table-striped" id="tPackages">
+                    <thead>
+                    <tr>
+                        <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric"
+                            data-identifier="true">{% trans 'id' %}
+                        </th>
+                        <th data-align="right" data-header-align="right" data-column-id="name">{% trans 'name' %}</th>
+                        <th data-align="right" data-header-align="right" data-column-id="amount">{% trans 'amount' %}</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                    {% if perms.CRM.add_pricepackage %}
+                        <tfoot>
+                        <tr>
+                            <td></td>
+                            <td><input type="text" value="" name="n" placeholder="{% trans 'name' %}" class="form-control input-sm"/></td>
+                            <td><input type="text" value="" name="a" placeholder="{% trans 'amount' %}" class="form-control input-sm"/> </td>
+                            <td><button type="submit" class="btn btn-sm btn-info"><i class="fa fa-plus"></i> <span class="hidden-sm hidden-xs">{% trans 'add' %}</span></button> </td>
+                        </tr>
+                        </tfoot>
+                    {% endif %}
+                </table>
+            </form>
+        </div>
+    </div>
+    {% if perms.CRM.add_pricepackage %}
+        <form id="fAddPackageGroups" class="hidden">
+            <input type="hidden" name="p"/>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{% trans 'groups' %}</h3>
+                </div>
+                <div class="panel-body" id="dGroups">
+                    {% for g in groups %}
+                        <div class="checkbox checkbox-inline checkbox-primary">
+                            <input checked="checked" type="checkbox" value="{{ g.pk }}" name="grp" placeholder="{{ g.name }}" id="{{ g.pk }}"/>
+                            <label for="{{ g.pk }}">{{ g.name }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="panel-footer" id="dt">
+                    <button type="submit" class="btn btn-sm btn-info"><i class="glyphicon glyphicon-check"></i> <span class="hidden-sm hidden-xs">{% trans 'ok' %}</span></button>
+                </div>
+            </div>
+        </form>
+    {% endif %}
+{% endblock %}
+{% block script %}
+    <script language="javascript" type="text/javascript" src="{% static 'js/system/virtualBank/DebitChargePackage.js' %}"></script>
+{% endblock %}

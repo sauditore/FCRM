@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load i18n%}
+{% block title %}
+    {% trans 'error' %}
+{% endblock %}
+{% block page %}
+    {% trans 'error' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'error' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="middle-box text-center animated fadeIn" style="margin-top: 0!important;">
+        <h1>500</h1>
+        <h3 class="font-bold">{% trans 'one of the parameteres you entered is not correct' %}</h3>
+
+        <div class="error-desc">
+            {{ error_message }}<br/>
+            <br/>
+            <a href="/" class="btn btn-primary m-t">{% trans 'dashboard' %}</a>
+            <a href="javascript:window.history.back()" class="btn btn-primary m-t">{% trans 'back' %}</a>
+        </div>
+    </div>
+{% endblock %}

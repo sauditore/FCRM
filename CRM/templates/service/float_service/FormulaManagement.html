@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+    {% trans 'formula management' %}
+{% endblock %}
+{% block page %}
+    {% trans 'formula management' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'service' %}</li>
+    <li>{% trans 'float services' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+    <div class="ibox-title">
+        <h5>{% trans 'formula' %}</h5>
+        <div class="ibox-tools">
+            {% if perms.CRM.add_serviceformula %}
+                <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#mAddFormula"><span class="hidden-sm hidden-xs">{% trans 'add' %}</span></button>
+            {% endif %}
+        </div>
+    </div>
+        <div class="ibox-content">
+            <table class="table table-striped" id="tServiceFormula" data-toggle="grid">
+                <thead>
+                <tr>
+                    <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric"
+                        data-identifier="true">{% trans 'id' %}
+                    </th>
+                    <th data-align="right" data-header-align="right" data-column-id="name">{% trans 'name' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="formula">{% trans 'formula' %}</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script language="javascript" type="text/javascript" src="{% static 'js/system/services/FloatServiceManagement.js' %}"></script>
+{% endblock %}
+{% block modals %}
+    {% if perms.CRM.add_serviceformula %}
+        {% include 'service/float_service/AddNewFormulaModal.html' %}
+    {% endif %}
+{% endblock %}
+{% block actions %}
+    {% if perms.CRM.change_serviceformula %}
+        <button type="button" class="btn btn-default btn-sm" data-need-pk="1" data-toggle="modal" data-target="#mAddFormula"><i class="glyphicon glyphicon-edit"></i> <span class="hidden-sm hidden-xs">{% trans 'edit' %}</span></button>
+    {% endif %}
+    {% if perms.CRM.delete_formula %}
+        <button data-action="del" data-url="{% url 'service_float_formula_rm' %}" type="button" class="btn btn-danger btn-sm" data-need-pk="1"><i class="fa fa-trash"></i> <span class="hidden-sm hidden-xs">{% trans 'delete' %}</span></button>
+    {% endif %}
+{% endblock %}

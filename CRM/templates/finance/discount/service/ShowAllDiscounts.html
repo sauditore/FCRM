@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load humanize %}
+{% load MathTags %}
+{% load TextUtils %}
+{% block title %}
+    {% trans 'discounts' %}
+{% endblock %}
+{% block bodyblock %}
+    <div class="table-list">
+    <table>
+        <tr>
+            <th><span>#</span></th>
+            <th><span>{% trans 'name' %}</span></th>
+            <th><span>{% trans 'extra days' %}</span></th>
+            <th><span>{% trans 'discount' %}</span></th>
+            <th><span>{% trans 'service' %}</span></th>
+            <th><span>{% trans 'charge days' %}</span></th>
+            <th><span>{% trans 'extra package' %}</span></th>
+            <th><span>{% trans 'management' %}</span></th>
+        </tr>
+        {% for d in discounts %}
+        <tr>
+            <td>{{ page|sub:1|mul:per_page|plus:forloop.counter }}</td>
+            <td><a href="{% url 'add_or_edit_discount' %}?d={{ d.pk }}">{{ d.name }}</a></td>
+            <td>{{ d.extended_days }}</td>
+            <td>{{ d.price_discount }}</td>
+            <td>{{ d.service.name }}</td>
+            <td>{{ d.charge_days }}</td>
+            <td>{{ d.extra_traffic|convert_credit }}</td>
+            <td><a href="{% url 'delete_discount' %}?d={{ d.pk }}">{% trans 'delete' %}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+    {% include 'menu/Pager.html' %}
+    <div class="btn-set">
+    <a href="{% url 'add_or_edit_discount' %}" class="buttons">{% trans 'add' %}</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% load i18n %}
+<div class="modal fade" id="mAdd" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="fAdd" method="post" action="{% url 'service_float_discount_package_add' %}">
+                    <input type="hidden" value="" name="pk"/>
+                    <div class="form-group">
+                        <label>{% trans 'charge amount' %}</label>
+                        <input class="form-control" type="text" name="cm" placeholder="{% trans 'charge amount' %}"/>
+                    </div>
+                    <div class="form-group">
+                        <label>{% trans 'extra charge' %}</label>
+                        <input class="form-control" type="text" value="" name="ec" placeholder="{% trans 'extra charge' %}"/>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-info btn-sm"><i class="fa fa-check"></i> <span
+                                class="hidden-sm hidden-xs">{% trans 'add' %}</span></button>
+                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i
+                                class="fa fa-remove"></i> <span class="hidden-xs hidden-sm">{% trans 'cancel' %}</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

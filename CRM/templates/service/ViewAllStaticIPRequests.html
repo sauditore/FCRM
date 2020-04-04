@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load DateConverter %}
+{% block title %}
+    {% trans 'static ip request' %}
+{% endblock %}
+{% block bodyblock %}
+    <div class="table-list">
+    <table>
+    <tr>
+        <th><span>{% trans 'code' %}</span></th>
+        {% if user.is_staff or user.is_superuser %}
+        <th><span>{% trans 'username' %}</span></th>
+        {% endif %}
+        <th><span>{% trans 'request time' %}</span></th>
+        <th><span>{% trans 'state' %}</span></th>
+        <th><span>{% trans 'accept time' %}</span></th>
+        <th><span>{% trans 'description' %}</span></th>
+        {% if user.is_superuser or user.is_staff %}
+            <th><span>{% trans 'manage' %}</span></th>
+        {% endif %}
+    </tr>
+    {% for r in rip %}
+        <tr class="{% cycle 'rows0' 'rows1' %}">
+        <td><span>{{ r.pk }}</span></td>
+        {% if user.is_staff or user.is_superuser %}
+            <td><span>{{ r.user.username }}</span></td>
+        {% endif %}
+        <td><span>{{ r.request_time|convert_date }}</span></td>
+        <td><span>{% if r.is_accepted %}{% trans 'followed' %}{% else %}{% trans 'waiting' %}{% endif %}</span></td>
+        <td><span>{{ r.accept_time|convert_date }}</span></td>
+        <td><span>{{ r.assigned_address }}</span></td>
+        {% if user.is_superuser or user.is_staff %}
+            <td>
+            {% if r.is_accepted %}
+                <span>-</span>
+            {% else %}
+                <a href="{% url 'accept_request' %}?r={{ r.pk }}">{% trans 'accept' %}</a>
+            {% endif %}
+            </td>
+        {% endif %}
+        </tr>
+
+    {% endfor %}
+    </table>
+    </div>
+    <div class="btn-set">
+    <br/>
+    <a href="{% url 'add_new_ip_request' %}?u={{ uid }}" class="buttons">{% trans 'request new' %}</a>
+    </div>
+{% endblock %}

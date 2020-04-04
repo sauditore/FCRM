@@ -1,0 +1,31 @@
+{% load i18n %}
+<div class="modal fade" id="mAdd" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="fAdd">
+                    <div class="form-group">
+                        <input type="text" value="" name="n" placeholder="{% trans 'name' %}" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" value="" name="c" placeholder="{% trans 'charge month' %}" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" value="" name="e" placeholder="{% trans 'extra month charge' %}" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" value="" name="p" placeholder="{% trans 'extra package' %}" class="form-control"/>
+                    </div>
+                    <input type="hidden" value="" name="pk"/>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-info btn-sm"><i class="fa fa-check"></i> <span
+                                class="hidden-sm hidden-xs">{% trans 'add' %}</span></button>
+                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i
+                                class="fa fa-remove"></i> <span class="hidden-xs hidden-sm">{% trans 'cancel' %}</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

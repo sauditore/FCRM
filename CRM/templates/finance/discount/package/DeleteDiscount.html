@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'delete discount' %}
+{% endblock %}
+{% block bodyblock %}
+    <form method="post">
+    {% csrf_token %}
+    <input type="hidden" value="{{ d.pk }}" name="d"/>
+        <span>{% trans 'are you sure you want to delete the following discount?' %}</span>
+    <div class="table-list">
+        <table>
+            <tr>
+                <td><span>{% trans 'name' %}</span></td>
+                <td><span>{{ d.name }}</span></td>
+            </tr>
+            <tr>
+                <td><span>{% trans 'package' %}</span></td>
+                <td><span>{{ d.package.name }}</span></td>
+            </tr>
+        </table>
+    </div>
+    <input type="submit" value="{% trans 'delete' %}" name="confirm"/>
+    <input type="submit" value="{% trans 'cancel' %}" name="cancel"/>
+    </form>
+{% endblock %}

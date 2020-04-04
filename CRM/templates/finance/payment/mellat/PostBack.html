@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'bank payment result' %}
+{% endblock %}
+{% block body %}
+    <div class="table-form">
+    <table>
+        <tr>
+            <td>{% trans 'invoice number' %}</td>
+            <td>{{ i.pk }}</td>
+        </tr>
+        <tr>
+            <td>{% trans 'service' %}</td>
+            <td>{% if i.service_service %}{{ i.service_service.name }}{% else %}{{ i.traffic.name }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td>{% trans 'result' %}</td>
+            <td>{{ msg }}</td>
+        </tr>
+    </table>
+    </div>
+    <div class="btn-set">
+    <a href="{% url 'show all factors' %}" class="buttons">{% trans 'back' %}</a>
+    </div>
+{% endblock %}

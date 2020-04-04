@@ -1,0 +1,25 @@
+{% load i18n %}
+<div class="modal fade" id="mAddContract">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form action="{% url 'contract_add_new' %}" method="post">
+                    <input type="hidden" name="pk"/>
+                    <div class="form-group">
+                        <input class="form-control" type="text" maxlength="255" value="" name="t" placeholder="{% trans 'title' %}"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" value="" name="m" placeholder="{% trans 'message' %}" class="form-control" maxlength="500"/>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" name="b" placeholder="{% trans 'text' %}"></textarea>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-sm btn-info"><i class="fa fa-check"></i> <span>{% trans 'add' %}</span></button>
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal"><i class="fa fa-remove"></i> <span>{% trans 'cancel' %}</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+{% load i18n %}
+{% load static %}
+{% load assets %}
+{% assets filters='jsmin', output='adtmD.js', 'js/system/transport/addTransportType.js' %}
+<script language="JavaScript" type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+<div class="modal fade" id="mAddTransportType">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form method="post" id="fAddTransportType">
+                    <div>
+                        <div class="input-group">
+                            <label class="input-group-addon">{% trans 'name' %}</label>
+                            <input type="text" value="" name="n" placeholder="{% trans 'name' %}" class="form-control"/>
+                        </div>
+                    </div>
+                </form>
+                <div class="text-center">
+                    <button type="submit" value="" class="btn btn-info btn-sm"><i class="fa fa-plus"></i><span class="hidden-xs hidden-sm">{% trans 'add' %}</span></button>
+                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-remove"></i><span class="hidden-sm hidden-xs">{% trans 'cancel' %}</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

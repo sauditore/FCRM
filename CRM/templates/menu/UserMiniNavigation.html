@@ -1,0 +1,37 @@
+{% load i18n %}
+{% if mini_user_nav %}
+    {% if not hide_collapse %}
+    <button type="button" data-toggle="collapse" data-target="#miniNav" class="btn btn-info">
+    <i class="glyphicon glyphicon-user"></i>
+    </button>
+    <div class="collapse" id="miniNav">
+
+    <div class="panel panel-default check_wrap">
+        <div class="panel-body">
+    {% endif %}
+            {% if perms.CRM.view_profile %}
+                <a title="{% trans 'personal information' %}" href="{% url 'show the user summery' %}?uid={{ mini_user_nav.pk }}" class="btn btn-info"><i class="glyphicon glyphicon-user"></i></a>
+            {% endif %}
+            {% if not mini_user_nav.is_staff %}
+                {% if perms.CRM.view_service_summery %}
+                    <a title="{% trans 'service information' %}" class="btn btn-info" href="{% url 'user services summery' %}?u={{ mini_user_nav.pk }}"><i class="glyphicon glyphicon-info-sign"></i> </a>
+                {% endif %}
+            {% endif %}
+            {% if perms.CRM.view_invoices or perms.CRM.view_single_invoice %}
+                <a class="btn btn-info" href="{% url 'show all factors' %}?u={{ mini_user_nav.pk }}" title="{% trans 'invoice' %}"><i class="glyphicon glyphicon-usd"></i></a>
+            {% endif %}
+            {% if perms.CRM.view_help_desk %}
+                <a class="btn btn-info" href="{% url 'show all tickets' %}?u={{ mini_user_nav.pk }}" title="{% trans 'help and support' %}"><i class="glyphicon glyphicon-tag"></i></a>
+            {% endif %}
+            {% if perms.CRM.view_activity %}
+                <a href="{% url 'view_dashboard' %}?tiu={{ mini_user_nav.pk }}" class="btn btn-info" title="{% trans 'view user activity' %}"><i class="glyphicon glyphicon-dashboard"></i></a>
+            {% endif %}
+            {% if perms.CRM.view_products %}
+                <a href="{% url 'equipment_view_internet_user' %}?u={{ mini_user_nav.pk }}" class="btn btn-info" title="{% trans 'equipment' %}"><i class="glyphicon glyphicon-bishop"></i></a>
+            {% endif %}
+    {% if not hide_collapse %}
+        </div>
+    </div>
+    </div>
+    {% endif %}
+{% endif %}

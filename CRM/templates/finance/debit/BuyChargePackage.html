@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% load humanize %}
+{% block title %}
+{% endblock %}
+{% block scriptblock %}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/linearIcons.css' %}"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'css/price_list.css' %}"/>
+    <script language="javascript" type="text/javascript" src="{% static 'js/PricePackageBuy.js' %}"></script>
+{% endblock %}
+{% block bodyblock %}
+<div class="pricing pricing--tashi">
+    {% for p in packs %}
+        <div class="pricing__item">
+            <h3 class="pricing__title">{{ p.name }}</h3>
+            <p class="pricing__sentence">{% trans 'charge account' %}</p>
+            <div class="pricing__price">
+                <span class="pricing__currency">{% trans 'T' %}</span>{{ p.amount|floatformat:0|intcomma:False }}
+                <span class="pricing__period"></span>
+            </div>
+            <ul class="pricing__feature-list">
+                <li class="pricing__feature">{% trans 'account charge' %} : {{ p.amount|floatformat:0|intcomma:False }} {% trans 'toman' %}</li>
+            </ul>
+            <button data-pk="{{ p.ext }}" data-uid="{{ uid }}" data-buy="1" class="pricing__action"><span class="icon icon--cart"></span></button>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

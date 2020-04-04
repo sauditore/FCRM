@@ -1,0 +1,26 @@
+{% load i18n %}
+{% load DateConverter %}
+<div class="table-list">
+    <table>
+        <tr>
+            <th>#</th>
+            <th>{% trans 'start time' %}</th>
+            <th>{% trans 'end time' %}</th>
+            <th>{% trans 'bank result' %}</th>
+            <th>{% trans 'payment key' %}</th>
+            <th>{% trans 'bank reference number' %}</th>
+        </tr>
+        {% for t in tracks %}
+            <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ t.start_time|convert_date }}</td>
+            <td>{{ t.end_time|convert_date }}</td>
+            <td>{{ t.initial_res }}</td>
+            <td>{% if not t.final_res %}-{% else %}{{ t.final_res }}{% endif %}</td>
+            <td>{% if t.final_res %}{{ t.invoice.ref_number }}{% endif %}</td>
+            </tr>
+        {% empty %}
+            {% trans 'no result' %}
+        {% endfor %}
+    </table>
+</div>

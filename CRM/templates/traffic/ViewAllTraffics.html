@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load TextUtils %}
+{% block title %}
+    {% trans 'traffic management' %}
+{% endblock %}
+{% block page %}
+    {% trans 'traffic management' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'service' %}</li>
+    <li>{% trans 'traffic' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'view traffic' %}</h5>
+            <div class="ibox-tools">
+                {% if perms.CRM.add_traffic %}
+                        <a class="btn btn-xs btn-primary" href="{% url 'create traffic' %}">{% trans 'add new traffic' %}</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="ibox-content">
+            <div class="">
+                <table class="table table-bordered">
+                    <tr>
+                        <th><span>{% trans 'traffic name' %}</span></th>
+                        <th><span>{% trans 'description' %}</span></th>
+                        <th><span>{% trans 'traffic amount' %}</span></th>
+                        <th><span>{% trans 'group' %}</span></th>
+                        <th><span>{% trans 'is vip' %}</span></th>
+                        <th colspan="2"><span>{% trans 'actions' %}</span></th>
+                    </tr>
+                    <tbody>
+                    {% for t in traffic_list %}
+                        <tr class="{% cycle 'rows0' 'rows1' %}">
+                            <td><span>{{ t.name }}</span></td>
+                            <td><span>{{ t.description }}</span></td>
+                            <td><span>{{ t.amount|convert_credit }}</span></td>
+                            <td><span>{{ t.fk_package_groups_package.get.group.name }}</span></td>
+                            <td><span>{{ t.fk_vip_packages_package.exists|convert_bool }}</span></td>
+                            <td>
+                                {% if perms.CRM.change_traffic %}
+                                    <a class="tbtn" href="{% url 'create traffic' %}?t={{ t.pk }}">{% trans 'edit' %}</a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if perms.CRM.delete_traffic %}
+                                    <a class="tbtn red" href="{% url 'delete traffic' %}?t={{ t.pk }}">{% trans 'delete' %}</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

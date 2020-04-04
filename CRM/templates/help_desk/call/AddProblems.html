@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'add new problem' %}
+{% endblock %}
+{% block bodyblock %}
+    <div class="table-form">
+    <form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="p" value="{{ problem.pk }}"/>
+    <table>
+        <tr>
+            <td>{% trans 'short description' %}</td>
+            <td><input name="txtShort" type="text" value="{{ problem.short_text }}" size="30" placeholder="{% trans 'short description' %}"/></td>
+        </tr>
+        <tr>
+            <td>{% trans 'describe the problem' %}</td>
+            <td><textarea name="txtDescription" placeholder="{% trans 'describe the problem' %}">{{ problem.description }}</textarea></td>
+        </tr>
+    </table>
+    <input type="submit" value="{% trans 'add' %}"/>
+    <a href="{% url 'view_call_problems' %}" class="buttons">{% trans 'cancel' %}</a>
+    </form>
+    </div>
+{% endblock %}

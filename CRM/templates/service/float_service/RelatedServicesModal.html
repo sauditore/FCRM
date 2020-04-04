@@ -1,0 +1,26 @@
+{% load i18n %}
+<div class="modal fade" id="mrs" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="fms">
+                    <input type="hidden" value="" name="pk"/>
+                    <div class="form-group">
+                        <select data-select="1" name="gr" multiple="multiple">
+                            {% for i in ibs %}
+                                <option value="{{ i.ext }}">{{ i.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-info btn-sm"><i class="fa fa-check"></i> <span
+                                class="hidden-sm hidden-xs">{% trans 'add' %}</span></button>
+                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i
+                                class="fa fa-remove"></i> <span class="hidden-xs hidden-sm">{% trans 'cancel' %}</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

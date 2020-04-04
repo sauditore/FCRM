@@ -1,0 +1,71 @@
+{% extends 'base.html'%}
+{% load i18n %}
+{% load TextUtils %}
+{% load DateConverter %}
+{% block title %}
+{% endblock %}
+{% block bodyblock %}
+    <div class="table-list">
+        <table>
+            <tr>
+                <th>#</th>
+                <th>{% trans 'title' %}</th>
+                <th>{% trans 'date' %}</th>
+                <th>{% trans 'sender' %}</th>
+                <th>{% trans 'message' %}</th>
+                <th>{% trans 'resposible' %}</th>
+                <th>{% trans 'is done' %}</th>
+                <th>{% trans 'done date' %}</th>
+            </tr>
+            {% for d in data %}
+                <tr>
+                <td>{{ forloop.counter }}</td>
+                <td><a href="{% url 'internet_user_work_history' %}?d={{ d.pk }}">{{ d.title }}</a></td>
+                <td>{{ d.create_date|convert_date }}</td>
+                <td>{{ d.sender.username }}</td>
+                <td>{{ d.message }}</td>
+                <td>{{ d.reader.username }}</td>
+                <td>{{ d.is_done|convert_bool }}</td>
+                <td>{{ d.done_date|convert_date }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% if details %}
+        <hr/>
+        <div class="table-list">
+        <table>
+            <tr>
+                <th>#</th>
+                <th>{% trans 'date' %}</th>
+                <th>{% trans 'group' %}</th>
+                <th>{% trans 'state' %}</th>
+                <th>{% trans 'message' %}</th>
+            </tr>
+            {% for d in details %}
+                <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ d.start_date|convert_date }}</td>
+                <td>{{ d.group.name }}</td>
+                <td>
+                    {% if d.state == 0 %}
+                        {% trans 'not started' %}
+                        {% elif d.state == 1 %}
+                        {% trans 'job started' %}
+                        {% elif d.state == 2 %}
+                        {% trans 'doing' %}
+                        {% elif d.state == 3 %}
+                                {% trans 'job finished successfully' %}
+                        {% elif d.state == 4 %}
+                                {% trans 'job can not be completed' %}
+                        {% elif d.state == 5 %}
+                                {% trans 'job referenced' %}
+                        {% endif %}
+                </td>
+                <td>{{ d.message }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        </div>
+    {% endif %}
+{% endblock %}

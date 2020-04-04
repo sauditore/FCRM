@@ -1,0 +1,34 @@
+{% load i18n %}
+<div class="modal fade" id="mAdd">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="fAdd">
+                    <input type="hidden" value="" name="pk"/>
+                    <div class="form-group">
+                        <input class="form-control" type="text" value="" name="n" placeholder="{% trans 'name' %}" maxlength="255"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" value="" maxlength="11" name="mb" placeholder="{% trans 'max bw' %}" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" name="ad" placeholder="{% trans 'address' %}"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" name="d" placeholder="{% trans 'description' %}"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox checkbox-rtl checkbox-primary">
+                            <input type="checkbox" value="1" name="ht" id="cHT"/>
+                            <label for="cHT">{% trans 'has test services' %}</label>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-sm btn-info"><i class="fa fa-check"></i> <span class="hidden-xs hidden-sm">{% trans 'add' %}</span></button>
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal"><i class="fa fa-remove"></i> <span class="hidden-sm hidden-xs">{% trans 'cancel' %}</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

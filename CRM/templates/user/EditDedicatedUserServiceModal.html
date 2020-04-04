@@ -1,0 +1,81 @@
+{% load i18n %}
+<script language="javascript" type="text/javascript">
+    $(function(){
+        $('#fEditDedicatedService').on('submit', function(x){
+            x.preventDefault();
+            var f = $(x.target);
+            $.ajax({
+                url: f.attr('action'),
+                method: 'post',
+                data: f.serialize(),
+                success: function(s){
+                    location.reload();
+                },
+                error: function(er){
+                    f.find('.alert').html(er.responseText).removeClass('hidden');
+                }
+            });
+        });
+        $('#mEditDedicatedService').on('show.bs.modal', function(e){
+            var m = $(this);
+            m.find('.alert').addClass('hidden');
+            var r = $(e.relatedTarget);
+            m.find('#n').val(r.data('name'));
+            m.find('#i').val(r.data('pk'));
+            $.ajax({
+                dataType: 'json',
+                method: 'get',
+                url: "{% url 'user_get_dedicated' %}?u=" + r.data('pk'),
+                success: function(d){
+                    m.find('#si').val(d.id);
+                    m.find('#i').val(d.ip);
+                    m.find('#s').val(d.name);
+                    m.find('#pr').val(d.price);
+                },
+                error: function(er){
+                    m.find('.alert').find('span').html(er.responseText).removeClass('hidden');
+                }
+            });
+        });
+    });
+
+</script>
+<form id="fEditDedicatedService" action="{% url 'user_update_dedicated' %}">
+    <div class="modal fade" id="mEditDedicatedService">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">{% trans 'edit dedicated user service' %}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger">
+                        <i class="glyphicon glyphicon-warning-sign"></i><span></span>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-group-addon"><i class="glyphicon glyphicon-user"></i></label>
+                        <input readonly type="text" value="" id="n" placeholder="{% trans 'name' %}" class="form-control"/>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-group-addon"><i class="glyphicon glyphicon-link"></i></label>
+                        <input type="text" value="" id="s" name="s" placeholder="{% trans 'service name' %}" class="form-control"/>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-group-addon"><i class="glyphicon glyphicon-globe"></i></label>
+                        <input class="form-control" name="i" placeholder="{% trans 'ip pool' %}" id="i" value=""/>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></label>
+                        <input type="text" value="" name="pr" id="pr" class="form-control" placeholder="{% trans 'price' %}"/>
+                    </div>
+                    <input type="hidden" value="" name="si" id="si"/>
+                    {% csrf_token %}
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-info">{% trans 'update' %}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'cancel' %}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

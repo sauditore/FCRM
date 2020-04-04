@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+{% endblock %}
+{% block bodyblock %}
+    <fieldset style="width: 30%">
+    <legend>{% trans 'import ibs users to local crm' %}</legend>
+    <form method="post">
+    {% csrf_token %}
+    <br/>
+        {% if perms.CRM.import_users %}
+    <input type="submit" value="{% trans 'import users' %}" />
+        {% endif %}
+    </form>
+    </fieldset>
+{% endblock %}

@@ -1,0 +1,198 @@
+{% load i18n %}
+{% load humanize %}
+{% load DateConverter %}
+{% if perms.CRM.view_profile %}
+    <div class="bhoechie-tab-content {% if user.is_staff %}active{% endif %}">
+        <div class="col-md-4">
+            <div class="widget-head-color-box gray-bg p-lg text-center">
+                <div class="m-b-md">
+                    <h2 class="font-bold no-margins">
+                        {{ tu.first_name }}
+                    </h2>
+                    {% if profile.is_dedicated %}<small><i class="fa fa-user-md"></i> {{ tu.fk_dedicated_user_profile_user.contact }}</small><br/>{% endif %}
+                    <small>{{ tu.username }}{% if tu.fk_ibs_user_info_user.get.ibs_uid %} - {{ tu.fk_ibs_user_info_user.get.ibs_uid }}{% endif %}</small>
+                    {% if user.is_staff %}
+                        <br/>
+                        <small>{{ tu.fk_user_owner_user.owner.first_name }}</small>
+                    {% endif %}
+                </div>
+                {% if can_switch and user.is_staff %}
+                    <a href="{% url 'user_switch_user' %}?u={{ tu.pk }}" class="fa fa-5x {% if profile.is_company %}fa-building{% elif is_reseller %}fa-bitcoin{% else %}fa-user{% endif %}"></a>
+                {% else %}
+                    <div class="fa fa-5x {% if profile.is_company %}fa-building{% elif is_reseller %}fa-bitcoin{% else %}fa-user{% endif %}"></div>
+                {% endif %}
+                <div>
+                    <span>{{ profile.telephone }} <i class="fa fa-phone"></i>  | </span>
+                    <span>{{ profile.mobile }} <i class="fa fa-mobile"></i> </span>
+                </div>
+                <div class="text-center">
+                    {% if perms.CRM.change_userprofile and not ip_login %}
+                        <a title="{% trans 'edit user data' %}" href="{% url 'edit user basic info' %}?u={{ tu.pk }}" class="btn btn-primary btn-xs" role="button"><i class="glyphicon glyphicon-edit"></i></a>
+                    {% endif %}
+                    {% if tu.is_active and not account_locked %}
+                        {% if perms.CRM.add_lockedusers and user.is_staff %}
+                            <a title="{% trans 'lock user account' %}" href="{% url 'lock_account' %}?u={{ tu.pk }}" type="button" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-lock"></i></a>
+                        {% endif %}
+                    {% else %}
+                        {% if perms.CRM.change_lockedusers and user.is_staff %}
+                            <a title="{% trans 'unlock user account' %}" href="{% url 'unlock_account' %}?u={{ tu.pk }}" role="button" class="btn btn-primary btn-xs"><i class="fa fa-unlock"></i></a>
+                        {% endif %}
+                    {% endif %}
+                    {% if perms.CRM.change_userprofile and not ip_login %}
+                        <a title="{% trans 'change password' %}" class="btn btn-xs btn-info" role="button" href="{% url 'change password' %}?uid={{ tu.pk }}"><i class="fa fa-key"></i></a>
+                    {% endif %}
+                    {% if perms.CRM.view_resellers and is_reseller %}
+                        <a title="{% trans 'view reseller profile' %}" class="btn btn-xs btn-info" href="{% url 'user_view_reseller' %}?u={{ tu.pk }}"><i class="fa fa-usd"></i></a>
+                    {% endif %}
+                    {% if not tu.is_staff %}
+                        {% if user.is_staff and perms.CRM.send_notification %}
+                            <button title="{% trans 'send username and password' %}" data-url="{% url 'user_nav_send_password' %}" data-pk="{{ tu.pk }}" type="button" class="btn btn-xs btn-primary" id="bSPass"><i class="fa fa-send-o"></i></button>
+                            <button title="{% trans 'send bank data informations' %}" data-url="{% url 'user_nav_send_bank_info' %}" data-pk="{{ tu.pk }}" type="button" class="btn btn-xs btn-primary" id="bSBN"><i class="fa fa-bank"></i></button>
+                        {% endif %}
+                    {% endif %}
+                    {% if tu.is_staff and profile.is_visitor %}
+                        <a href="{% url 'public_dedicate_view' %}" class="btn btn-xs btn-info"><i class="fa fa-bitcoin"></i></a>
+                    {% endif %}
+                    {% if debit_state != 0 %}
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <span class="{% if debit_state > 0 %}text-success{% elif debit_state < 0 %}text-danger{% endif %}">{{ debit_state|floatformat:0|intcomma:False }} {% trans 'toman' %} {% if debit_state > 0 %}{% trans 'deposit' %}{% elif debit_state == 0 %}-{% else %}{% trans 'debtor' %}{% endif %}</span>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% if user.is_staff %}
+                <div class="widget-text-box">
+                    <h4 class="media-heading">{% trans 'comment' %}</h4>
+                    {% if perms.CRM.change_userprofile and user.is_staff %}
+                        <span data-edit="1" data-url="{% url 'user_update_comment' %}" data-pk="{{ tu.pk }}" data-title="{% trans 'please enter comment' %}">{{ profile.comment }}</span>
+                    {% else %}
+                        <p>{{ profile.comment }}</p>
+                    {% endif %}
+                    {% if user.is_staff and account_locked %}
+                        <hr/>
+                        <h4 class="media-heading">{% trans 'locked at' %} {{ account_locked.lock_date|convert_date }}</h4>
+                        <div class="text-center">
+                            <span>{{ account_locked.ibs_comment }}</span>-
+                            <span>{{ account_locked.crm_comment }}</span>
+                        </div>
+                    {% endif %}
+                    <div class="text-center">
+                        <span>{{ service_group.service_group.name }}</span>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <div  class="col-md-6">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>{% trans 'other informations' %}</h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-md-4 col-lg-4 col-xs-6">
+                            <small class="stats-label">{% trans 'user id' %}</small>
+                            <h4 class="">{{ tu.pk }}</h4>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xs-6">
+                            {% if profile.is_company %}
+                                <small class="stats-label">{% trans 'company identity' %}</small>
+                                <h4>{{ tu.fk_company_data_user.identity_code }}</h4>
+                            {% else %}
+                                <small class="stats-label">{% trans 'identity code' %}</small>
+                                <h4>{{ profile.identity_number }}</h4>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <small class="stats-label">{% trans 'email' %}</small>
+                            <h4>{{ tu.email }}</h4>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-md-4 col-lg-4 col-xs-7">
+                                <small class="stats-label">{% trans 'join date' %}</small>
+                                <h4>{{ tu.date_joined|convert_date_no_day }}</h4>
+                            </div>
+                            <div class="col-md-4 col-lg-4 col-xs-5">
+                                {% if not profile.is_company %}
+                                    <small class="stats-label">{% trans 'birth date' %}</small>
+                                    <h4>{{ profile.birth_date|convert_date_no_day }}</h4>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 col-lg-4 col-xs-12">
+                                {% if not profile.is_company %}
+                                    <small class="stats-label">{% trans 'marriage date' %}</small>
+                                    <h4>{{ profile.marriage_date|convert_date_no_day }}</h4>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% if profile.is_company %}
+                        <div class="ibox-content">
+                            <div class="row">
+                                <div class="col-md-4 col-xs-12">
+                                    <small class="stats-label">{% trans 'company zip code' %}</small>
+                                    <h4>{{ tu.fk_company_data_user.zip_code }}</h4>
+                                </div>
+                                <div class="col-md-4 col-xs-12">
+                                    <small class="stats-label">{% trans 'economic code' %}</small>
+                                    <h4>{{ tu.fk_company_data_user.economic_code }}</h4>
+                                </div>
+                                <div class="col-md-4 col-xs-12">
+                                    <small class="stats-label">{% trans 'registration number' %}</small>
+                                    <h4>{{ tu.fk_company_data_user.registration_number }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <small class="stats-label">{% trans 'address' %}</small>
+                                <h4>{{ profile.address }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <h5></h5>
+                        <div class="row">
+                            <div class="col-md-12">
+                                {% if not tu.is_staff %}
+                                    {% if perms.CRM.change_userowner and user.is_staff %}
+                                        <button data-pk="{{ tu.pk }}" data-toggle="modal" data-target="#dvChangeOwner" class="btn btn-warning btn-xs" type="button"><i class="fa fa-btc"></i> <span class="hidden-xs hidden-sm">{% trans 'change reseller' %}</span></button>
+                                    {% endif %}
+                                {% endif %}
+                                {%  if perms.CRM.change_group and user.is_staff %}
+                                    <a href="{% url 'assign a group' %}?u={{ tu.username }}" class="btn btn-danger btn-xs" role="button"><i class="fa fa-users"></i> <span class="hidden-xs hidden-sm">{% trans 'groups' %}</span></a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                {% if perms.CRM.add_dedicateduserprofile and not tu.is_staff and not profile.is_dedicated %}
+                                    <button data-toggle="modal" data-target="#mAddDedicated" data-pk="{{ tu.pk }}" class="btn btn-xs btn-info"><i class="fa fa-star"></i> <span class="">{% trans 'set dedicated' %}</span></button>
+                                {% endif %}
+                                {% if perms.CRM.delete_dedicateduserprofile and profile.is_dedicated %}
+                                    <button data-action="dDed" data-url="{% url 'user_unset_dedicated' %}" data-pk="{{ tu.pk }}" class="btn btn-xs btn-danger"><i class="fa fa-star"></i> <span>{% trans 'delete dedicate' %}</span></button>
+                                {% endif %}
+                                {% if perms.CRM.add_companydata and not tu.is_staff and not profile.is_company %}
+                                    <button data-pk="{{ tu.pk }}" data-toggle="modal" data-target="#mSetCo" type="button" class="btn btn-xs btn-info"><i class="fa fa-building-o"></i> <span>{% trans 'set as company' %}</span></button>
+                                {% endif %}
+                                {% if perms.CRM.delete_company_data and not tu.staff and profile.is_company %}
+                                    <button data-pk="{{ tu.pk }}" data-url="{% url 'user_unset_company' %}" type="button" data-action="dDC" class="btn btn-xs btn-danger"><i class="fa fa-building-o"></i> <span>{% trans 'remove company' %}</span></button>
+                                {% endif %}
+                                {% if perms.CRM.add_resellerprofile and tu.is_staff and user.is_staff and not is_reseller and not profile.is_visitor %}
+                                    <button data-url="{% url 'user_set_reseller' %}" type="button" class="btn btn-xs btn-info" id="bSRL" data-pk="{{ tu.pk }}"><i class="fa fa-usd"> <span>{% trans 'set as reseller' %}</span></i></button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+        </div>
+    </div>
+{% endif %}

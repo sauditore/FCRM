@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'help desk department' %}
+{% endblock %}
+{% block bodyblock %}
+    <div class="table-list mini">
+        <h4></h4>
+        <table>
+            <thead>
+                <th>نام دپارتمان</th>
+                <th>نام گروه</th>
+                <th>عملیات</th>
+            </thead>
+            <tbody></tbody>
+                {% for d in dep %}
+                <tr>
+                    <td>{{ d.department_name }}</td>
+                    <td>{{ d.group.name }}</td>
+                    <td>
+                        {% if perms.CRM.change_delpdepartment %}
+                        <a class="tbtn blue" href="{% url 'create help department' %}?d={{ d.help_department_id }}" class="buttons">{% trans 'edit' %}</a>
+                        {% endif %}
+                        {% if perms.CRM.delete_helpdepartment %}
+                        <a class="tbtn red" href="" class="buttons">{% trans 'delete' %}</a></td>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </table>
+    </div>
+    <div class="btn-set">
+        <a class="buttons green" href="{% url 'create help department' %}" class="buttons">{% trans 'add new' %}</a>
+    </div>
+{% endblock %}

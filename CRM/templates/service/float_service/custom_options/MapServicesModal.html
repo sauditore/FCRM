@@ -1,0 +1,44 @@
+{% load i18n %}
+<div class="modal fade" id="mMapService" tabindex="">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-group">
+                    <select id="sbs" data-select="1">
+                        <option selected="selected" disabled="disabled">{% trans 'services' %}</option>
+                        {% for s in service %}
+                            <option value="{{ s.ext }}">{{ s.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select id="sih" data-select="1">
+                        <option selected="selected" disabled="disabled">{% trans 'ibs groups' %}</option>
+                        {% for i in ibs_groups %}
+                            <option value="{{ i.ext }}">{{ i.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="text-center">
+                    <button type="button" id="bAdd" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i></button>
+                </div>
+                <hr/>
+                <form id="fMapService">
+                    <div class="row">
+                        <div id="holder" class="col-md12">
+
+                        </div>
+                    </div>
+                    <input type="hidden" value="" name="pk"/>
+{#                    <div class="text-center">#}
+{#                        <button type="submit" class="btn btn-info btn-sm"><i class="fa fa-check"></i> <span#}
+{#                                class="hidden-sm hidden-xs">{% trans 'add' %}</span></button>#}
+{#                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i#}
+{#                                class="fa fa-remove"></i> <span class="hidden-xs hidden-sm">{% trans 'cancel' %}</span>#}
+{#                        </button>#}
+{#                    </div>#}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

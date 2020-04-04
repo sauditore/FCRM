@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load humanize %}
+{% block title %}
+    {% trans 'pay invoice' %}
+{% endblock %}
+{% block bodyblock%}
+<fieldset class="table-form">
+<h4>{% trans 'pay invoice' %} {{ data.invoice_id }}</h4>
+    <table>
+        <tr>
+            <td><span>{% trans 'price' %}</span></td>
+            <td><span>{{ data.amount|intcomma:False }}</span></td>
+        </tr>
+    </table>
+    <form method="post" action="{{ data.payment_address }}" id="frmBank" name="form1">
+        <input type="hidden" name="merchantCode" value="{{ data.merchant_code }}"/>
+        <input type="hidden" name="terminalCode" value="{{ data.terminal_code }}"/>
+        <input type="hidden" name="amount" value="{{ data.amount }}"/>
+        <input type="hidden" name="invoiceDate" value="{{ data.invoice_date }}"/>
+        <input type="hidden" name="redirectAddress" value="{{ data.redirect }}"/>
+        <input type="hidden" name="invoiceNumber" value="{{ data.invoice_id }}"/>
+        <input type="hidden" name="timeStamp" value="{{ data.post_time }}"/>
+        <input type="hidden" name="action" value="{{ data.cmd }}"/>
+        <input type="hidden" name="sign" value="{{ data.enc }}"/>
+        {% csrf_token %}
+    </form>
+<script type="text/javascript">
+    window.onload=function(){
+        var auto = setTimeout(function(){ autoRefresh(); }, 100);
+
+        function submitform(){
+          document.forms["frmBank"].submit();
+        }
+
+        function autoRefresh(){
+           clearTimeout(auto);
+           auto = setTimeout(function(){ submitform(); autoRefresh(); }, 2000);
+        }
+    }
+</script>
+</fieldset>
+{% endblock %}

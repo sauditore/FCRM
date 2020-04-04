@@ -1,0 +1,140 @@
+{% load i18n %}
+{% load DateConverter %}
+{% load humanize %}
+{% load TextUtils %}
+{% load assets %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>{% trans 'faratar' %} - {% trans 'print invoice' %}</title>
+    {% assets 'css_all' %}
+        <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}"/>
+    {% endassets %}
+</head>
+<body class="white-bg rtls" style="font-size: 11px!important;">
+<div class="wrapper wrapper-content">
+    <div class="text-center">
+        <img src="{% static 'img/hd2.png' %}" style="width: 700px"/>
+    </div>
+    <div class="m-t-lg p-lg">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="col-sm-12 no-padding">
+                    <div class="col-sm-6 no-padding">
+                        <span>{% trans 'invoice id' %}</span>
+                        <span class="text-navy">{{ i.pk }}</span>
+                    </div>
+                    <div class="col-sm-6 no-padding">
+                        <span class="pull-right"><strong>{% trans 'create date' %} :</strong> {{ i.create_time|convert_date_no_day }}</span><br/>
+                    </div>
+                </div>
+                <div class="col-sm-12 no-padding">
+                    <div class="col-sm-12 no-padding">
+                        <div class="col-sm-6 no-padding">
+                            <span>{% trans 'to user' %} : </span>
+                            <strong>{{ i.user.first_name }} | {{ i.user.fk_ibs_user_info_user.get.ibs_uid }}</strong><br>
+                        </div>
+                        <div class="col-sm-6 no-margins no-padding">
+                            <span class="pull-right"><strong>{% trans 'pay time' %} :</strong> {{ i.pay_time|convert_date_no_day }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 no-padding">
+                    <span>{% trans 'telephone' %} : </span><abbr>{{ i.user.fk_user_profile_user.get.telephone }}</abbr>
+                </div>
+
+                <div class="col-sm-12 no-padding">
+
+                    <span>{% trans 'mobile' %} : </span><abbr>{{ i.user.fk_user_profile_user.get.mobile }}</abbr>
+                </div>
+                <div class="col-sm-12 no-padding">
+                    <span>{% trans 'address' %} : </span>
+                    <span>
+                        {{ i.user.fk_user_profile_user.get.address }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        {% if i.service.service_type == 12 %}
+            <div class="table-responsive m-t">
+                <table class="table invoice-table">
+                    <thead>
+                    <tr>
+                        <th>{% trans 'group name' %}</th>
+                        <th>{% trans 'name' %}</th>
+                        <th class="text-center">{% trans 'value' %}</th>
+                        <th class="text-center">{% trans 'unit price' %}</th>
+                        <th class="text-center">{% trans 'final price' %}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for x in i.service.content_object.fk_float_template_template.all %}
+                        <tr>
+                            <td class=""><div><strong>{{ x.option.group.name }}</strong></div>
+                                <small>{{ x.option.group.group_help|snip_text:101 }}</small></td>
+                            <td class="text-center">{{ x.option.name }}</td>
+                            <td class="text-center">{{ x.value }}</td>
+                            <td class="text-center">{% if x.price > 0 %}{{ x.price|floatformat:0|intcomma:False }} {% trans 'toman' %} {% else %}<i class="fa fa-check"></i>{% endif %}</td>
+                            <td class="text-center">{% if x.total_price > 0 %}{{ x.total_price|floatformat:0|intcomma:False }} {% trans 'toman' %}{% else %}<i class="fa fa-check"></i>{% endif %}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div><!-- /table-responsive -->
+        {% elif i.service.service_type == 6 %}
+            <div class="table-responsive m-t">
+                <table class="table invoice-table">
+                    <thead>
+                    <tr>
+                        <th>{% trans 'credit' %}</th>
+                        <th>{% trans 'credit price' %}</th>
+                        <th class="text-center">{% trans 'service period' %}</th>
+                        <th class="text-center">{% trans 'service price' %}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ i.service.content_object.credit|convert_credit }}</td>
+                            <td>{{ i.service.content_object.credit_price|floatformat:0|intcomma:False }} {% trans 'toman' %}</td>
+                            <td>{{ i.service.content_object.days }} {% trans 'days' %}</td>
+                            <td>{{ i.service.content_object.days_price|floatformat:0|intcomma:False }} {% trans 'toman' %}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-md-5 pull-right">
+                <table class="table">
+                    <tbody>
+                    {% if i.debit_price %}
+                    <tr>
+                        <td>{% trans 'user debit' %}</td>
+                        <td class="text-danger">{{ i.debit_price|floatformat:0|intcomma:False }} {% trans 'toman' %}</td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                        <td><strong>{% trans 'service period' %} :</strong></td>
+                        <td>{{ i.extra_data }} {% trans 'month' %}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>{% trans 'tax' %} :</strong></td>
+                        <td>{{ i.tax|floatformat:0|intcomma:False }} {% trans 'toman' %}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>{% trans 'price to pay' %} :</strong></td>
+                        <td>{{ i.price|floatformat:0|intcomma:False }} {% trans 'toman' %}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="well m-t"><strong>{% trans 'comment' %}</strong>
+            {{ i.comment }}
+        </div>
+    </div>
+</div>
+</body>
+</html>

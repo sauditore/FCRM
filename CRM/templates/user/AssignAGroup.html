@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'assign group to user' %}
+{% endblock %}
+{% block page %}
+    {% trans 'assign group to user' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'user' %}</li>
+    <li>{% trans 'groups' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'assign group to user' %}</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-md-3 col-lg-3 col-sm-6">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>{% trans 'group name'%}</th>
+                            <th>{% trans 'actions' %}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for g in groups %}
+                            <tr>
+                                <td>{{ g.name }}</td>
+                                <td>
+                                    {% if g.pk in joined_groups %}
+                                        {% if perms.CRM.delete_group %}
+                                            <a class="btn btn-xs btn-danger" href="{% url 'assign a group' %}?a=b&uid={{ userid_value }}&gid={{ g.pk }}">{% trans 'remove' %}</a>
+                                        {% endif %}
+                                    {% else %}
+                                        {% if perms.add_group %}
+                                            <a class="btn btn-xs btn-success" href="{% url 'assign a group' %}?a=a&uid={{ userid_value }}&gid={{ g.pk }}">{% trans 'assign' %}</a>
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="text-center">
+                    <a class="btn btn-info" href="{% url 'show user navigation menu' %}?uid={{ userid_value }}">{% trans 'done' %}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

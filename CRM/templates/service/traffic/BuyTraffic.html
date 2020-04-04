@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load MathTags %}
+{% load humanize %}
+{% block title %}
+    {% trans 'buy traffics' %}
+{% endblock %}
+{% block page %}
+    {% trans 'buy traffics' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'service' %}</li>
+    <li>{% trans 'buy package' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-content">
+            <div class="row">
+            {% for f in traffics %}
+                {% if f.price > 2 %}
+                    <div class="col-md-2 text-center">
+                        <a href="{% url 'create invoice for traffic' %}?u={{ uid }}&t={{ f.pk }}">
+                            <h2 class=""><i class="fa fa-cube"></i> {{ f.name }}</h2>
+                            <span>{{ f.price|floatformat:0|intcomma:False }}<i class="fa fa-star"></i></span>
+                        </a>
+                    </div>
+                {% endif %}
+            {% endfor %}
+            {% for f in traffics %}
+                {% if f.price < 2 %}
+                    <div class="col-md-2 text-center">
+                    <a href="{% url 'create invoice for traffic' %}?u={{ uid }}&t={{ f.pk }}">
+                        <h2><i class="fa fa-cube"></i> {{ f.name }}</h2>
+                        <span>{{ f.amount|get_gig_price:price_value|floatformat:0|intcomma:False }} {% trans 'toman' %}</span>
+                        </a>
+                    </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

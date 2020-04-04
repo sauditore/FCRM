@@ -1,0 +1,377 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load QUrl %}
+{% load DateConverter %}
+{% load static %}
+{% load MathTags %}
+{% load humanize %}
+{% load TextUtils %}
+{% if not is_ajax %}
+{% block title %}
+    {% trans 'invoices' %}
+{% endblock %}
+{% block styles %}
+    <link type="text/css" href="{% static 'css/plugins/datepicker/bootstrap-datepicker.min.css' %}" rel="stylesheet"/>
+    <link type="text/css" href="{% static 'css/system/x-editable/bootstrap-editable.css' %}" rel="stylesheet"/>
+    <link type="text/css" href="{% static 'css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css' %}" rel="stylesheet"/>
+{% endblock %}
+{% block page %}
+    {% trans 'financial' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'financial' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+{% block header %}
+    <form id="fSearch">
+        <table class="table">
+            {% if user.is_staff %}
+                <tr>
+                    <td><span>{% trans 'ibs id' %}</span></td>
+                    <td><input type="text" name="ibs" maxlength="6" placeholder="{% trans 'ibs id' %}" class="form-control" value="{{ get.ibs }}"/> </td>
+                    <td><span>{% trans 'user id' %}</span></td>
+                    <td><input type="text" maxlength="6" name="u" placeholder="{% trans 'id' %}" class="form-control" value="{{ get.u }}"/>
+                    </td>
+                </tr>
+            {% endif %}
+            <tr>
+                <td><span>{% trans 'invoice number' %}</span></td>
+                <td><input type="text" name="pk" autocomplete="off" placeholder="{% trans 'invoice number' %}" class="form-control" value="{{ get.pk }}"/></td>
+                <td><span>{% trans 'payment state' %}</span></td>
+                <td>
+                    <select name="sPS" data-select="1">
+                        <option value="">{% trans 'none' %}</option>
+                        <option value="1">{% trans 'paid' %}</option>
+                        <option value="2">{% trans 'unpaid' %}</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><span>{% trans 'start date' %}</span></td>
+                <td><input data-date="1" type="text" name="sd" id="sd" maxlength="10" placeholder="{% trans 'start date' %}" class="form-control" value="{{ get.sd }}"/></td>
+                <td><span>{% trans 'end date' %}</span></td>
+                <td><input data-date="1" type="text" id="ed" name="ed" maxlength="10" placeholder="{% trans 'end date' %}" class="form-control" value="{{ get.ed }}"/></td>
+            </tr>
+            {% if user.is_staff and perms.CRM.view_invoices %}
+                <tr>
+                    <td><span>{% trans 'service group' %}</span></td>
+                    <td>
+                        <select name="sg" data-select="1" id="sGroups">
+                            <option value="">-</option>
+                            {% for s in service_groups %}
+                                <option value="{{ s.pk }}">{{ s.name }}</option>
+                            {% endfor %}
+                            <option value="">{% trans 'all' %}</option>
+                        </select>
+                    </td>
+                    <td>
+                        <span>{% trans 'current service' %}</span>
+                    </td>
+                    <td>
+                        <select id="userCurrentServices" name="sp" data-select="1">
+                            <option value="">{% trans 'none' %}</option>
+                            {% for s in services %}
+                                <option value="{{ s.pk }}">{{ s.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                {% if perms.CRM.view_complete_finance %}
+                    <tr>
+                        <td><span>{% trans 'service name' %}</span></td>
+                        <td>
+                            <select name="s" id="sServices" data-select="1">
+                                <option value="">{% trans 'none' %}</option>
+                                {% for s in services %}
+                                    <option value="{{ s.pk }}">{{ s.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td><span>{% trans 'package name' %}</span></td>
+                        <td>
+                            <select name="t" id="sPackages" data-select="1">
+                                <option value="">{% trans 'none' %}</option>
+                                {% for t in traffics %}
+                                    <option value="{{ t.pk }}">{{ t.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span>{% trans 'payment type' %}</span></td>
+                        <td>
+                            <select name="pt" id="pt" data-select="1">
+                                <option value="">{% trans 'none' %}</option>
+                                <option value="1">{% trans 'bank payment' %}</option>
+                                <option value="2">{% trans 'personnel payment' %}</option>
+                            </select>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endif %}
+        </table>
+        {% if perms.CRM.view_complete_finance %}
+            <div class="text-center">
+            <p>{% trans 'include these types of service' %}</p>
+                <div class="form-group">
+                    <input type="hidden" value="1" name="searching"/>
+                    <div class="checkbox checkbox-inline checkbox-primary checkbox-rtl">
+                        <input type="checkbox" name="cos" value="1" id="eFilter" checked="checked"/>
+                        <label for="eFilter">{% trans 'service' %}</label>
+                    </div>
+                    <div class="checkbox checkbox-inline checkbox-primary checkbox-rtl">
+                        <input type="checkbox" name="cot" value="1" id="cTraffic" checked="checked"/>
+                        <label for="cTraffic">{% trans 'packages' %}</label>
+                    </div>
+                    <div class="checkbox checkbox-rtl checkbox-inline checkbox-primary">
+                        <input type="checkbox" value="1" name="com" id="cTemps" checked="checked"/>
+                        <label for="cTemps">{% trans 'temp recharge' %}</label>
+                    </div>
+                    <div class="checkbox checkbox-rtl checkbox-inline checkbox-primary">
+                        <input type="checkbox" value="1" name="cof" id="cNew" checked="checked"/>
+                        <label for="cNew">{% trans 'float service' %}</label>
+                    </div>
+                    <div class="checkbox checkbox-rtl checkbox-inline checkbox-primary">
+                        <input type="checkbox" value="1" checked="checked" name="cis" id="cIP"/>
+                        <label for="cIP">{% trans 'ip static' %}</label>
+                    </div>
+                    <div class="checkbox checkbox-rtl checkbox-inline checkbox-primary">
+                        <input type="checkbox" value="1" checked="checked" name="ced" id="cED"/>
+                        <label for="cED">{% trans 'dedicated' %}</label>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-search"></i> <span class="hidden-sm hidden-xs">{% trans 'search' %}</span></button>
+            {% if perms.CRM.download_invoice_excel %}
+                <button type="button" id="bDEX" class="btn btn-sm btn-primary"><i class="fa fa-download"></i> <span class="hidden-sm hidden-xs">{% trans 'excel' %}</span></button>
+            {% endif %}
+        </div>
+    </form>
+{% endblock %}
+{% endif %}
+{% block body %}
+    {% if perms.CRM.view_complete_finance %}
+        <div class="ibox collapsed">
+            <div class="ibox-title">
+                <h5>{% trans 'today sell' %}</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <table class="table table-responsive table-bordered table-striped">
+                    <tr>
+                        <td>{% trans 'today sell' %}</td>
+                        <td data-col="0">0</td>
+                        <td>{% trans 'today packages' %}</td>
+                        <td data-col="1">0</td>
+                        <td>{% trans 'today package price' %}</td>
+                        <td data-col="2">0</td>
+                        <td>{% trans 'today recharges' %}</td>
+                        <td data-col-="3">0</td>
+                        <td>{% trans 'total recharge payment' %}</td>
+                        <td data-col="4">0</td>
+                        <td>{% trans 'total bank payment' %}</td>
+                        <td data-col="5">0</td>
+                    </tr>
+                </table>
+                <div class="text-center">
+                    <button id="bToday" type="button" class="btn btn-sm btn-primary"><i class="fa fa-refresh"></i> <span class="hidden-xs hidden-sm">{% trans 'refresh' %}</span></button>
+                </div>
+            </div>
+        </div>
+        <div class="ibox collapsed">
+            <div class="ibox-title">
+                <h5>{% trans 'detailed items' %}</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <table class="table table-responsive table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>{% trans 'most sell date' %}</th>
+                        <th>{% trans 'most sell' %}</th>
+                        <th>{% trans 'most recharges date' %}</th>
+                        <th>{% trans 'most recharges price' %}</th>
+                        <th>{% trans 'most used packages date' %}</th>
+                        <th>{% trans 'most used packages price' %}</th>
+                        <th>{% trans 'dynamic discount' %}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><span class="price" id="sMostSell">-</span></td>
+                        <td><span class="price" id="sMostSellData">0</span></td>
+                        <td><span id="sMostRechargeDate"></span></td>
+                        <td><span class="price" id="sMostRecharge"></span></td>
+                        <td><span  id="sMostPackages"></span></td>
+                        <td><span id="sMostPackagesDate"></span></td>
+                        <td><span  id="sDynamicDiscount" class="price"></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="table table-bordered table-responsive">
+                    <thead>
+                    <tr>
+                        <th>{% trans 'total invoices' %}</th>
+                        <th>{% trans 'users' %}</th>
+                        <th>{% trans 'total price' %}</th>
+                        <th>{% trans 'online payment' %}</th>
+                        <th>{% trans 'online payment amount' %}</th>
+                        <th>{% trans 'paid by personnel' %}</th>
+                        <th>{% trans 'personnel payment amount' %}</th>
+                        <th>{% trans 'total recharges' %}</th>
+                        <th>{% trans 'total packages' %}</th>
+                        <th>{% trans 'total amount' %}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><span id="sTotalInvoice" class="price"></span></td>
+                        <th><span id="sUsers" class="price"></span></th>
+                        <td><span id="sTotalPrice" class="price"></span></td>
+                        <td><span id="sOnlinePayment" class="price"></span></td>
+                        <td><span id="sOnlinePaymentAmount" class="price"></span></td>
+                        <td><span id="sPersonnelPayment" class="price"></span></td>
+                        <td><span id="sPersonnelPaymentAmount" class="price"></span></td>
+                        <td><span id="sATotalRecharge" class="price"></span></td>
+                        <td><span id="sATotalPackage" class="price"></span></td>
+                        <td><span id="sATotalPackageAmount" class="price"></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="text-center">
+                    <button id="bAnalyze" type="button" class="btn btn-sm btn-primary"><i class="fa fa-refresh"></i> <span class="hidden-xs hidden-sm">{% trans 'refresh' %}</span></button>
+                </div>
+            </div>
+        </div>
+        <div class="ibox collapsed">
+            <div class="ibox-title">
+                <h5>{% trans 'service types' %}</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <table class="table table-bordered table-responsive" id="tServiceData">
+                    <thead>
+                    <tr>
+                        <th>{% trans 'float service' %}</th>
+                        <th>{% trans 'normal service' %}</th>
+                        <th>{% trans 'package' %}</th>
+                        <th>{% trans 'ip' %}</th>
+                        <th>{% trans 'users' %}</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <div class="text-center">
+                    <button id="bServiceData" type="button" class="btn btn-sm btn-info"><i class="fa fa-refresh"></i> <span>{% trans 'refresh' %}</span></button>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>{% trans 'invoices' %}</h5>
+        </div>
+        <div class="ibox-content">
+            <table class="table table-condensed" data-toggle="grid" id="tInvoices">
+                <thead class="text-center">
+                <tr>
+                    <th data-css-class="data-accepted" data-align="center" data-header-align="center" data-column-id="pk" data-type="numeric"
+                        data-identifier="true">{% trans 'id' %}</th>
+                    {% if user.is_staff or user.is_superuser %}
+                        <th data-align="center" data-header-align="center" data-formatter="linker" data-column-id="user__fk_ibs_user_info_user__ibs_uid">{% trans 'ibs id' %}</th>
+                        <th data-align="center" data-header-align="center" data-formatter="linker" data-column-id="user__first_name">{% trans 'name' %}</th>
+                    {% endif %}
+
+                    <th data-align="center" data-header-align="center" data-column-id="create_time">{% trans 'creation time' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="service_text">{% trans 'service name' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="price" data-formatter="price">{% trans 'price' %}({% trans 'toman' %})</th>
+                    <th data-align="center" data-header-align="center" data-column-id="extra_data" data-formatter="extra_data">{% trans 'service period' %}</th>
+
+                    <th data-align="center" data-header-align="center" data-column-id="is_paid" data-formatter="state">{% trans 'paid' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="ref_number">{% trans 'bank reference number' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="pay_time">{% trans 'pay time' %}</th>
+                </tr>
+                </thead>
+                <tbody class="text-center">
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script language="javascript" type="text/javascript" src="{% static 'js/plugins/datepicker/bootstrap-datepicker.min.js' %}"></script>
+    <script language="javascript" type="text/javascript" src="{% static 'js/plugins/datepicker/bootstrap-datepicker.fa.min.js' %}"></script>
+    <script language="javascript" type="text/javascript" src="{% static 'js/system/invoice/InvoiceManagement.js' %}"></script>
+    {% if perms.CRM.admin_payment %}
+        <script language="javascript" type="text/javascript" src="{% static 'js/system/invoice/AdminPayment.js' %}"></script>
+    {% endif %}
+    {% if perms.CRM.view_complete_finance %}
+        <script language="javascript" type="text/javascript" src="{% static 'js/system/invoice/InvoiceExtra.js' %}"></script>
+    {% endif %}
+{% endblock %}
+{% block modals %}
+    <table class="table table-info hidden" id="tFloats">
+        <thead>
+        <tr>
+            <th class="text-center">{% trans 'group' %}</th>
+            <th class="text-center">{% trans 'name' %}</th>
+            <th class="text-center">{% trans 'value' %}</th>
+            <th class="text-center">{% trans 'price' %}</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    {% if perms.CRM.admin_payment %}
+        {% include 'finance/payment/AdminPaymentModal.html' %}
+    {% endif %}
+    {% if user.is_staff and perms.CRM.view_user_debit %}
+        {% include 'finance/debit/AddNewModal.html' %}
+    {% endif %}
+    {% if perms.CRM.change_invoice %}
+        {% include 'finance/EditInvoiceModal.html' %}
+    {% endif %}
+    {% if perms.CRM.view_invoice_charge %}
+        {% include 'finance/report/ChargedModal.html' %}
+    {% endif %}
+
+{% endblock %}
+{% block actions %}
+    {% if perms.CRM.e_payment %}
+        <form method="get" action="{% url 'e_payment' %}?" target="_blank" id="fPayment">
+            <input type="hidden" value="" name="f" data-need-pk="1"/>
+            <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-usd hidden-xs hidden-sm"></i> <span class="">{% trans 'pay' %}</span></button>
+        </form>
+    {% endif %}
+    {% if user.is_staff and perms.CRM.view_user_debit %}
+        <button type="button" data-need-pk="1" data-pk="" data-need-cpk="1" class="btn btn-sm btn-info" data-toggle="modal" data-target="#addNewModal"><i class="fa fa-bank hidden-xs hidden-sm"></i> <span class="hidden-sm hidden-xs">{% trans 'virtual bank' %}</span></button>
+    {% endif %}
+    {% if perms.CRM.admin_payment and user.is_staff %}
+        <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#mAdminPayment" data-pk="" data-need-pk="1"><i class="fa fa-usd hidden-xs hidden-sm"></i> <span class="">{% trans 'pay' %}</span></button>
+    {% endif %}
+    {% if perms.CRM.change_invoice and user.is_staff %}
+        <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#mIEdit" data-pk="" data-need-pk="1"><i class="fa fa-edit hidden-xs hidden-sm"></i> <span class="">{% trans 'edit' %}</span></button>
+    {% endif %}
+    {% if perms.CRM.delete_invoice and user.is_staff %}
+        <button data-action="del" type="button" class="btn btn-sm btn-danger" data-url="{% url 'delete factor' %}" data-need-pk="1"><i class="fa fa-trash hidden-xs hidden-sm"></i> <span class="">{% trans 'delete' %}</span></button>
+    {% endif %}
+    {% if perms.CRM.print_invoice %}
+        <a href="{% url 'invoice_print_single' %}" data-need-pk="1" data-action="pr" target="_blank" class="btn btn-sm btn-info"><i class="fa fa-print hidden-xs hidden-sm"></i> <span class="">{% trans 'print' %}</span></a>
+    {% endif %}
+    {% if perms.CRM.view_invoice_charge %}
+        <button data-toggle="modal" data-target="#mCharged" type="button" class="btn btn-sm btn-warning" data-need-pk="1" data-action="npd"><i class="fa fa-refresh hidden-xs hidden-sm"></i> <span>{% trans 'charge state' %}</span></button>
+    {% endif %}
+{% endblock %}

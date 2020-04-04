@@ -1,0 +1,11 @@
+<table>
+    {% for g in group_list %}
+    <tr>
+        <td>
+            <input type="checkbox" name="cbGroup" value="{{ g.group_id }}"/>
+        </td>
+        <td>{{ g.group_name }}</td>
+        <td>{{  g.group_description }}</td>
+    </tr>
+    {% endfor %}
+</table>

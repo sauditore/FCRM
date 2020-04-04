@@ -1,0 +1,32 @@
+{% load i18n %}
+<div class="modal fade" id="mBuyIP">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form method="post" action="{% url 'view_ip_static_request' %}">
+                    <div class="form-group">
+                        <select class="form-control" name="mn" data-select="1">
+                            <option value="1">{% trans '1 month' %}</option>
+                            <option value="2">{% trans '2 month' %}</option>
+                            <option value="3">{% trans '3 month' %}</option>
+                            <option value="4">{% trans '4 month' %}</option>
+                            <option value="5">{% trans '5 month' %}</option>
+                            <option value="6">{% trans '6 month' %}</option>
+                            <option value="7">{% trans '7 month' %}</option>
+                            <option value="8">{% trans '8 month' %}</option>
+                            <option value="9">{% trans '9 month' %}</option>
+                            <option value="10">{% trans '10 month' %}</option>
+                            <option value="11">{% trans '11 month' %}</option>
+                            <option value="12">{% trans '12 month' %}</option>
+                        </select>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-sm btn-info"><i class="fa fa-shopping-cart"></i> <span>{% trans 'buy' %}</span></button>
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal"><i class="fa fa-remove"></i> <span>{% trans 'cancel' %}</span></button>
+                    </div>
+                    <input type="hidden" name="u" value="{{ tu.pk }}"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

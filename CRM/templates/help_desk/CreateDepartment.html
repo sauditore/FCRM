@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'create a new help department' %}
+{% endblock %}
+{% block bodyblock %}
+<div class="table-form">
+    <h2>{% trans 'create a new help department' %}</h2>
+    <form method="post">
+    <table>
+    <tr>
+        <td><span>{% trans 'name' %}</span></td>
+        <td><input type="text" name="txtName" value="{{ dep.department_name }}" placeholder="{% trans 'department name' %}"/></td>
+    </tr>
+    <tr>
+        <td><span>{% trans 'group name' %}</span></td>
+        <td>
+            <select name="slGroups">
+                <option value="-1">-</option>
+                {% for g in groups %}
+                    <option value="{{ g.pk }}" {% if g.pk == dep.group.pk %}selected{% endif %}>{{ g.name }}</option>
+                {% endfor %}
+            </select>
+        </td>
+    </tr>
+    </table>
+    {% csrf_token %}
+    <div class="btn-set">
+        <input type="hidden" name="d" value="{{ dep.pk }}"/>
+        <input class="buttons green" type="submit" value="{% trans 'create' %}"/>
+    </div>
+    </form>
+{% endblock %}

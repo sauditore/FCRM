@@ -1,0 +1,23 @@
+{% load static %}
+{% load i18n %}
+<div class="modal fade" id="mAddFormula">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="fAddFormula">
+                    <div class="form-group">
+                        <input type="text" value="" name="n" class="form-control" maxlength="255" placeholder="{% trans 'name' %}"/>
+                    </div>
+                    <div class="form-group">
+                        <textarea style="height: 350px;direction: ltr" class="form-control input-sm" placeholder="{% trans 'formula' %}" name="f"></textarea>
+                        <input type="hidden" name="pk"/>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-sm btn-info"><i class="fa fa-check"></i> <span class="hidden-xs hidden-sm">{% trans 'add'%}</span></button>
+                        <button class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-remove"></i> <span class="hidden-sm hidden-xs">{% trans 'cancel' %}</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

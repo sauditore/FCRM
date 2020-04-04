@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+{% endblock %}
+{% block scriptblock %}
+<link href="/static/css/graph.css" rel="stylesheet" type="text/css">
+<script language="javascript" type="text/javascript" src="/static/js/jquery.flot.js"></script>
+	<script type="text/javascript">
+
+	$(function() {
+
+		var options = {
+			lines: {
+				show: true
+			},
+			points: {
+				show: true
+			},
+			xaxis: {
+				tickDecimals: 0,
+				tickSize: 1
+			}
+		};
+
+		var data = [];
+
+		$.plot("#placeholder", data, options);
+
+		// Fetch one series, adding to what we already have
+
+		var alreadyFetched = {};
+
+		function zxc() {
+
+			var button = $(this);
+
+			// Find the URL in the link right next to us, then fetch the data
+
+			var dataurl = '/ajax/?a=grp&u=' + document.getElementById('uid').value;
+			function onDataReceived(series) {
+				if (!alreadyFetched[series.label]) {
+					alreadyFetched[series.label] = true;
+					data.push(series);
+				}
+				$.plot("#placeholder", data, options);
+			}
+			$.ajax({
+				url: dataurl,
+				type: "GET",
+				success: onDataReceived
+			});
+		}
+
+		// Initiate a recurring data update
+
+		function vbn()  {
+
+			data = [];
+			alreadyFetched = {};
+
+			$.plot("#placeholder", data, options);
+
+			var iteration = 0;
+
+			function fetchData() {
+
+				++iteration;
+
+				function onDataReceived(series) {
+
+					// Load all the data in one pass; if we only got partial
+					// data we could merge it with what we already have.
+
+					data = [ series ];
+					$.plot("#placeholder", data, options);
+				}
+
+				// Normally we call the same URL - a script connected to a
+				// database - but in this case we only have static example
+				// files, so we need to modify the URL.
+
+				$.ajax({
+					url: '/ajax/?a=grp&u=' + document.getElementById('uid').value,
+					type: "GET",
+					success: onDataReceived
+				});
+
+
+					setTimeout(fetchData, 1000);
+			}
+
+			setTimeout(fetchData, 5000);
+		}
+
+		// Load the first series by default, so we don't have an empty plot
+
+		zxc();
+        vbn()
+	});
+
+	</script>
+
+{% endblock %}
+{% block bodyblock %}
+    <div class="graph-container">
+			<div id="placeholder" class="graph-placeholder"></div>
+    </div>
+    <input type="hidden" value="{{ uid }}" id="uid"/>
+{% endblock %}

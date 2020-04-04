@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load QUrl %}
+{% load DateConverter %}
+{% load MathTags %}
+{% block title %}
+    {% trans 'invoices' %}
+{% endblock %}
+{% block scriptblock %}
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <style>
+html {
+    direction: rtl !important;
+    font-family: Tahoma;
+    font-size: 12px !important;
+}
+
+body {
+    direction: rtl !important;
+}
+
+table {
+    width: 100%;
+    margin: 20px 0;
+    direction: rtl !important;
+    border-collapse: collapse;
+    font-size: 12px !important;
+}
+
+table th {
+    direction: rtl !important;
+    color: #000;
+    font-weight: bold;
+    padding: 10px 5px;
+    border: 1px solid #000;
+}
+
+table td {
+    direction: rtl !important;
+    color: #333;
+    padding: 10px 5px;
+    border: 1px solid #CCC;
+} 
+
+    </style>
+{% endblock %}
+{% block bodyblock %}
+    <div style=" text-align: right; border-bottom: 2px solid #CCC; height: 140px;">
+        <img style="float: right;" width="100" src="http://payment.gen-co.com/static/images/logo-small.png">
+        <strong style="font-size: 18px; line-height: 160px;">گسترش ارتباطات نور</strong>
+        <div style="clear: both: width: 100%;"></div>
+    </div>
+    <div style="direction: rtl !important;">
+        <table style="direction: rtl !important;">
+            <thead>
+                <th><span>#</span></th>
+                {% if user.is_staff %}
+                    <th><span>{% trans 'ibs id' %}</span></th>
+                    <th><span>{% trans 'username' %}</span></th>
+                {% endif %}
+                <th><span>{% trans 'factor number' %}</span></th>
+                <th><span>{% trans 'creation time' %}</span></th>
+                <th><span>{% trans 'package name' %}</span></th>
+                <th><span>{% trans 'service name' %}</span></th>
+                <th><span>{% trans 'price' %}</span></th>
+                <th><span>{% trans 'is paid' %}</span></th>
+                <th><span>{% trans 'comment' %}</span></th>
+                <th><span>{% trans 'pay time' %}</span></th>
+                <th><span>{% trans 'bank reference number' %}</span></th>
+            </thead>
+            <tbody>
+                {% for f in factors %}
+                <tr class="{% cycle 'rows0' 'rows1' %}">
+                    <td><span>{{ page|sub:1|mul:5|plus:forloop.counter }}</span></td>
+                    {% if user.is_staff %}
+                        <td><span>{{ f.user.fk_ibs_user_info_user.get.ibs_uid }}</span></td>
+                        <td><a href="{% url 'show all factors' %}?u={{ f.user.pk }}">{{ f.user.username }}</a> </td>
+                    {% endif %}
+                    <td>{{ f.pk }}</td>
+                    <td>{{ f.create_time|convert_date }}</td>
+                    <td>{{ f.traffic.name }}</td>
+                    <td>{{ f.service_service.name }}</td>
+                    <td>{{ f.price }}</td>
+                    <td>{{ f.is_paid }}</td>
+                    <td>{{ f.comment }}</td>
+                    <td>{{ f.pay_time|convert_date }}</td>
+                    <td>{{ f.ref_number }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <p style=" text-align: left;">{% trans 'page' %} {{ page }} {% trans 'of' %} {{ page_count }}</p>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load MathTags %}
+{% load static %}
+{% load DateConverter %}
+{% block title %}
+    {% trans 'online crm users' %}
+{% endblock %}
+{% block scriptblock %}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/tether.min.css' %}"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'css/tether-theme-arrows-dark.css' %}"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'css/shepherd-theme-dark.css' %}"/>
+    <script language="javascript" type="text/javascript" src="{% static 'js/tether.min.js' %}"></script>
+    <script language="javascript" type="text/javascript" src="{% static 'js/shepherd.min.js' %}"></script>
+    <script language="javascript">
+    $(function(){
+        var tour = new Shepherd.Tour({
+            defaults: {
+            classes: 'shepherd-theme-dark',
+{#            scrollTo: true#}
+          }
+        });
+        tour.addStep('example-step', {
+          text: 'ببین داداش این داره میگه که کیا الا آنلاین شدن اینجا!',
+          attachTo: 'table',
+{#          classes: 'example-step-extra-class',#}
+          buttons: [
+            {
+              text: 'بعدی',
+              action: tour.next
+            }
+          ]
+        });
+        tour.addStep('example-step2', {
+          text: 'man ke khar nistam ke baba!!! ah ah ah',
+          attachTo: 'b',
+{#          classes: 'example-step-extra-class',#}
+          buttons: [
+            {
+              text: 'بعدی',
+              action: tour.next
+            }
+          ]
+        });
+        tour.start();
+    })
+    </script>
+{% endblock %}
+{% block bodyblock %}
+    <div class="table-list">
+    <table>
+        <thead>
+            <th>#</th>
+            <th>{% trans 'username' %}</th>
+            <th>{% trans 'name' %}</th>
+            <th>{% trans 'last seen' %}</th>
+            <th>{% trans 'ip address' %}</th>
+            <th>{% trans 'status' %}</th>
+        </thead>
+        {% for u in users %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td><a href="{% url 'show user navigation menu' %}?uid={{ u.user.pk }}">{{ u.user.username }}</a></td>
+            <td>{{ u.user.first_name }}</td>
+            <td>{{ u.seen|convert_date:False }}</td>
+            <td>{{ u.ip }}</td>
+            <td>{% if u.status %}<b class="stat green">{% trans 'online' %}</b>{% else %}<b class="stat gray">{% trans 'offline' %}</b>{% endif %}</td>
+        </tr>
+
+        {% endfor %}
+    </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load TextUtils %}
+{% load MathTags %}
+{% load static %}
+
+{% block title %}
+    {% trans 'tower management' %}
+{% endblock %}
+
+{% block page %}
+    {% trans 'tower management' %}
+{% endblock %}
+
+{% block sitemap %}
+    <li>{% trans 'service' %}</li>
+    <li>{% trans 'tower' %}</li>
+{% endblock %}
+{% block header %}
+    <div id="searchArea">
+        <form role="search" class="navbar-form" id="fSearch">
+            <div class="input-group">
+                <label class="input-group-addon">
+                    <i class="glyphicon glyphicon-user"></i>
+                </label>
+                <input type="text" size="7" name="ib" placeholder="{% trans 'ibs id' %}" class="form-control"/>
+            </div>
+            <div class="input-group">
+                <label class="input-group-addon"><i class="glyphicon glyphicon-text-color"></i></label>
+                <input type="text" value="" name="n" class="form-control" size="10" placeholder="{% trans 'name' %}"/>
+            </div>
+            <div class="input-group">
+                <label class="input-group-addon"><i class="glyphicon glyphicon-text-width"></i></label>
+                <input size="30" type="text" value="" name="d" placeholder="{% trans 'description' %}" class="form-control"/>
+            </div>
+            <div class="input-group">
+                <label class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></label>
+                <input type="text" value="" placeholder="{% trans 'address' %}" class="form-control" size="30" name="ad"/>
+            </div>
+            <button type="submit" data-action-target="#datax" data-action-form="#fSearch" data-action-search="1" class="btn btn-success">{% trans 'filter' %}</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'tower' %}</h5>
+            <div class="ibox-tools">
+                {% if perms.CRM.add_tower %}
+                    <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#mAdd"><span>{% trans 'add' %}</span></button>
+                {% endif %}
+            </div>
+        </div> <!--title-->
+
+        <div class="ibox-content">
+            <div>
+                <table class="table table-condensed table-hover table-striped" data-toggle="grid">
+                    <thead>
+                    <tr>
+                        <th data-align="center" data-header-align="center" data-column-id="pk" data-type="numeric" data-identifier="true">{% trans 'id' %}</th>
+                        <th data-header-align="center" data-align="center" data-column-id="name">{% trans 'name' %}</th>
+                        <th data-header-align="center" data-align="center" data-column-id="max_bw">{% trans 'max bw' %}</th>
+                        <th data-header-align="center" data-align="center" data-column-id="has_test" data-formatter="has_test">{% trans 'has test' %}</th>
+                        <th data-header-align="center" data-align="center" data-column-id="description">{% trans 'description' %}</th>
+                        <th data-header-align="center" data-align="center" data-column-id="address">{% trans 'address' %}</th>
+                        <th data-header-align="center" data-align="center" data-column-id="users">{% trans 'users' %}</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+{% endblock %}
+
+{% block script %}
+    <script language="javascript" type="text/javascript" src="{% static 'js/system/tower/TowerManagement.js' %}"></script>
+{% endblock %}
+
+{% block modals %}
+    {% include 'towers/AssignUserToTowerModal.html' %}
+    {% if perms.CRM.add_towerproblemreport %}
+        {% include 'towers/ReportTowerProblem.html' %}
+    {% endif %}
+    {% if perms.CRM.add_tower %}
+        {% include 'towers/AddTowerModal.html' %}
+    {% endif %}
+{% endblock %}
+{% block actions %}
+    {% if perms.CRM.add_towerproblemreport %}
+        <button data-toggle="modal" data-need-pk="1" data-target="#dvReportTower" type="button" data-name="" data-pk="" class="btn btn-warning btn-sm">{% trans 'report problem' %}</button>
+    {% endif %}
+    {% if perms.CRM.change_tower %}
+        <button type="button" data-need-pk="1" class="btn btn-sm btn-info" data-toggle="modal" data-target="#mAdd"><i class="fa fa-edit"></i><span class="hidden-sm hidden-xs">{% trans 'edit' %}</span></button>
+    {% endif %}
+    {%  if perms.CRM.delete_tower %}
+        <button data-url="{% url 'tower_delete' %}" type="button" data-action="del" data-need-pk="1" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> <span class="hidden-sm hidden-xs">{% trans 'delete' %}</span></button>
+    {% endif %}
+{% endblock %}

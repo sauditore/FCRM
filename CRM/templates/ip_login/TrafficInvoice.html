@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load MathTags %}
+{% load humanize %}
+
+{% block title%}
+    {% trans 'traffic invoice' %}
+{% endblock %}
+
+{% block page %}
+    {% trans 'traffic invoice' %}
+{% endblock %}
+
+{% block sitemap %}
+    <li>{% trans 'ip login' %}</li>
+    <li>{% trans 'traffic invoice' %}</li>
+{% endblock %}
+
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'traffic invoice' %}</h5>
+        </div>
+        <div class="ibox-content">
+
+            <div class="table-form">
+                <form action="" method="post">
+                    <table>
+                        <tr>
+                            <td><span>{% trans 'traffic name' %}</span></td>
+                            <td><span>{{ s.name }}</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>{% trans 'amount' %}</span></td>
+                            <td><span>{{ s.amount }}</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>{% trans 'extra traffic' %}</span></td>
+                            <td><span>{{ extra_amount }}</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>{% trans 'discount price' %}</span>
+                            </td>
+                            <td><span>{{ discounted_price|floatformat:0|intcomma:False }} {% trans 'toman' %}</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>{% trans 'tax' %}</span>
+                            </td>
+                            <td><span>{{ tax|floatformat:0|intcomma:False }} {% trans 'toman' %}</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>{% trans 'debit' %}</span></td>
+                            <td><span>{{ debit|floatformat:0|intcomma:False }} {% trans 'toman' %}</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>{% trans 'final price' %}</span>
+                            </td>
+                            <td><span>{{ price|floatformat:0|intcomma:False }} {% trans 'toman' %}</span>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="text-center">
+                        <input type="submit" value="{% trans 'buy traffic' %}"/>
+                        <a class="buttons" href="javascript:window.history.back()">{% trans 'cancel' %}</a>
+                        {% csrf_token %}
+                        <input type="hidden" name="uid" value="{{ u }}"/>
+                        <input type="hidden" name="sid" value="{{ s.pk }}"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

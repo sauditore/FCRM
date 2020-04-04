@@ -1,0 +1,60 @@
+{% load i18n %}
+{% load static %}
+<div class="modal fade" id="mAddNewInvoice">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="fAddNewInvoice">
+                    <div class="row">
+                        <div id="dH">
+                            <div class="form-inline hidden">
+                                <div class="form-group">
+                                    <select name="sx0">
+                                        {% for s in services %}
+                                            <option value="{{ s.ext }}">{{ s.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" data-float="1" size="10" name="px0" placeholder="{% trans 'price' %}" class="form-control"/>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" data-float="1" size="10" name="mx0" placeholder="{% trans 'time' %}" class="form-control"/>
+                                </div>
+                                <button data-dyna-del="1" type="button" class="btn btn-xs btn-danger hidden"><i class="glyphicon glyphicon-remove"></i></button>
+                            </div>
+                        </div>
+                        <hr/>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group col-md-5">
+                            <input size="10" type="text" name="dp" class="form-control" placeholder="{% trans 'discount' %}"/>
+                        </div>
+                        <div class="form-group col-md-5">
+                            <input type="text" id="lSum" size="10" readonly="readonly" value="0" placeholder="{% trans 'final price' %}" class="form-control"/>
+                        </div>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-xs btn-success" id="bAddNew"><i class="glyphicon glyphicon-plus"></i><span></span></button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <select id="ity" data-select="1" name="ity">
+                            <option disabled="disabled">{% trans 'type' %}</option>
+                            {% for i in invoice_type %}
+                                <option value="{{ i.ext }}">{{ i.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control text-area" name="d" placeholder="{% trans 'description' %}"></textarea>
+                    </div>
+                    <input type="hidden" name="u" value=""/>
+                    <div class="text-center">
+                        <button class="btn btn-info btn-sm" type="submit"><i class="glyphicon glyphicon-plus"></i> <span class="hidden-xs hidden-sm">{% trans 'add' %}</span></button>
+                        <button class="btn btn-default btn-sm" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i> <span class="hidden-sm hidden-xs">{% trans 'cancel' %}</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

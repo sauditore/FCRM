@@ -1,0 +1,22 @@
+{% load i18n %}
+<div class="modal fade" id="mEquipmentAmountChange">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <table class="table table-hover table-striped" id="tEquipmentChange">
+                    <thead>
+                    <tr>
+                        <th>{% trans 'id' %}</th>
+                        <th>{% trans 'date' %}</th>
+                        <th>{% trans 'amount' %}</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <div class="text-center">
+                    <button class="btn btn-default btn-sm"><i class="fa fa-remove"></i> <span class="hidden-sm hidden-xs">{% trans 'close' %}</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

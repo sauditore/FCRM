@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load humanize %}
+{% load MathTags %}
+{% block title %}
+    {% trans 'discounts' %}
+{% endblock %}
+{% block bodyblock %}
+    <div class="table-list">
+    <table>
+        <tr>
+            <th><span>#</span></th>
+            <th><span>{% trans 'name' %}</span></th>
+            <th><span>{% trans 'package' %}</span></th>
+            <th><span>{% trans 'extra traffic' %}</span></th>
+            <th><span>{% trans 'discount' %}</span></th>
+            <th><span>{% trans 'management' %}</span></th>
+        </tr>
+        {% for d in discounts %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td><a href="{% url 'add_or_edit_package_discount' %}?d={{ d.pk }}">{{ d.name }}</a></td>
+            <td>{{ d.package.name }}</td>
+            <td>{{ d.extended_package }}</td>
+            <td>{{ d.price_discount }}</td>
+            <td><a href="{% url 'delete_package_discount' %}?d={{ d.pk }}">{% trans 'delete' %}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+    {% include 'menu/Pager.html' %}
+    <div class="btn-set">
+    <a href="{% url 'add_or_edit_package_discount' %}" class="buttons">{% trans 'add' %}</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% load i18n %}
+{% load static %}
+{% load assets %}
+{% assets filters='jsmin', output='uploaded.js', 'js/system/uploader/UploadedFiles.js' %}
+<script language="javascript" type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+<div class="modal fade" id="mUploaded" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <table id="tFileHolder" class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>زمان</th>
+                            <th>بارگذار</th>
+                            <th>کاربر</th>
+                            <th>نمایش</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

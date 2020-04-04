@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'delete department' %}
+{% endblock %}
+{% block bodyblock %}
+    <form method="post">
+    <fieldset class="enter_data">
+        <legend>{% trans 'delete department' %}</legend>
+        <span>{% trans 'are you sure you want to delete department?' %} : {{ dep.department_name }}</span>
+    </fieldset>
+        <br/><br/>
+    <input type="submit" name="ok" value="{% trans 'yes' %}"/>
+    <input type="submit" name="cancel" value="{% trans 'no' %}"/>
+    <input type="hidden" name="d" value="{{ dep.pk }}"/>
+    {% csrf_token %}
+    </form>
+{% endblock %}

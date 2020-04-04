@@ -1,0 +1,30 @@
+{% load i18n %}
+{% load DateConverter %}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>{% trans 'expired users' %}</title>
+</head>
+<body>
+
+    <table>
+    <tr>
+        <td><span>{% trans 'ibs id' %}</span></td>
+        <td><span>{% trans 'username' %}</span></td>
+        <td><span>{% trans 'first login' %}</span></td>
+        <td><span>{% trans 'expire date' %}</span></td>
+        <td><span>{% trans 'notify' %}</span></td>
+    </tr>
+    {% for u in users %}
+        <tr class="{% cycle 'rows0' 'rows1' %}">
+            <td><a href="{% url 'show user navigation menu' %}?iid={{ u.user_id }}">{{ u.user_id }}</a></td>
+            <td><span>{{ u.normal_username }}</span></td>
+            <td><span>{{ u.first_login|convert_date }}</span></td>
+            <td><span>{{ u.abs_exp_date|convert_date }}</span></td>
+            <td><a href="#">{% trans 'notify' %}</a> </td>
+        </tr>
+    {% endfor %}
+    </table>
+</body>
+</html>

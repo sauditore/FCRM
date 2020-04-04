@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'delete traffic' %}
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+    <div class="ibox-heading">
+        <div class="ibox-title">
+            {% trans 'delete traffic' %}
+        </div>
+    </div>
+    <div class="ibox-content">
+        {% trans 'are you sure you want to delete traffic?' %}<span> {{ traffic.name }}</span>
+        <form action="/traffic/delete/" method="post">
+
+            <table>
+                <tr>
+                    <td>
+                        <input class="btn btn-sm btn-danger" type="submit" value="{% trans 'yes' %}"/>
+                    </td>
+                    <td>
+                        <input class="btn btn-sm btn-primary" type="button" value="{% trans 'cancel' %}" onclick="document.location='/traffic/show/all/'"/>
+                    </td>
+                </tr>
+            </table>
+            {% csrf_token %}
+            <input type="hidden" name="tid" value="{{ traffic.pk }}"/>
+        </form>
+    </div>
+    </div>
+{% endblock %}

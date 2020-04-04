@@ -1,0 +1,20 @@
+{% load static %}
+{% load i18n %}
+<div class="modal fade" id="mAssignOption">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="fAssignOption">
+                    <div class="form-group">
+                        <select id="sOptions" name="opt" multiple="multiple" data-select="1"></select>
+                    </div>
+                    <input type="hidden" name="pk"/>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-sm btn-info"><i class="fa fa-check"></i> <span class="hidden-xs hidden-sm">{% trans 'add' %}</span></button>
+                        <button class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-remove"></i> <span class="hidden-sm hidden-xs">{% trans 'cancel' %}</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+    {% trans 'temp recharge' %}
+{% endblock %}
+{% block styles %}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/plugins/ionRangeSlider/ion.rangeSlider.css' %}"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'css/plugins/ionRangeSlider/ion.rangeSlider.skinFlat.css' %}"/>
+{% endblock %}
+{% block page %}
+    {% trans 'temp recharge' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'service' %}</li>
+    <li>{% trans 'temp recharge' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-content">
+            <div class="row">
+            </div>
+            <input type="hidden" value="{{ day_price }}" id="hdp"/>
+            <input type="hidden" value="{{ gig_price }}" id="hpp"/>
+            <div class="row">
+                <div class="col-md-3 col-lg-3 col-sm-8 col-xs-8 col-md-offset-4 col-lg-offset-4 col-xs-offset-2 col-sm-offset-2">
+                    <form method="get" id="fTemp">
+                        {% if credit > 0 %}
+                            <div class="form-group">
+                                <div class="text-center">
+                                    <label>{% trans 'package to charge' %} : <span id="sPack"></span> {% trans 'meg' %}</label>
+                                </div>
+                                <input data-lbl="sPack" style="width: 100%;display: none;" data-pk="c" id="c" data-slider-id="c" type="text" data-min="0" data-max="{{ credit }}" data-step="1" data-slider-value="" value=""/>
+                                <input class="form-control" name="c" type="text" style="" min="0" max="{{ credit }}" data-extra-slider="1" value="0"/>
+                            </div>
+                        {% endif %}
+                        {% if days > 0 %}
+                            <div class="form-group">
+                                <div class="text-center">
+                                    <label>{% trans 'days to charge' %} : <span id="sDays"></span> {% trans 'days' %}</label>
+                                </div>
+                                <input data-lbl="sDays" style="width: 100%;display: none;" id="d" data-pk="d" data-slider-id="d" type="text" data-min="0" data-max="{{ days }}" data-slider-step="1" data-slider-value="" value=""/>
+                                <input class="form-control" style="" name="d" type="text"  min="0" max="{{ days }}" data-extra-slider="1" value="0"/>
+                            </div>
+                        {% endif %}
+
+                        <input type="hidden" value="{{ uid }}" name="u"/>
+                        <div class="text-center">
+                            <h3>{% trans 'temp charge price' %} : <span id="sPrice">0 {% trans 'toman' %}</span></h3>
+                            <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-ok-sign"></i> <span class="">{% trans 'charge' %}</span></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script language="javascript" src="{% static 'js/plugins/ionRangeSlider/ion.rangeSlider.min.js' %}"></script>
+    <script language="javascript" type="text/javascript" src="{% static 'js/system/services/TempCharge.js' %}"></script>
+{% endblock %}

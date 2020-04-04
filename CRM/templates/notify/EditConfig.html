@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load TextUtils %}
+{% block title %}
+    {% trans 'change notify configuration' %}
+{% endblock %}
+{% block page %}
+    {% trans 'change notify configuration' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'notifications' %}</li>
+    <li>{% trans 'config' %}</li>
+    <li>{% trans 'edit' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'edit' %} {{ c.name }}</h5>
+        </div>
+        <div class="ibox-content">
+            <form method="post">
+                <table class="table table-bordered">
+                    <tr>
+                        <td><span>{% trans 'name' %}</span></td>
+                        <td><span>{{ c.name }}</span></td>
+                    </tr>
+                    <tr>
+                        <td><span>{% trans 'description' %}</span></td>
+                        <td><p>{{ c.description }}</p></td>
+                    </tr>
+                    <tr>
+                        <td><label for="ce">{% trans 'email text' %}</label><input {% if c.email_enabled %}checked{% endif %} type="checkbox" name="ce" id="ce" value="1"/></td>
+                        <td><textarea class="form-control" name="et" placeholder="{% trans 'email text' %}">{{ c.mail_text }}</textarea></td>
+                    </tr>
+                    <tr>
+                        <td><label for="se">{% trans 'sms text' %}</label><input type="checkbox" name="se" id="se" value="1" {% if c.sms_enabled %}checked{% endif %}/></td>
+                        <td><textarea class="form-control" name="st" placeholder="{% trans 'sms text' %}">{{ c.sms_text }}</textarea> </td>
+                    </tr>
+                    <tr>
+                        <td><label for="ie">{% trans 'inbox text' %}</label><input type="checkbox" name="ie" id="ie" value="1" {% if c.inbox_enabled %}checked{% endif %} /></td>
+                        <td><textarea class="form-control" name="it" placeholder="{% trans 'inbox text' %}">{{ c.inbox_text }}</textarea> </td>
+                    </tr>
+                </table>
+                {% csrf_token %}
+                <input type="hidden" value="{{ c.pk }}" name="n"/>
+                <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-check"></i> <span class="hidden-sm hidden-xs">{% trans 'save' %}</span></button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

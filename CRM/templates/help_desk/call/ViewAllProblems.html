@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'manage problems' %}
+{% endblock %}
+{% block bodyblock %}
+    <div class="table-list">
+    <table>
+    <tr>
+        <th><span>{% trans 'id' %}</span></th>
+        <th><span>{% trans 'short describtion' %}</span></th>
+        <th><span>{% trans 'solutions' %}</span></th>
+        <th><span>{% trans 'actions' %}</span></th>
+    </tr>
+    {% for p in problems %}
+        <tr class="{% cycle 'rows0' 'rows1' %}">
+        <td><span>{{ p.pk }}</span></td>
+        <td><span>{{ p.short_text }}</span></td>
+        <td><a href="{% url 'choose_solutions' %}?q={{ p.pk }}">{% trans 'assign' %}</a></td>
+        <td>{% if perms.CRM.change_userproblems %}
+            <a href="{% url 'add_new_problem' %}?p={{ p.pk }}">{% trans 'edit' %}</a><span> | </span>
+        {% endif %}
+        {% if perms.CRM.delete_userproblems %}
+            <a href="#">{% trans 'delete' %}</a>
+        {% endif %}
+        </td>
+        </tr>
+    {% endfor %}
+    </table>
+        </div><br/><br/>
+    {% if perms.CRM.add_userproblems %}
+    <a href="{% url 'add_new_problem' %}" class="buttons">{% trans 'add problem' %}</a>
+    {% endif %}
+{% endblock %}

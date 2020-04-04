@@ -1,0 +1,332 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+    {% trans 'create user' %}
+{% endblock %}
+{% block styles%}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css' %}"/>
+{#    <link type="text/css" rel="stylesheet" href="{% static 'css/plugins/iCheck/custom.css' %}"/>#}
+{% endblock %}
+{% block page %}
+    {% trans 'create user' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'user' %}</li>
+    <li>{% trans 'create user' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="col-md-4">
+        <div class="ibox">
+            <div class="ibox-title">
+                <h5>{% trans 'steps' %}</h5>
+            </div>
+            <div class="ibox-content" id="lGroups">
+                <div class="">
+                    <div class="list-group">
+                        <a href="#" class="list-group-item" data-target="#dAccount">
+                            <h4 class="list-group-item-heading"><i class="fa fa-user"></i>{% trans 'account info' %}</h4>
+                            <p class="list-group-item-text">{% trans 'user account inforamtion' %}</p>
+                        </a>
+                        <a href="#" class="list-group-item" data-target="#dPersonal">
+                            <h4 class="list-group-item-heading"><i class="fa fa-info"></i>{% trans 'personal information' %}</h4>
+                            <p class="list-group-item-text">{% trans 'personal information' %}</p>
+                        </a>
+                        {% if perms.CRM.add_resellerprofile %}
+                            <a data-owner="cReseller" href="#" class="list-group-item hidden" id="aReseller" data-target="#dReseller">
+                                <h4 class="list-group-item-heading"><i class="fa fa-chain"></i>{% trans 'reseller information' %}</h4>
+                                <p class="list-group-item-text">{% trans 'reseller finance information' %}</p>
+                            </a>
+                        {% endif %}
+                        {% if perms.CRM.add_companydata %}
+                            <a href="#" class="list-group-item hidden" data-target="#dCompany" id="aCompany">
+                                <h4 class="list-group-item-heading"><i class="fa fa-building"></i>{% trans 'company information' %}</h4>
+                                <p class="list-group-item-text">{% trans 'company information' %}</p>
+                            </a>
+                        {% endif %}
+                        {% if perms.CRM.add_dedicateduserservice %}
+                            <a href="#" class="list-group-item hidden" data-n-related="cReseller" data-target="#dDService" id="aDService">
+                                <h4 class="list-group-item-heading"><i class="fa fa-cube"></i>{% trans 'dedicated service' %}</h4>
+                                <p class="list-group-item-text">{% trans 'define dedicated user services here' %}</p>
+                            </a>
+                        {% endif %}
+                        {% if perms.CRM.add_userservicegroup %}
+                            <a href="#" class="list-group-item" data-target="#dServiceGroup" id="aServiceGroup">
+                                <h4 class="list-group-item-heading"><i class="fa fa-cubes"></i>{% trans 'service group' %}</h4>
+                                <p class="list-group-item-text">{% trans 'service group information' %}</p>
+                            </a>
+                        {% endif %}
+                        {% if perms.CRM.add_usertower %}
+                            <a id="aTower" href="#" class="list-group-item" data-target="#dTower">
+                                <h4 class="list-group-item-heading"><i class="fa fa-building"></i>{% trans 'tower' %}</h4>
+                                <p class="list-group-item-text">{% trans 'assign user to tower' %}</p>
+                            </a>
+                        {% endif %}
+                        {% if not user.fk_reseller_profile_user.exists %}
+                            <a href="#" class="list-group-item" data-target="#dState">
+                                <h4 class="list-group-item-heading"><i class="fa fa-check-circle"></i>{% trans 'state' %}</h4>
+                                <p class="list-group-item-text">{% trans 'specify account state here' %}</p>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'user informations' %}</h5>
+        </div>
+        <div class="ibox-content">
+            <form action="{% url 'user_create_ajax' %}" method="post" id="fCreateUser" class="">
+                <input type="hidden" name="pk" />
+                <div class="alert alert-success hidden">
+                    <i class="glyphicon glyphicon-ok-circle"></i><span>{% trans 'user has been created' %}</span>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h4 class="panel-title"><i class="fa fa-user"></i>{% trans 'account info' %}</h4></div>
+                    <div class="panel-collapse collapse" id="dAccount">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="form-group">
+                                        <input type="text" name="u" placeholder="{% trans 'username' %}" class="form-control" data-float="1"/>
+                                    </div>
+                                    <div class="input-group-btn">
+                                        <button id="bRandomUser" type="button" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-random"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input data-float="1" type="password" name="p" placeholder="{% trans 'password' %}" class="form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <input data-float="1" type="password" name="rp" placeholder="{% trans 'retype' %}" class="form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" data-float="1" value="" name="e" placeholder="{% trans 'email' %}" class="form-control"/>
+                            </div>
+                            {% if perms.CRM.add_resellerprofile %}
+                                <div class="form-group">
+                                    <div class="checkbox checkbox-primary">
+                                        <input type="checkbox" value="1" name="rpf" id="cReseller"/>
+                                        <label for="cReseller" class="">
+                                            {% trans 'reseller user' %}
+                                        </label>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if perms.CRM.add_companydata %}
+                                <div class="form-group">
+                                    <div class="checkbox checkbox-primary">
+                                        <input type="checkbox" value="1" name="co" id="cCompany"/>
+                                        <label for="cCompany">{% trans 'create user for company' %}</label>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if perms.CRM.add_dedicateduserservice %}
+                                <div class="form-group" data-n-related="cReseller">
+                                    <div class="checkbox checkbox-primary">
+                                        <input type="checkbox" value="1" name="de" id="cDedicated"/>
+                                        <label for="cDedicated">
+                                            {% trans 'mark as dedicated user' %}
+                                        </label>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title"><i class="fa fa-info"></i>{% trans 'personal info' %}</h4>
+                    </div>
+                    <div class="panel-collapse collapse" id="dPersonal">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <input type="text" data-float="1" value="" name="fn" placeholder="{% trans 'first name' %}-{% trans 'last name' %}" class="form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" data-float="1" value="" name="idn" placeholder="{% trans 'identity number' %}" class="form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" data-float="1" maxlength="13" name="m" value="" placeholder="{% trans 'mobile' %}" class="form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" data-float="1" maxlength="13" name="ph" placeholder="{% trans 'telephone' %}" class="form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" data-float="1" value="" name="ad" placeholder="{% trans 'address' %}" class="form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <textarea name="des" class="form-control" placeholder="{% trans 'comment' %}"></textarea>
+                            </div>
+                            <div class="form-group" id="dGender">
+                                <div class="radio radio-primary radio-inline">
+                                    <input id="rgm" value="1" type="radio" name="gn"/>
+                                    <label for="rgm">{% trans 'man' %}</label>
+                                </div>
+                                <div class="radio radio-primary radio-inline">
+                                    <input value="0" type="radio" name="gn" id="rgf"/>
+                                    <label for="rgf">{% trans 'woman' %}</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                {% if perms.CRM.add_resellerprofile %}
+                    <div class="panel panel-default hidden" id="dpReseller" data-owner="cReseller">
+                        <div class="panel-heading"><h4 class="panel-title"><i class="fa fa-chain"></i>{% trans 'reseller information' %}</h4></div>
+                        <div class="panel-collapse collapse" id="dReseller">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <input type="text" data-float="1" name="rpo" placeholder="{% trans 'package profit percent' %}" class="form-control"/>
+                                </div>
+                                <div class="form-group">
+                                    <input data-float="1" type="text" name="rso" placeholder="{% trans 'service profit percent' %}" class="form-control"/>
+                                </div>
+                                <div class="form-group">
+                                    <input data-float="1" type="text" name="rnc" placeholder="{% trans 'max debtor price' %}" class="form-control"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if perms.CRM.add_companydata %}
+                    <div class="panel panel-default hidden" id="dpCompany">
+                        <div class="panel-heading">
+                            <h4 class="panel-title"><i class="fa fa-building"></i>{% trans 'company informations' %}</h4>
+                        </div>
+                        <div class="panel-collapse collapse" id="dCompany">
+
+                            <div  class="panel-body">
+                                <div class="form-group">
+                                    <input data-float="1" type="text" value="" name="cs" placeholder="{% trans 'company identity number' %}" class="form-control"/>
+                                </div>
+                                <div class="form-group">
+                                    <input data-float="1" type="text" value="" name="cz" placeholder="{% trans 'company zip code' %}" class="form-control"/>
+                                </div>
+                                <div class="form-group">
+                                    <input data-float="1" type="text" value="" name="ce" placeholder="{% trans 'economic code' %}" class="form-control"/>
+                                </div>
+                                <div class="form-group">
+                                    <input data-float="1" type="text" name="cr" placeholder="{% trans 'registration number' %}" class="form-control"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="panel panel-default hidden" id="dpDService" data-n-related="cReseller">
+                    <div class="panel-heading">
+                        <h4 class="panel-title"><i class="fa fa-cube"></i>{% trans 'dedicated service' %}</h4>
+                    </div>
+                    <div class="panel-collapse collapse" id="dDService">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <input type="text" name="ds" class="form-control" data-float="1" placeholder="{% trans 'contact name' %}"/>
+                            </div>
+                            {#                    <div class="input-group">#}
+                            {#                        <label class="input-group-addon"><i class="glyphicon glyphicon-scale"></i></label>#}
+                            {#                        <input type="text" value="" name="ds" placeholder="{% trans 'service' %}" class="form-control"/>#}
+                            {#                    </div>#}
+                            {#                    <div class="input-group">#}
+                            {#                        <label class="input-group-addon"><i class="glyphicon glyphicon-globe"></i></label>#}
+                            {#                        <input type="text" value="" name="di" placeholder="{% trans 'ip pool' %}" class="form-control"/>#}
+                            {#                    </div>#}
+                            {#                    <div class="input-group">#}
+                            {#                        <label class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></label>#}
+                            {#                        <input type="text" value="" name="dp" placeholder="{% trans 'price' %}" class="form-control"/>#}
+                            {#                    </div>#}
+                        </div>
+                    </div>
+                </div>
+                {% if perms.CRM.add_userservicegroup %}
+                    <div class="panel panel-default" id="dpServiceGroup">
+                        <div class="panel-heading">
+                            <h4 class="panel-title"><i class="fa fa-cubes"></i>{% trans 'service group' %}</h4>
+                        </div>
+                        <div class="panel-collapse collapse" id="dServiceGroup">
+                            <div class="panel-body">
+                                <select id="sServiceGroup" name="sg" data-select="1">
+                                    <option value>-</option>
+                                    {% for o in service_groups %}
+                                        <option value="{{ o.pk }}">{{ o.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    {% if perms.CRM.add_usertower %}
+                        <div class="panel panel-default" id="dpTower">
+                            <div class="panel-heading">
+                                <h4 class="panel-title"><i class="fa fa-building-o"></i>{% trans 'tower' %}</h4>
+                            </div>
+                            <div class="panel-collapse collapse" id="dTower">
+                                <div class="panel-body">
+                                    <select id="sTowers" name="tow" data-select="1">
+                                        <option value="">-</option>
+                                        {% for t in towers %}
+                                            <option value="{{ t.pk }}">{{ t.name }}</option>
+                                        {% endfor %}
+                                    </select><br/><br/>
+                                    <div class="alert alert-info hidden">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+                {% if not user.fk_reseller_profile_user.exists %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title"><i class="fa fa-check-circle"></i>{% trans 'state' %}</h4>
+                        </div>
+                        <div class="panel-collapse collapse" id="dState">
+                            <div class="panel-body">
+                                    <div class="form-group" data-n-related="cReseller">
+                                        {% if user.is_superuser %}
+                                        <div class="radio radio-inline radio-primary">
+                                            <input id="rut" type="radio" name="ut" value="2"/>
+                                            <label for="rut">{% trans 'superuser' %}</label>
+                                        </div>
+                                        <div class="radio radio-inline radio-primary">
+                                            <input id="rx" type="radio" name="ut" value="0"/>
+                                            <label for="rx" >{% trans 'personnel' %}</label>
+                                        </div>
+                                        <div class="radio radio-inline radio-primary">
+                                            <input id="ruc" type="radio" name="ut" value="1"/>
+                                            <label for="ruc">{% trans 'customer' %}</label>
+                                        </div>
+                                        {% endif %}
+                                        <div class="checkbox checkbox-inline checkbox-primary">
+                                            <input id="cCa" type="checkbox" name="ca" value="1"/>
+                                            <label for="cCa">{% trans 'activate user' %}</label>
+                                        </div>
+                                        <div class="checkbox checkbox-inline checkbox-primary">
+                                            <input id="crf" type="checkbox" checked name="rfc" value="1"/>
+                                            <label for="crf">{% trans 'reference' %}</label>
+                                        </div>
+                                    </div>
+                                <div class="form-group">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <input type="hidden" value="1" name="ca"/>
+                {% endif %}
+                <button type="submit" class="btn btn-success">{% trans 'create' %}</button>
+                {% csrf_token %}
+            </form>
+        </div>
+    </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script language="javascript" type="text/javascript" src="{% static 'js/plugins/iCheck/icheck.min.js' %}"></script>
+    <script language="javascript" type="text/javascript" src="{% static 'js/system/users/CreateUser.js' %}"></script>
+{% endblock %}

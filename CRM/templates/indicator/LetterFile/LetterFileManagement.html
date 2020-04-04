@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+{% trans 'letter file management' %}
+{% endblock %}
+{% block page %}
+    {% trans 'letter file management' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'indicator' %}</li>
+    <li>{% trans 'letter file' %}</li>
+{% endblock %}
+{% block body %}
+<div class="ibox float-e-margin">
+<div class="ibox-title">
+    <h5>{% trans 'letter file' %}</h5>
+    <div class="ibox-tools">
+        {% if perms.CRM.add_letterfile %}
+            <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#mAdd"><span class="hidden-xs hidden-sm">{% trans 'add' %}</span></button>
+        {% endif %}
+    </div>
+</div>
+    <div class="ibox-content">
+        <table class="table table-striped" data-toggle="grid">
+            <thead>
+            <tr>
+                <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric"
+                    data-identifier="true">{% trans 'id' %}
+                </th>
+                <th data-align="right" data-header-align="right" data-column-id="name">{% trans 'name' %}</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+    <script language="javascript" type="text/javascript" src="{% static 'js/system/indicator/LetterFileManagement.js' %}"></script>
+{% endblock %}
+{% block modals %}
+    {% if perms.CRM.add_letterfile or perms.CRM.change_letterfile %}
+        {% include 'indicator/LetterFile/AddLetterModal.html' %}
+    {% endif %}
+{% endblock %}
+{% block actions %}
+{% if perms.CRM.change_letterfile %}
+    <button type="button" data-need-pk="1" data-pk="" class="btn btn-sm btn-info" data-toggle="modal" data-target="#mAdd"><i class="glyphicon glyphicon-edit"></i> <span class="hidden-sm hidden-xs">{% trans 'edit' %}</span></button>
+{% endif %}
+{% if perms.CRM.delete_letterfile %}
+    <button type="button" data-url="{% url 'indicator_letter_file_rm' %}" data-action="del" data-need-pk="1" data-pk="" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#mBaseDel"><i class="glyphicon glyphicon-trash"></i> <span class="hidden-xs hidden-sm">{% trans 'delete' %}</span></button>
+{% endif %}
+{% endblock %}

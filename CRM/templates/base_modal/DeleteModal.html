@@ -1,0 +1,21 @@
+{% load i18n %}
+<div class="modal fade" id="mBaseDel">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                <h3 class="modal-title">{% trans 'confirm delete' %}</h3>
+            </div>
+            <div class="alert alert-danger hidden">
+                <i class="glyphicon glyphicon-warning-sign"></i> <span></span>
+            </div>
+            <div class="modal-body bg-danger">
+                <i class="glyphicon glyphicon-warning-sign"></i> {% trans 'are you sure you want delete this item?' %}
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger btn-sm" type="submit"><i class="glyphicon glyphicon-trash"></i> <span class="hidden-sm hidden-xs">{% trans 'delete' %}</span></button>
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i> <span class="hidden-xs hidden-sm">{% trans 'cancel' %}</span></button>
+            </div>
+        </div>
+    </div>
+</div>

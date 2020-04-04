@@ -1,0 +1,469 @@
+{% load i18n %}
+{% load DateConverter %}
+{% if user.is_authenticated and not ip_login %}
+    <li><a href="/"><i class="fa fa-home"></i> <span>{% trans 'dashboard' %}</span></a></li>
+{% else %}
+    <li><a href="/"><i class="fa fa-home"></i> <span>{% trans 'home' %}</span></a></li>
+{% endif %}
+{% if user.is_authenticated and not ip_login %}
+    {% if user.is_staff and not user.fk_user_profile_user.is_reseller %}
+        <li>
+            <a href="{% url 'view_dashboard' %}">
+                <i class="fa fa-dashboard"></i>
+                <span class="nav-label">{% trans 'workbench' %}</span>
+                <span class="fa arrow"></span>
+            </a>
+            {% if perms.CRM.view_dashboard %}
+                <ul class="nav nav-second-level collapse">
+                    <li>
+                        <a href="{% url 'view_dashboard' %}">{% trans 'view' %}</a>
+                    </li>
+                </ul>
+            {% endif %}
+            {% if perms.CRM.view_dashboard_routing %}
+                <ul class="nav nav-second-level collapse">
+                    <li>
+                        <a href="{% url 'add_dashboard_route' %}">{% trans 'dahboard routing' %}</a>
+                    </li>
+                </ul>
+            {% endif %}
+            {% if user.is_staff and perms.CRM.view_indicator %}
+                <ul class="nav nav-second-level collapse">
+                    <li>
+                        <a href="{% url 'indicator_view_all' %}">{% trans 'indicator' %}<span class="fa arrow"></span></a>
+                        <ul class="nav nav-third-level collapse">
+                            <li><a href="{% url 'indicator_view_all' %}">{% trans 'view' %}</a></li>
+                            {% if perms.CRM.view_pocket_book %}
+                                <li>
+                                    <a href="{% url 'indicator_pocket_book_view' %}">{% trans 'pocket book' %}</a>
+                                </li>
+                            {% endif %}
+                            {% if perms.CRM.view_letter_file %}
+                                <li>
+                                    <a href="{% url 'indicator_letter_file_view' %}">{% trans 'letter file' %}</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                </ul>
+            {% endif %}
+
+        </li>
+    {% endif %}
+    {% if perms.CRM.access_mail_box %}
+        <li>
+            <a href="{% url 'mail_view' %}">
+                <i class="fa fa-inbox"></i>
+                <span class="nav-label">{% trans 'email' %}</span>
+                <span class="label label-danger" id="spMail"></span>
+            </a>
+        </li>
+    {% endif %}
+    {% if user.is_staff and perms.CRM.view_calendar %}
+        <li>
+            <a href="#">
+                <i class="fa fa-calendar"></i>
+                <span class="nav-label">{% trans 'calendar' %}</span>
+                <span class="fa arrow"></span>
+            </a>
+            <ul class="nav nav-second-level collapse">
+                <li>
+                    <a href="{% url 'calendar_view_all' %}">{% trans 'view' %}</a>
+                </li>
+                {% if perms.CRM.view_calendar_event_type %}
+                    <li>
+                        <a href="{% url 'calendar_event_type_view' %}">{% trans 'event types' %}</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </li>
+    {% endif %}
+    {% if user.is_staff  %}
+        <li>
+            <a href="#">
+                <i class="fa fa-user"></i>
+                <span class="nav-label">{% trans 'users' %}</span>
+                <span class="fa arrow"></span>
+            </a>
+            <ul class="nav nav-second-level collapse">
+                {% if perms.CRM.search_users %}
+                    <li>
+                        <a href="{% url 'search for users' %}">{% trans 'search' %}</a>
+                    </li>
+                {% endif %}
+                {% if user.fk_reseller_profile_user.exists %}
+                    <li>
+                        <a href="{% url 'user_view_all' %}?t=4">{% trans 'customers' %}
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{% url 'user_view_all' %}?t=4">{% trans 'customers' %}</a>
+                    </li>
+                {% endif %}
+                {% if perms.CRM.view_dedicated_user %}
+                    <li>
+                        <a href="{% url 'user_view_all' %}?t=5">{% trans 'dedicated' %}</a>
+                    </li>
+                {% endif %}
+                {% if user.is_superuser %}
+                    <li>
+                        <a href="{% url 'user_view_all' %}?t=2">{% trans 'personnel' %}</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'user_view_all' %}?t=1">{% trans 'admins' %}</a>
+                    </li>
+                {% endif %}
+                {% if perms.CRM.view_resellers and not user.fk_user_profile_user.is_reseller and user.is_staff %}
+                    <li>
+                        <a href="{% url 'user_view_all' %}?t=3">{% trans 'reseller' %}</a>
+                    </li>
+                {% endif %}
+                {% if perms.CRM.view_visitors %}
+                    <li>
+                    <a href="{% url 'user_view_all' %}?t=7">{% trans 'visitors' %}</a>
+                    </li>
+                {% endif %}
+                <li>
+                    <a href="{% url 'user_view_all' %}?t=6">{% trans 'my users' %}</a>
+                </li>
+                {% if perms.CRM.add_new_users %}
+                    <li><a href="{% url 'create user' %}">{% trans 'create' %}</a></li>
+                {% endif %}
+            </ul>
+        </li>
+    {% endif %}
+
+    {% if user.is_superuser %}
+        <li>
+            <a href="{% url 'show_all_groups' %}">
+                <i class="fa fa-users"></i> <span class="nav-label">{% trans 'groups' %}</span>
+                <span class="fa arrow"></span>
+            </a>
+            <ul class="nav nav-second-level collapse">
+                {% if perms.CRM.view_vip_group %}
+                    <li>
+                        <a href="{% url 'show_all_groups' %}">{% trans 'view' %}</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'view_vip_groups' %}">{% trans 'vip groups' %}</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </li>
+    {% endif %}
+
+    {% if perms.CRM.view_invoices or perms.CRM.view_user_debit %}
+        <li>
+            <a href="{% url 'show all factors' %}">
+                <i class="fa fa-dollar"></i>
+                <span>{% trans 'fianancial' %}</span>
+                <span class="fa arrow"></span>
+            </a>
+            <ul class="nav nav-second-level collapse">
+                {% if perms.CRM.view_invoices %}
+                    <li>
+                        <a href="{% url 'show all factors' %}">{% trans 'view' %}</a>
+                    </li>
+                {% endif %}
+                {% if user.is_superuser %}
+                    <li><a href="{% url 'bank_api_management' %}">{% trans 'gateways' %}</a></li>
+                    <li><a href="{% url 'group_routing_management' %}">{% trans 'routing' %}</a></li>
+                {% endif %}
+                {% if perms.CRM.view_dedicated_invoice %}
+                    <li>
+                        <a href="{% url 'invoice_dedicate_view' %}">
+                            <span>{% trans 'dedicate' %}</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-third-level collapse">
+                            <li>
+                                <a href="{% url 'invoice_dedicate_view' %}">{% trans 'view' %}</a>
+                            </li>
+                            {%  if perms.CRM.view_dedicated_invoice_type %}
+                                <li><a href="{% url 'invoice_dedicate_send_type_view' %}">{% trans 'send types' %}</a></li>
+                            {% endif %}
+                            {% if perms.CRM.view_invoice_type %}
+                                <li><a href="{% url 'invoice_dedicate_type_view' %}">{% trans 'invoice type' %}</a> </li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if perm.CRM.view_discount %}
+                    <li><a href="#">{% trans 'discount' %}<span class="fa arrow"></span></a>
+                        <ul class="nav nav-third-level collapse">
+                            <li>
+                                <a href="{% url 'view_all_discount' %}">{% trans 'service discount' %}</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'view_all_package_discount' %}">{% trans 'package discount' %}</a>
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if user.is_staff and perms.CRM.view_user_debit %}
+                    <li>
+                        <a href="{% url 'debit_view' %}">{% trans 'virtual bank' %}<span class="fa arrow"></span></a>
+                        <ul class="nav nav-third-level collapse">
+                            <li><a href="{% url 'debit_view' %}">{% trans 'view' %}</a></li>
+                            {% if perms.CRM.view_debit_subject %}
+                                <li>
+                                    <a href="{% url 'debit_subjects' %}"><span>{% trans 'subject' %}</span></a>
+                                </li>
+                            {% endif %}
+                            {% if perms.CRM.view_package_price %}
+                                <li>
+                                    <a href="{% url 'debit_view_charge_package' %}"><span>{% trans 'packages' %}</span></a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                {% endif %}
+            </ul>
+        </li>
+    {% endif %}
+    {% if user.is_staff and perms.CRM.view_services or perms.CRM.can_view_temp_charge or perms.CRM.view_tower or perms.CRM.view_pop_site %}
+        <li>
+            <a href="{% url 'show all services' %}">
+                <i class="fa fa-cubes"></i><span>{% trans 'service' %}</span>
+                <span class="fa arrow"></span>
+            </a>
+            <ul class="nav nav-second-level collapse">
+                {% if perms.CRM.view_services %}
+                    <li>
+                        <a href="{% url 'show all services' %}">{% trans 'view' %}</a>
+                    </li>
+                {% endif %}
+                {% if perms.CRM.view_dedicated_services %}
+                    <li>
+                        <a href="{% url 'service_dedicate_view' %}">{% trans 'dedicated' %}</a>
+                    </li>
+                {% endif %}
+                {% if perms.CRM.view_basic_service %}
+                    <li>
+                        <a href="#">{% trans 'float services' %}
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-third-level collapse">
+                            <li><a href="{% url 'service_view_float' %}">{% trans 'view' %}</a></li>
+                            {% if perms.CRM.view_custom_option_group %}
+                                <li>
+                                    <a href="{% url 'service_float_option_group_view' %}">{% trans 'groups' %}</a> </li>
+                            {% endif %}
+                            {%  if perms.CRM.view_formula %}
+                                <li>
+                                    <a href="{% url 'service_float_view_formula' %}">{% trans 'formula' %}</a>
+                                </li>
+                            {% endif %}
+                            {% if perms.CRM.view_custom_option %}
+                                <li>
+                                    <a href="{% url 'service_float_option_view' %}">{% trans 'custom option' %}</a>
+                                </li>
+                            {% endif %}
+                            {% if perms.CRM.view_float_discount %}
+                                <li>
+                                    <a href="{% url 'service_float_discount_view' %}">{% trans 'discount' %}</a>
+                                </li>
+                            {% endif %}
+                            {% if perms.CRM.view_float_package_discount and user.is_staff %}
+                                <li>
+                                    <a href="{% url 'service_float_discount_package_view' %}">{% trans 'package discount' %}</a>
+                                </li>
+                            {% endif %}
+                            {% if perms.CRM.view_all_templates or perms.CRM.view_user_template %}
+                                <li>
+                                <a href="{% url 'service_float_template_view' %}">{% trans 'templates' %}</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if perm.CRM.view_packages %}
+                    <li>
+                        <a href="{% url 'view all traffics' %}">{% trans 'package' %}
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-third-level collapse">
+                            <li>
+                                <a href="{% url 'view all traffics' %}">{% trans 'view' %}
+                                </a>
+                            </li>
+                            {% if user.is_superuser %}
+                                <li>
+                                    <a href="{% url 'create traffic' %}">{% trans 'create' %}</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if perm.CRM.add_servicegroups and user.is_staff %}
+                    <li>
+                        <a href="{% url 'service_group_management' %}">{% trans 'groups' %}</a>
+                    </li>
+                {% endif %}
+                {% if perms.CRM.add_ippool and user.is_staff %}
+                    <li>
+                        <a href="{% url 'view_ip_statics' %}">{% trans 'ip static' %}</a>
+                    </li>
+                {% endif %}
+                {% if perms.CRM.view_equipment and user.is_staff %}
+                    <li>
+                        <a href="{% url 'equipment_view_type' %}">{% trans 'equipment' %}
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-third-level collapse">
+                            <li>
+                                <a href="{% url 'equipment_view_type' %}">{% trans 'view' %}</a>
+                            </li>
+                            {% if perms.CRM.view_equipment_code %}
+                                <li>
+                                    <a href="{% url 'equipment_code_view' %}">{% trans 'codes' %}</a>
+                                </li>
+                            {% endif %}
+                            {% if perms.CRM.view_equipment_group %}
+                                <li>
+                                    <a href="{% url 'view_product_group' %}">{% trans 'groups' %}</a>
+                                </li>
+                            {% endif %}
+                            {% if perms.CRM.view_equipment_state_list %}
+                                <li>
+                                    <a href="{% url 'equipment_state_list_view' %}">{% trans 'state list' %}</a>
+                                </li>
+                            {% endif %}
+                            {% if perms.CRM.change_equipment %}
+                                <li>
+                                    <a href="{% url 'equipment_view' %}">{% trans 'details' %}</a>
+                                </li>
+                            {% endif %}
+                            {% if perms.CRM.view_order_details %}
+                                <li><a href="{% url 'equipment_order_view' %}">{% trans 'orders' %}</a> </li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                {% endif %}
+{#                {% if perms.CRM.can_view_temp_charge %}#}
+{#                    <li>#}
+{#                        <a href="">{% trans 'temp charge' %}#}
+{#                            <span class="fa arrow"></span>#}
+{#                        </a>#}
+{#                        {% if perms.CRM.add_tempcharge %}#}
+{#                            <ul class="nav nav-third-level collapse">#}
+{#                                <li>#}
+{#                                    <a href="{% if perms.CRM.can_report_temp_recharge %}{% url 'temp_charge_report' %}{% endif %}">{% trans 'view' %}</a>#}
+{#                                </li>#}
+{#                                <li>#}
+{#                                    <a href="{% url 'temp_charge_charge' %}">{% trans 'recharge' %}</a>#}
+{#                                </li>#}
+{#                            </ul>#}
+{#                        {% endif %}#}
+{#                    </li>#}
+{#                {% endif %}#}
+                {% if perms.CRM.view_tower %}
+                    <li>
+                        <a href="{% url 'tower_view' %}">{% trans 'towers' %}</a>
+                    </li>
+                {% endif %}
+                {% if perms.CRM.view_pop_site %}
+                    <li>
+                        <a href="{% url 'pop_site_view' %}">{% trans 'pop sites' %}</a>
+                    </li>
+                {% endif %}
+                {% if perms.CRM.view_transportation %}
+                    <li>
+                        <a href="{% url 'transport_view' %}">{% trans 'transport' %}</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </li>
+    {% endif %}
+{#    {% if perms.CRM.view_ip_request %}#}
+{#        <li>#}
+{#            <a href="{% url 'view_ip_static_request' %}"><i class="fa fa-globe"></i><span class="nav-label">{% trans 'static ip' %}</span></a>#}
+{#        </li>#}
+{#    {% endif %}#}
+
+    {% if user.is_superuser %}
+        <li><a href="#"><i class="fa fa-puzzle-piece"></i> <span class="nav-label">{% trans 'configuration' %}</span><span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level collapse">
+                {% if perms.CRM.import_services %}
+                    <li><a href="{% url 'import ibs services' %}">{% trans 'import from ibs' %}</a></li>
+                {% endif %}
+                {% if perms.CRM.view_settings %}
+                    <li><a href="{% url 'system configuration' %}">{% trans 'system' %}</a></li>
+                {% endif %}
+            </ul>
+        </li>
+    {% endif %}
+    {% if perms.CRM.change_userprofile %}
+        <li><a href="#"><i class="fa fa-gear"></i> <span>{% trans 'settings' %}</span><span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level collapse">
+                <li><a href="{% url 'change password' %}">{% trans 'change passowrd' %}</a></li>
+            </ul>
+        </li>
+    {% endif %}
+    {% if perms.CRM.view_contracts %}
+        <li>
+        <a href="{% url 'contract_view_all' %}">
+            <i class="fa fa-check"></i> <span>{% trans 'contracts' %}</span>
+        </a>
+        </li>
+    {% endif %}
+    {% if perms.CRM.view_help_desk %}
+        <li><a href="#"><i class="fa fa-support"></i> <span class="nav-label">{% trans 'help desk' %}</span><span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level collapse">
+                <li><a href="{% url 'show all tickets' %}">{% trans 'view' %}</a></li>
+                {% if user.is_superuser %}
+                    <li>
+                        <a href="{% url 'show all help desk department' %}">{% trans 'departments' %}</a>
+                    </li>
+                {% endif %}
+                {% if perms.CRM.view_call_history %}
+                    <li>
+                        <a href="#">{% trans 'calls' %}<span class="fa arrow"></span></a>
+
+                        <ul class="nav nav-third-level collapse">
+                            <li><a href="{% url 'view_call_history' %}">{% trans 'view' %}</a></li>
+                            {% if user.is_staff %}
+                                {% if perms.CRM.add_calllogs %}
+                                    <li>
+                                        <a href="{% url 'add_new_call_log' %}">{% trans 'add call' %}</a>
+                                    </li>
+                                {% endif %}
+                                {% if perms.CRM.add_userproblems %}
+                                    <li>
+                                        <a href="{% url 'view_call_problems' %}">{% trans 'problems' %}</a>
+                                    </li>
+                                {% endif %}
+                                {% if perms.CRM.change_solutions %}
+                                    <li>
+                                        <a href="{% url 'view_all_solutions' %}">{% trans 'solutions' %}</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if perms.CRM.view_notification %}
+                    <li>
+                        <a href="#"><span>{% trans 'notifications' %}</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-third-level collapse">
+                            <li><a href="{% url 'show_all_notifies' %}">{% trans 'view' %}</a></li>
+                            {% if perms.CRM.send_notification and user.is_staff %}
+                                <li><a href="{% url 'send_new_notification' %}">{% trans 'send' %}</a> </li>
+                            {% endif %}
+                            {% if user.is_superuser %}
+                                <li><a href="{% url 'notify_config' %}">{% trans 'settings' %}</a> </li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if user.is_staff and perms.CRM.view_polls %}
+                    <li>
+                        <a href="{% url 'poll_view' %}"><span>{% trans 'polls' %}</span></a>
+                    </li>
+                {% endif %}
+            </ul>
+        </li>
+    {% endif %}
+{% else %}
+    <li><a href="{% url 'login' %}?skip=1">{% trans 'login' %}</a></li>
+{% endif %}

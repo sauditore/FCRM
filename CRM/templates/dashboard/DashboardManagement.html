@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load TextUtils %}
+{% load assets %}
+{% load DateConverter%}
+{% block title %}
+    {% trans 'workbench management' %}
+{% endblock %}
+{% block page %}
+    {% trans 'workbench management' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'workbench' %}</li>
+    <li>{% trans 'groups' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="ibox float-e-margins">
+    <div class="ibox-title">
+        <h5>{% trans 'workbench groups' %}</h5>
+    </div>
+    <div class="ibox-content">
+        <div class="row">
+            {% for a in actions %}
+                {% with actions|get_key:a|get_item:0 as is_active %}
+                    <div class="col-lg-3 col-md-3">
+                        <div class="panel {% if is_active %}panel-primary{% else %}panel-warning{% endif %}">
+                            <div class="panel-heading">
+                                <h5>{{ a }}</h5>
+                            </div>
+                            <div class="panel-body">
+                                <form method="post">
+                                    <input type="hidden" value="{{ a }}" name="c"/>
+                                    <div class="checkbox checkbox-rtl checkbox-success">
+                                        <input {% if is_active %}checked="checked"{% endif %} id="c{{ a }}" type="checkbox" value="1" name="e"/>
+                                        <label for="c{{ a }}">{% trans 'enable this routing and events' %}</label>
+
+                                    </div>
+                                    <div>
+                                        <span>{% trans 'message' %} : </span>
+                                        <input type="text" name="m" placeholder="{% trans 'message' %}" value="{{ actions|get_key:a|get_item:4 }}" class="form-control"/>
+                                    </div>
+                                    <div>
+                                        <span>{% trans 'groups' %} :</span>
+                                        <select name="g" data-select="1">
+                                            {% for g in groups %}
+                                                <option {% if g.pk|snip_text in actions|get_key:a|get_item:2 %}selected="selected"{% endif %} value="{{ g.pk }}">{{ g.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="text-center m-t-xs">
+                                        <button type="submit" class="btn btn-sm btn-info"><i class="fa fa-check"></i> <span>{% trans 'save' %}</span></button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endwith %}
+            {% endfor %}
+        </div>
+{#    {% if perms.CRM.add_dashboardrouting %}#}
+{#        <form method="post" class="" action="{% url 'add_dashboard_route' %}">#}
+{#            <div class="row">#}
+{#                <table class="table">#}
+{#                    <tr>#}
+{#                        <td><span>{% trans 'name' %}</span></td>#}
+{#                        <td>#}
+{#                            <input maxlength="255" class="form-control" type="text" value="{{ edit.name }}" placeholder="{% trans 'name' %}" name="n"/>#}
+{#                        </td>#}
+{#                    </tr>#}
+{#                    <tr>#}
+{#                        <td><span>{% trans 'message' %}</span></td>#}
+{#                        <td>#}
+{#                            <input class="form-control" type="text" value="{{ edit.message }}" name="msg" placeholder="{% trans 'system message' %}" maxlength="255" autocomplete="off"/>#}
+{#                        </td>#}
+{#                    </tr>#}
+{#                    <tr>#}
+{#                        <td><label for="ac">{% trans 'system action' %}</label></td>#}
+{#                        <td>#}
+{#                            <select name="ac" id="ac" data-select="1">#}
+{#                                {% for a in actions %}#}
+{#                                    <option value="{{ a.pk }}" {% if edit.action_id == a.pk %}selected{% endif %}>{{ a }}</option>#}
+{#                                {% endfor %}#}
+{#                            </select>#}
+{#                        </td>#}
+{#                    </tr>#}
+{#                    <tr>#}
+{#                        <td><label for="g">{% trans 'group' %}</label></td>#}
+{#                        <td>#}
+{#                            <select name="g" id="g" data-select="1">#}
+{#                                {% for g in groups %}#}
+{#                                    <option value="{{ g.pk }}" {% if edit.group_id == g.pk %}selected{% endif %}>{{ g.name }}</option>#}
+{#                                {% endfor %}#}
+{#                            </select>#}
+{#                        </td>#}
+{#                    </tr>#}
+{#                </table>#}
+{#                {% csrf_token %}#}
+{#                <input type="hidden" value="{{ edit.pk }}" name="pk"/>#}
+{#            <div class="text-center">#}
+{#                <button type="submit" class="btn btn-sm btn-info"><i class="fa fa-check"></i>{% trans 'add' %}</button>#}
+{#            </div>#}
+{#            </div>#}
+{#        </form>#}
+{#    {% endif %}#}
+    <hr/>
+    </div>
+    </div>
+{% endblock %}
+{% block script %}
+    {% assets filters='jsmin', output='dasrhman.js', 'js/system/workbench/routing.js' %}
+        <script language="javascript" type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+{% endblock %}

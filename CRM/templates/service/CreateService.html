@@ -1,0 +1,42 @@
+{% load i18n%}
+<div class="modal fade" id="msc">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form method="post" id="frmCreateService">
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="n" maxlength="255" value="{{ service.name }}" placeholder="{% trans 'service name' %}" />
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="d" autocomplete="off" value="" placeholder="{% trans 'description' %}"/>
+                    </div>
+                    <div class="form-group">
+                        <select name="gn" id="gName" data-select="1">
+                            {% for p in service_groups %}
+                                <option value="{{ p.pk }}">{{ p.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select name="gt" data-select="1">
+                            <option disabled="disabled" selected="selected">{% trans 'type' %}</option>
+                            <option value="1">{% trans 'limited' %}</option>
+                            <option value="2">{% trans 'unlimited' %}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox checkbox-primary">
+                            <input type="checkbox" name="isn" value="1" id="isn"/>
+                            <label for="isn">{% trans 'is visible' %}</label>
+                        </div>
+                    </div>
+                    <input type="hidden" value="" name="pk"/>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-sm btn-info"><i class="fa fa-check"></i> <span class="hidden-xs hidden-sm">{% trans 'edit' %}</span></button>
+                        <button data-dismiss="modal" type="button" class="btn btn-sm btn-default"><i class="fa fa-remove"></i> <span class="hidden-xs hidden-sm">{% trans 'cancel' %}</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

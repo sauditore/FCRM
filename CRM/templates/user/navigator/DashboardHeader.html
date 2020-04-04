@@ -1,0 +1,8 @@
+{% load i18n %}
+{% if not user.is_staff %}
+    <a href="#" class="list-group-item active text-center">
+        <div class="text-center">
+            <h4 class="fa fa-2x fa-bar-chart"></h4><p class="hidden-sm hidden-xs">{% trans 'dashboard' %}</p>
+        </div>
+    </a>
+{% endif %}

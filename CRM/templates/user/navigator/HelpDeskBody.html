@@ -1,0 +1,35 @@
+{% load i18n %}
+{% load DateConverter %}
+{% if perms.CRM.view_help_desk %}
+    <div class="bhoechie-tab-content">
+        <div class="text-center">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="text-center hidden-sm hidden-xs">#</th>
+                    <th class="text-center">{% trans 'operator' %}</th>
+                    <th class="text-center">{% trans 'call time' %}</th>
+                    <th class="text-center">{% trans 'problem' %}</th>
+                    <th class="text-center  hidden-xs hidden-sm">{% trans 'solution' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for c in calls %}
+                    <tr>
+                        <td class="hidden-xs hidden-sm">{{ forloop.counter }}</td>
+                        <td>{{ c.operator.first_name }}</td>
+                        <td>{{ c.call_time|convert_date }}</td>
+                        <td>{{ c.problem.short_text }}</td>
+                        <td class=" hidden-xs hidden-sm">{{ c.solution.short_text }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5"><h3 class="text-danger">{% trans 'no result' %}</h3></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
+

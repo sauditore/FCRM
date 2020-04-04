@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'group type management' %}
+{% endblock %}
+{% block bodyblock %}
+    {% comment %}
+    <table>
+    <tr>
+        <td><span>{% trans 'group name' %}</span></td>
+        <td><span>{% trans 'group type' %}</span></td>
+        <td><span>{% trans 'actions' %}</span></td>
+    </tr>
+    {% endcomment %}
+    {% for k, v in group_types.iteritems %}
+        <fieldset class="enter_data">
+            <legend>{{ k }}</legend>
+            <span>{{ v.0 }}</span><br/>
+            {% if perm_edit == 1 %}
+                <a class="buttons" href="/groups/types/?g={{ v.1 }}">{% trans 'edit' %}</a>
+            {% endif %}
+        </fieldset>
+        {% comment %}
+        <tr class="{% cycle 'rows0' 'rows1'%}">
+            <td><span>{{ k }}</span></td>
+            <td><span>{{ v.1 }}</span></td>
+            <td>
+
+            </td>
+        </tr>
+        {% endcomment %}
+    {% endfor %}
+    {% comment %}
+    </table>
+    {% endcomment %}
+    <br/><br/>
+    <a class="buttons" href="{% url 'show_all_groups' %}">{% trans 'back' %}</a>
+
+{% endblock %}

@@ -1,0 +1,35 @@
+{% load i18n %}
+{% load assets %}
+<div class="modal fade" id="mSetCo" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="fSetCo"  action="{% url 'user_set_company' %}">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="cs" placeholder="{% trans 'company identity' %}" maxlength="50"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="cz" placeholder="{% trans 'postal code' %}" maxlength="50"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="ce" placeholder="{% trans 'eco code' %}" maxlength="50"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="cr" placeholder="{% trans 'register code' %}" maxlength="50"/>
+                    </div>
+                    <input type="hidden" value="" name="pk"/>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-info btn-sm"><i class="fa fa-check"></i> <span
+                                class="hidden-sm hidden-xs">{% trans 'add' %}</span></button>
+                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i
+                                class="fa fa-remove"></i> <span class="hidden-xs hidden-sm">{% trans 'cancel' %}</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% assets filters='jsmin', output='setCOOO.js', 'js/system/users/set_company.js' %}
+    <script language="javascript" type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}

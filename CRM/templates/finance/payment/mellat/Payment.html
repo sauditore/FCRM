@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load humanize %}
+{% block title %}
+    {% trans 'pay invoice' %}
+{% endblock %}
+{% block page %}
+    {% trans 'pay invoice' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'financial' %}</li>
+    <li>{% trans 'payment' %}</li>
+    <li>{% trans 'bank mellat' %}</li>
+{% endblock %}
+{% block body%}
+<fieldset class="table-form">
+<h4>{% trans 'pay invoice' %} {{ invoice.service.name }}</h4>
+    <table>
+        <tr>
+            <td><span>{% trans 'price' %}</span></td>
+            <td><span>{{ invoice.price|intcomma:False }} {% trans 'toman' %}</span></td>
+        </tr>
+    </table>
+    <form method="post" action="{{ action_page }}" id="frmBank" name="frmBank">
+        <input type="hidden" name="RefId" value="{{ rid }}"/>
+        {% csrf_token %}
+    </form>
+<script type="text/javascript">
+    window.onload=function(){
+        var auto = setTimeout(function(){ autoRefresh(); }, 100);
+
+        function submitform(){
+          document.forms["frmBank"].submit();
+        }
+
+        function autoRefresh(){
+           clearTimeout(auto);
+           auto = setTimeout(function(){ submitform(); autoRefresh(); }, 2000);
+        }
+    }
+</script>
+</fieldset>
+{% endblock %}

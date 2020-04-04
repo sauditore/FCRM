@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load QUrl %}
+{% load MathTags %}
+{% load TextUtils %}
+{% load DateConverter %}
+{% block title %}
+    {% trans 'search users' %}
+{% endblock %}
+{% block page %}
+    {% trans 'search users' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'users' %}</li>
+    <li>{% trans 'search' %}</li>
+{% endblock %}
+{% block styles %}
+    <link type="text/css" href="{% static 'css/system/persianDate/persianDatepicker-default.css' %}" rel="stylesheet"/>
+{% endblock %}
+{% block body %}
+    <div class="ibox float-e-margin">
+    <div class="ibox-title">
+        <h5>{% trans 'search users' %}</h5>
+    </div>
+    <div class="ibox-content">
+        <div class="row">
+            <div class="col-md-12">
+                <form method="get" action="{% url 'search for users' %}" id="frmSearch">
+                    <div class="col-md-6">
+                        <div class="ibox col-md-12 float-e-margins">
+                            <div class="ibox-title">
+                                <h5>{% trans 'user information' %}</h5>
+                                <div class="ibox-tools">
+                                    <a class="collapse-link">
+                                        <i class="fa fa-chevron-up"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="ibox-content">
+                                <div class="form-group col-md-4">
+                                    <input maxlength="5" autocomplete="off" id="ii" autofocus type="text" size="5" name="ii" placeholder="{% trans 'ibs id' %}" value="{{ request.GET.ii }}" class="form-control"/>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <input type="text" name="ci" size="10" maxlength="20" placeholder="{% trans 'user id' %}" value="{{ request.GET.u }}" class="form-control"/>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <input type="text" name="u" size="10" maxlength="20" placeholder="{% trans 'username' %}" value="{{ request.GET.u }}" class="form-control"/>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <input class="form-control" type="text" name="in" size="8" maxlength="10" placeholder="{% trans 'identity number' %}" value="{{ request.GET.in }}"/>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <input class="form-control" type="text" name="mn" size="8" maxlength="11" placeholder="{% trans 'mobile' %}" value="{{ request.GET.mn }}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="ibox col-md-12">
+                            <div class="ibox-title">
+                                <h5>{% trans 'personal info' %}</h5>
+                                <div class="ibox-tools">
+                                    <a class="collapse-link">
+                                        <i class="fa fa-chevron-up"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="ibox-content">
+                                <div class="form-group col-md-4">
+                                    <input class="form-control" type="text" name="n" size="11" maxlength="15" placeholder="{% trans 'name' %}" value="{{ request.GET.n }}"/>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <input class="form-control" type="text" name="p" maxlength="11" size="10" placeholder="{% trans 'phone' %}" value="{{ request.GET.p }}"/>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <input class="form-control" type="text" name="ad" size="110%" autocomplete="off" placeholder="{% trans 'address' %}" value="{{ request.GET.ad }}"/>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <input class="form-control" size="6" maxlength="10" type="text" name="js" id="txtJoinStart" placeholder="{% trans 'join date' %} {% trans 'from' %}" value="{{ request.GET.js }}"/>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <input class="form-control" type="text" name="je" size="6" maxlength="10" id="txtJoinEnd" placeholder="{% trans 'join date' %} {% trans 'to' %}" value="{{ request.GET.je }}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="ibox col-md-12">
+                            <div class="ibox-title">
+                                <h5>{% trans 'service information' %}</h5>
+                                <div class="ibox-tools">
+                                    <a class="collapse-link">
+                                        <i class="fa fa-chevron-up"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="ibox-content">
+                                <div class="form-group col-md-4">
+                                    <input class="form-control" size="6" maxlength="10" type="text" name="es" id="txtExpireStart" placeholder="{% trans 'expire date' %} {% trans 'from' %}" value="{{ request.GET.es }}"/>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <input class="form-control" type="text" name="ee" size="6" maxlength="10" id="txtExpireEnd" placeholder="{% trans 'expire date' %} {% trans 'to' %}" value="{{ request.GET.ee }}"/>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <select name="ss" data-select="1">
+                                        <option selected="selected" disabled="disabled">{% trans 'service' %}</option>
+                                        <option value="">-</option>
+                                        {% for s in services %}
+                                            <option value="{{ s.pk }}">{{ s.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <select name="st" data-select="1">
+                                        <option selected="selected" disabled="disabled">{% trans 'account state' %}</option>
+                                        <option value="">-</option>
+                                        <option value="1">{% trans 'acitive' %}</option>
+                                        <option value="0">{% trans 'locked' %}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="ibox col-md-12">
+                            <div class="ibox-title">
+                                <h5>{% trans 'other' %}</h5>
+                                <div class="ibox-tools">
+                                    <a class="collapse-link">
+                                        <i class="fa fa-chevron-up"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="ibox-content">
+                                <div class="form-group col-md-4">
+                                    <select name="st" data-select="1">
+                                        <option selected="selected" disabled="disabled">{% trans 'state' %}</option>
+                                        <option value="">-</option>
+                                        <option value="1">{% trans 'acitive' %}</option>
+                                        <option value="0">{% trans 'locked' %}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <select name="rsl" data-select="1">
+                                        <option selected="selected" disabled="disabled">{% trans 'reseller' %}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <select name="grp" data-select="1">
+                                        <option selected="selected" disabled="disabled">{% trans 'group' %}</option>
+                                        {% for g in groups %}
+                                            <option value="{{ g.pk }}">{{ g.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" value="s" name="a"/>
+                    <div class="text-center col-md-12">
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> <span class="hidden-sm hidden-xs">{% trans 'search' %}</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="ibox">
+    <div class="ibox-title">
+        <h5>{% trans 'search result' %}</h5>
+    </div>
+        <div class="ibox-content"  id="srx">
+            <table class="table" data-toggle="grid">
+                <thead>
+                <tr>
+                    <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric" data-identifier="true" data-formatter="nav">{% trans 'id' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="fk_ibs_user_info_user__ibs_uid" data-formatter="nav">{% trans 'ibs id' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="first_name">{% trans 'name' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="username">{% trans 'username' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="fk_user_profile_user__mobile">{% trans 'mobile' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="fk_user_profile_user__telephone">{% trans 'phone' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="is_active" data-formatter="active">{% trans 'active' %}</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <br/>{% if show_res %}
+
+    <div class="table-list">
+        <fieldset>
+            <h4>{% trans 'search result' %}</h4>
+            <div id="dvUsers">
+                <table>
+                    <thead>
+                        <th class="col-chk">#</th>
+                        <th class="col-chk">{% trans 'ibs id' %}</th>
+                        <th class="col-id"><span>{% trans 'user id' %}</span></th>
+                        <th><span>{% trans 'username' %}</span></th>
+                        <th><span>{% trans 'firstname and lastname' %}</span></th>
+                        {% if request.GET.js or request.GET.je %}
+                            <th><span>{% trans 'join date' %}</span></th>
+                        {% endif %}
+                        {% if request.GET.ss or request.GET.ee or request.GET.es %}
+                                <th><span>{% trans 'service' %}</span></th>
+                                <th><span>{% trans 'expire time' %}</span></th>
+                            {% endif %}
+{#                        {% if request.GET.ad %}#}
+                            <th><span>{% trans 'address' %}</span></th>
+{#                        {% endif %}#}
+                        <th><span>{% trans 'telphone' %}</span></th>
+                        <th><span>{% trans 'email' %}</span></th>
+                        <th><span>{% trans 'is active' %}</span></th>
+                    </thead>
+                    <tbody>
+                    {% for u in users %}
+                        <tr class="{% cycle 'rows0' 'rows1' %}">
+                            <td class="col-chk">
+                                {{ page|sub:1|mul:per_page|plus:forloop.counter }}
+
+                            </td>
+                            <td><span><a href="{% url 'show user navigation menu' %}?uid={{ u.pk }}">{{ u.fk_ibs_user_info_user.get.ibs_uid }}</a></span></td>
+                            <td><span>{{ u.pk }}</span></td>
+                            <td><a href="{% url 'show user navigation menu' %}?uid={{ u.pk }}"><span>{{ u.username }}</span></a></td>
+                            <td><span>{{ u.first_name }}</span></td>
+                            {% if request.GET.je or request.GET.js %}
+                                <td><span>{{ u.date_joined|convert_date }}</span></td>
+                            {% endif %}
+                            {% if request.GET.ss or request.GET.ee or request.GET.es%}
+                                <td><span>{{ u.fk_current_service_user.get.service.name }}</span></td>
+                                <td><span>{{ u.fk_current_service_user.get.expire_date|convert_date }}</span></td>
+                            {% endif %}
+{#                            {% if request.GET.ad %}#}
+                                <td><span>{{ u.fk_user_profile_user.get.address|snip_text }}</span></td>
+{#                            {% endif %}#}
+                            <td><span>{{ u.fk_user_profile_user.get.telephone }}</span></td>
+                            <td><span>{{ u.email }}</span></td>
+
+                            <td><span>{{ u.is_active }}</span></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </fieldset>
+    </div>
+    <div class="btn-set">
+    {% if perms.CRM.send_notification %}
+    <a class="buttons" href="{% url 'send_new_notification' %}?{{ request.META.QUERY_STRING }}">{% trans 'send notification' %}</a>
+    {% endif %}
+    </div>
+    {% endif %}
+{% endblock %}
+{% block script %}
+    <script language="JavaScript" type="text/javascript" src="{% static 'js/system/persianDatepicker/persianDatepicker.min.js' %}"></script>
+    <script language="JavaScript" type="text/javascript" src="{% static 'js/system/users/Search.js' %}"></script>
+{% endblock %}

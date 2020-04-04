@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'delete document' %}
+{% endblock %}
+{% block bodyblock %}
+    <form method="post">
+    {% csrf_token %}
+        <input type="hidden" name="d" value="{{ doc.pk }}"/>
+    <fieldset class="enter_data">
+        <legend>{{ doc.upload_name }}</legend>
+        <span>{% trans 'are you sure you want delete this file?' %} </span>
+        <span>{{ doc.upload_name }} {% trans 'belongs to' %} {{ doc.user.username }}</span>
+        <br/><br/>
+        <input type="submit" value="{% trans 'delete' %}" name="btnAccept"/><input type="submit" name="btnCancel" value="{% trans 'cancel' %}"/>
+    </fieldset>
+    </form>
+{% endblock %}

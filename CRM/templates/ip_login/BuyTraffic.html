@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load MathTags %}
+{% load humanize %}
+{% block title %}
+    {% trans 'buy traffics' %}
+{% endblock %}
+
+{% block page %}
+    {% trans 'buy traffics' %}
+{% endblock %}
+
+{% block sitemap %}
+    <li>{% trans 'ip login' %}</li>
+    <li>{% trans 'buy traffic' %}</li>
+{% endblock %}
+
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'buy traffic' %}</h5>
+        </div>
+        <div class="ibox-content">
+
+            <div class="ca-menu_wrap">
+                <ul class="ca-menu">
+                    {% for f in traffics %}
+                        {% if f.price > 2 %}
+                            <li>
+                                <a href="{% url 'ip_login_traffic_invoice' %}?t={{ f.pk }}">
+                                    <span class="ca-icon"><i class="fa fa-star"></i></span>
+
+                                    <div class="ca-content">
+                                        <h2 class="ca-main">{{ f.name }}</h2>
+
+                                        <h3 class="ca-sub-show">{{ f.price|floatformat:0|intcomma:False }} {% trans 'toman' %}</h3>
+
+                                    </div>
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+                <ul class="ca-menu">
+                    {% for f in traffics %}
+                        {% if f.price < 2 %}
+                            <li>
+                                <a href="{% url 'ip_login_traffic_invoice' %}?t={{ f.pk }}">
+                                    <span class="ca-icon"><i class="fa fa-cube"></i></span>
+                                    <div class="ca-content">
+                                        <h2 class="ca-main">{{ f.name }}</h2>
+                                        <h3 class="ca-sub-show">{{ f.amount|get_gig_price:price_value|floatformat:0|intcomma:False }} {% trans 'toman' %}</h3>
+                                    </div>
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+{#    <ul class="ca-menu">#}
+{#            {% for f in traffics %}#}
+{#            {% if f.amount > 0 and f.price > 2 %}#}
+{#            <li>#}
+{#                <a href="{% url 'ip_login_traffic_invoice' %}?t={{ f.pk }}">#}
+{#                    <span class="ca-icon"><i class="fa fa-star"></i></span>#}
+{#                    <div class="ca-content">#}
+{#                        <h2 class="ca-main">{{ f.name }}</h2>#}
+{#                        <h3 class="ca-sub-show">{{ f.price|floatformat:0|intcomma:False }}</h3>#}
+{#                    </div>#}
+{#                </a>#}
+{#            </li>#}
+{#            {% endif %}#}
+{#            {% endfor %}#}
+{#        </ul>#}
+    </div>
+{% endblock %}

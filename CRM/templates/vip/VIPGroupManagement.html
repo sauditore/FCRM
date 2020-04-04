@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static%}
+{% block title %}
+    {% trans 'vip group management' %}
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+    <div class="ibox-title">
+        <h5>{% trans 'vip groups' %}</h5>
+        <div class="ibox-tools">
+            {% if perms.CRM.add_vipgroup %}
+                <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#mAdd"><span>{% trans 'add' %}</span></button>
+            {% endif %}
+        </div>
+    </div>
+    <div class="ibox-content">
+        <div>
+            <table class="table" data-toggle="grid">
+                <thead>
+                <tr>
+                    <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric"
+                    data-identifier="true">{% trans 'id' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="name">{% trans 'name' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="group__name">{% trans 'service group' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="users">{% trans 'users' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="services">{% trans 'services' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="packages">{% trans 'packages' %}</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script language="javascript" type="text/javascript" src="{% static 'js/system/group/VIPGroupManagement.js' %}"></script>
+{% endblock %}
+{% block modals %}
+    {% if perms.CRM.add_vipgroups or perms.CRM.change_vipgroups %}
+        {% include 'vip/AddVIPModal.html' %}
+    {% endif %}
+{% endblock %}
+{% block actions %}
+    {% if perms.CRM.change_vipgroups %}
+        <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#mAdd" data-need-pk="1"><i class="fa fa-edit"> <span class="hidden-sm hidden-xs">{% trans 'edit' %}</span></i></button>
+        <button type="button" class="btn btn-sm btn-danger" data-url="{% url 'delete_vip_group' %}" data-need-pk="1" data-pk="" data-action="del"><i class="fa fa-trash"></i> <span class="hidden-xs hidden-sm">{% trans 'delete' %}</span></button>
+    {% endif %}
+{% endblock %}

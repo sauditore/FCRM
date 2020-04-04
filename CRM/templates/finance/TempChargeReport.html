@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load DateConverter %}
+{% load MathTags %}
+{% block title %}
+    {% trans 'temp charge report' %}
+{% endblock %}
+{% block scriptblock %}
+    <script language="JavaScript" type="text/javascript" src="/static/js/persianDatepicker.min.js"></script>
+    <link type="text/css" href="/static/css/persianDatepicker-default.css" rel="stylesheet"/>
+    <script type="text/javascript">
+        $(function () {
+            $("#sd").persianDatepicker();
+            $("#ed").persianDatepicker();
+        });
+    </script>
+{% endblock %}
+{% block bodyblock %}
+    <form method="get">
+    <div class="table-form">
+        <table>
+            {% if user.is_staff or user.is_superuser %}
+            <tr>
+                <td>{% trans 'ibs id' %}</td>
+                <td>
+                    <input type="text" value="{{ request.GET.ib }}" placeholder="{% trans 'ibs id' %}" name="ib"/>
+                </td>
+            </tr>
+            <tr>
+                <td>{% trans 'user id' %}</td>
+                <td>
+                    <input type="text" value="{{ request.GET.ui }}" placeholder="{% trans 'user id' %}" name="ui"/>
+                </td>
+            </tr>
+                <tr>
+                <td>{% trans 'recharger' %}</td>
+                <td>
+                    <input type="text" value="{{ request.GET.ru }}" placeholder="{% trans 'recharger' %}" name="rc"/>
+                </td>
+                </tr>
+            {% endif %}
+            <tr>
+                <td>{% trans 'start date' %}</td>
+                <td><input type="text" value="{{ request.GET.sd }}" placeholder="{% trans 'start date' %}" id="sd" name="sd"/></td>
+            </tr>
+        <tr>
+            <td>{% trans 'end date' %}</td>
+            <td><input type="text" value="{{ request.GET.ed }}" placeholder="{% trans 'end date' %}" id="ed" name="ed"/></td>
+        </tr>
+        </table>
+    </div>
+    <br/>
+    <input type="hidden" value="s" name="a"/>
+    <input type="submit" value="{% trans 'filter' %}"/>
+    </form>
+    <div class="table-list">
+    <h4>{% trans 'search result' %}</h4>
+        <table>
+            <tr>
+                <th>#</th>
+                {% if user.is_superuser or user.is_staff %}
+                <th>{% trans 'ibs id' %}</th>
+                <th>{% trans 'username' %}</th>
+                {% endif %}
+                <th>{% trans 'date' %}</th>
+                <th>{% trans 'recharger' %}</th>
+            </tr>
+        {% for c in charges %}
+            <tr>
+            <td>{{ forloop.counter }}</td>
+            {% if user.is_superuser or user.is_staff %}
+                <td><a href="{% url 'show user navigation menu' %}?uid={{ c.user.pk }}">{{ c.user.fk_ibs_user_info_user.get.ibs_uid }}</a></td>
+                <td><a href="{% url 'show user navigation menu' %}?uid={{ c.user.pk }}" >{{ c.user.username }}</a></td>
+            {% endif %}
+            <td>{{ c.datetime|convert_date }}</td>
+            <td>{{ c.recharger.username }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+    {% include 'menu/Pager.html' %}
+{% endblock %}

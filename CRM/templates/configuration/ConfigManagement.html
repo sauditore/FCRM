@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+        {% trans 'system configuration' %}
+{% endblock %}
+{% block page %}
+        {% trans 'system configuration' %}
+{% endblock %}
+{% block sitemap %}
+        <li>{% trans 'configuration' %}</li>
+        <li>{% trans 'view' %}</li>
+{% endblock %}
+
+
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-content col-md-12">
+            {% for s, o in data.items %}
+                <div class="panel panel-default col-md-5 col-md-offset-3">
+                <div class="panel-heading">
+                    <a href="#{{ s }}" data-toggle="collapse"><i class="glyphicon glyphicon-eject"></i> <span>{% trans s %}</span></a>
+                </div>
+                <div class="collapse" id="{{ s }}">
+                    <div class="panel-body">
+                        <table class="table table-hover">
+                            {% for n,v in o.items %}
+                                <tr>
+                                    <td>{% trans n %}</td>
+                                    <td class="col-md-8"><span data-title="{% trans s %}" data-pk="1" data-url="{% url 'system configuration' %}" data-edit="1" id="{{ s }}__{{ n }}" class="form-control input-sm">{{ v }}</span></td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="text-center">
+        <a href="{% url 'system configuration' %}?relocate=YES!PLEASE!" class="btn btn-danger">{% trans 'relod from cache' %}</a>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/system/x-editable/bootstrap-editable.css' %}"/>
+    <script language="javascript" type="text/javascript" src="{% static 'js/plugins/x-editable/bootstrap-editable.min.js' %}"></script>
+    <script language="JavaScript" type="text/javascript" src="{% static 'js/system/config/ConfigManagement.js' %}"></script>
+{% endblock %}

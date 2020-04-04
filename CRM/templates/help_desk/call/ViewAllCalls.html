@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load DateConverter %}
+{% load QUrl %}
+{% load MathTags %}
+{% block title %}
+    {% trans 'view call history' %}
+{% endblock %}
+{% block page %}
+    {% trans 'view call history' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'help desk' %}</li>
+    <li>{% trans 'calls' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+{% block body%}
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'calls' %}</h5>
+        </div>
+        <div class="ibox-content">
+            <table class="table table-bordered">
+                <tr>
+                    <th><span>#</span></th>
+                    <th><span>{% trans 'id' %}</span></th>
+                    {% if user.is_staff %}
+                        <th><span>{% trans 'ibs id' %}</span></th>
+                        <th><span>{% trans 'username' %}</span></th>
+                    {% endif %}
+                    <th><span>{% trans 'time' %}</span></th>
+                    <th><span>{% trans 'operator' %}</span></th>
+                    <th><span>{% trans 'problem' %}</span></th>
+                    <th><span>{% trans 'solution' %}</span></th>
+                </tr>
+                {% for l in log %}
+                    <tr class="{% cycle 'rows0' 'rows1' %}">
+                        <td>{{ forloop.counter }}</td>
+                        <td><a href="{% url 'view_single_log' %}?c={{ l.pk }}">{{ l.pk }}</a></td>
+                        {% if user.is_staff or user.is_superuser %}
+                            {% if perms.CRM.view_profile %}
+                                <td><span><a href="{% url 'show user navigation menu' %}?uid={{ l.user.pk }}">{{ l.user.fk_ibs_user_info_user.get.ibs_uid }}</a> </span></td>
+                                <td><span><a href="{% url 'show user navigation menu' %}?uid={{ l.user.pk }}">{{ l.user.username }}</a></span></td>
+                            {% else %}
+                                <td><span>{{ l.user.fk_ibs_user_info.get.user.ibs_uid }}</span></td>
+                                <td><span>{{ l.user.username }}</span></td>
+                            {% endif %}
+
+                        {% endif %}
+                        <td><span>{{ l.call_time|convert_date }}</span></td>
+                        <td><span>{{ l.operator.username }}</span></td>
+                        <td><span>{{ l.problem.short_text }}</span></td>
+                        <td><span>{{ l.solution.short_text }}</span></td>
+                    </tr>
+                {% endfor %}
+            </table>
+            {% include  'menu/Pager.html' %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% load assets %}
+{% block title %}
+    {% trans 'transport' %}
+{% endblock %}
+
+{% block page %}
+    {% trans 'transport' %}
+{% endblock %}
+
+{% block sitemap %}
+    <li>{% trans 'service' %}</li>
+    <li>{% trans 'transport' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+
+{% block body %}
+<div class="ibox">
+    <div class="ibox-title">
+        <h5>{% trans 'transport' %}</h5>
+        <div class="ibox-tools">
+            {% if perms.CRM.add_transportation %}
+                <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#mAddNewTransport"><span>{% trans 'add' %}</span></button>
+            {% endif %}
+        </div>
+    </div>
+    <div class="ibox-content">
+        <table class="table" data-toggle="grid">
+            <thead>
+            <tr>
+                <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric" data-identifier="true">{% trans 'id' %}</th>
+                <th data-header-align="right" data-align="right" data-column-id="name">{% trans 'name' %}</th>
+                <th data-header-align="right" data-align="right" data-column-id="description">{% trans 'description' %}</th>
+                <th data-header-align="right" data-align="right" data-column-id="transport_type__name">{% trans 'transport type' %}</th>
+                <th data-header-align="right" data-align="right" data-column-id="last_update">{% trans 'last update' %}</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+    {% assets filters='jsmin', output='tpmn.js', 'js/system/transport/TransportManagement.js' %}
+    <script language="javascript" type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+{% endblock %}
+
+{% block modals %}
+    {% if perms.CRM.view_transport_type %}
+        {% include 'transportation/ViewTransportTypesModal.html'%}
+    {% endif %}
+    {% if perms.CRM.add_transporttype %}
+        {% include 'transportation/AddTransportTypeModal.html' %}
+    {% endif %}
+    {% if perms.CRM.add_transportation %}
+        {% include 'transportation/AddTransportModal.html' %}
+    {% endif %}
+{% endblock %}
+
+{% block actions %}
+    {% if perms.CRM.view_transport_type %}
+        <button id="bvTypes" type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#mViewTransportTypes"><i class="fa fa-remove"></i><span class="hidden-sm hidden-xs"> {% trans 'types' %}</span></button>
+    {% endif %}
+    {% if perms.CRM.delete_transportation %}
+        <button data-action="del" data-url="{% url 'transport_remove' %}" data-need-pk="1" type="button" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i><span class="hidden-sm hidden-xs"> {% trans 'delete' %}</span></button>
+    {% endif %}
+{% endblock %}

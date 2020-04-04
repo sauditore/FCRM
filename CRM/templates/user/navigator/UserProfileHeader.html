@@ -1,0 +1,8 @@
+{% load i18n %}
+{% if perms.CRM.view_profile %}
+    <a href="#" class="list-group-item {% if user.is_staff %}active{% endif %} text-center">
+        <div class="text-center">
+            <h4 class="fa fa-2x fa-user"></h4><p class="hidden-sm hidden-xs">{% trans 'personal information' %}</p>
+        </div>
+    </a>
+{% endif %}

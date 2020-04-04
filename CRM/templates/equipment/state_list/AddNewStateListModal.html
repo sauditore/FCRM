@@ -1,0 +1,23 @@
+{% load i18n %}
+
+<div class="modal fade" id="mAddEquipmentStateList">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="fAddEquipmentStateList">
+                    <div class="form-group">
+                        <input type="text" value="" name="n" placeholder="{% trans 'name' %}" class="form-control input-sm"/>
+                        <input type="hidden" name="pk"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control input-sm" name="d" placeholder="{% trans 'description' %}" value=""/>
+                    </div>
+                    <div class="text-center">
+                        <button class="btn btn-info btn-sm" type="submit"><i class="fa fa-plus"></i><span class="hidden-xs hidden-sm"> {% trans 'add' %}</span></button>
+                        <button class="btn btn-default btn-sm" type="button" data-dismiss="modal"><i class="fa fa-remove"></i> <span class="hidden-sm hidden-xs">{% trans 'cancel' %}</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

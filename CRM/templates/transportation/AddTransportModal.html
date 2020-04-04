@@ -1,0 +1,30 @@
+{% load i18n %}
+{% load static %}
+<script language="javascript" type="text/javascript" src="{% static 'js/system/transport/transportAdd.js' %}"></script>
+
+    <div class="modal fade" id="mAddNewTransport">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form id="fAddNewTransport">
+                        <div class="form-group">
+                            <label class="input-group-addon">{% trans 'name' %}</label>
+                            <input type="text" value="" name="n" placeholder="{% trans 'name' %}" class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label class="input-group-addon">{% trans 'description' %}</label>
+                            <input type="text" name="d" value="" placeholder="{% trans 'description' %}" class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="sTTypes" class="input-group-addon">{% trans 'type' %}</label>
+                            <select id="sTTypes" name="t" class="form-control"></select>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-info btn-sm"><i class="fa fa-plus"></i><span class="hidden-xs hidden-sm">{% trans 'add' %}</span></button>
+                            <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-remove"></i><span class="hidden-sm hidden-xs">{% trans 'cancel' %}</span></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>

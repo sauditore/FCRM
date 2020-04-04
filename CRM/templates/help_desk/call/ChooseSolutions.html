@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'choose solutions' %}
+{% endblock %}
+{% block bodyblock %}
+    <div class="table-list">
+    <table>
+        <tr>
+            <th>{% trans 'solution id' %}</th>
+            <th>{% trans 'description' %}</th>
+            <th>{% trans 'action' %}</th>
+        </tr>
+        {% for s in sols %}
+            <tr>
+            <td><a href="{% url 'add_new_solution' %}?s={{ s.pk }}">{{ s.pk }}</a>
+
+             </td>
+            <td>{{ s.short_text }}</td>
+            <td>
+            {% if s.pk in added%}
+            {% if perms.CRM.add_problemsandsolutions %}
+            <a href="{% url 'choose_solutions' %}?q={{ q }}&a=r&n={{ s.pk }}" class="stat red">{% trans 'remove' %}</a>
+            {% endif %}
+            {% else %}
+            {% if perms.CRM.delete_problemsandsolutions %}
+            <a href="{% url 'choose_solutions' %}?q={{ q }}&a=a&n={{ s.pk }}" class="stat green">{% trans 'add' %}</a>
+            {% endif %}
+            {% endif %}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    </div>
+    <br/><br/>
+    <a href="{% url 'view_call_problems' %}" class="buttons">{% trans 'done' %}</a>
+{% endblock %}

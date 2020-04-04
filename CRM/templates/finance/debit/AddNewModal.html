@@ -1,0 +1,55 @@
+{% load static %}
+{% load i18n %}
+<div class="modal fade" id="addNewModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form method="post" action="{% url 'debit_add_new' %}" id="rnd12445554">
+                    <input type="hidden" name="u" id="hu"/>
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label for="mid">{% trans 'user id' %}</label>
+                            <input class="form-control" type="text" readonly id="mid" size="10"/>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="mun">{% trans 'first name' %}</label>
+                            <input type="text" class="form-control" readonly id="mun"/>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="old">{% trans 'price amount' %}</label>
+                            <input type="text" class="form-control" readonly id="old" size="5"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for="tds">{% trans 'debit subject' %}</label>
+                            <input readonly class="form-control" type="text" value="" id="tds"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-3">
+                            <input id="mpr" placeholder="{% trans 'price' %} ({% trans 'toman' %})" type="text" value="0" name="a" class="form-control"/>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <input type="text" value="" name="inv" class="form-control" placeholder="{% trans 'invoice number' %}"/>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <select name="sb" id="sSubjects" data-select="1"></select>
+                        </div>
+                    </div>
+                    <div  class="row">
+                        <div class="form-group col-md-12">
+                            <input type="text" value="" size="30" placeholder="{% trans 'description' %}" name="p" class="form-control"/>
+                        </div>
+                    </div>
+                    {% csrf_token %}
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-info btn-sm"><i class="fa fa-check"></i> <span class="hidden-xs hidden-sm">{% trans 'add' %}</span></button>
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal"><i class="fa fa-remove"></i> <span class="hidden-sm hidden-xs">{% trans 'cancel' %}</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script language="javascript" type="text/javascript" src="{% static 'js/system/virtualBank/changeDeposit.js' %}"></script>

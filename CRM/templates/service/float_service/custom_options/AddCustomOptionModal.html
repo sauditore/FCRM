@@ -1,0 +1,81 @@
+{% load i18n %}
+<div class="modal fade" id="mAddCustomOption">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="fAddCustomOption">
+                    <div class="form-group">
+                        <input type="text" name="n" placeholder="{% trans 'name' %}" class="form-control" maxlength="255"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="i" placeholder="{% trans 'min value' %}" class="form-control" maxlength="11"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="a" placeholder="{% trans 'max value' %}" class="form-control" maxlength="11"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="vn" placeholder="{% trans 'variable name' %}" class="form-control" maxlength="10"/>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox checkbox-primary">
+                            <input id="ccf" type="checkbox" value="1" name="cf"/>
+                            <label for="ccf">{% trans 'custom value' %}</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" placeholder="{% trans 'min value' %}" class="form-control" value="" name="cfi"/>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" placeholder="{% trans 'max value' %}" class="form-control" value="" name="cfx"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" name="ht" placeholder="{% trans 'help' %}"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <select id="sServices" name="gt" data-select="1">
+                            <option selected="selected" disabled="disabled">{% trans 'service type' %}</option>
+                            <option value="0">-</option>
+                            <option value="1">{% trans 'limited' %}</option>
+                            <option value="2">{% trans 'unlimited' %}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" value="" name="p" class="form-control" maxlength="11" placeholder="{% trans 'package amount' %}"/>
+                    </div>
+                    <div class="form-group">
+                        <select id="sIpPool" name="ip" data-select="1">
+                            <option selected="selected" disabled="disabled">{% trans 'ip pool' %}</option>
+                            <option>-</option>
+                            {% for p in pool %}
+                                <option value="{{ p.ext }}">{{ p.name }}</option>
+                            {% endfor %}
+                        </select>
+
+                    </div>
+                    <div class="form-group">
+                        <select data-select="1" id="sCG" name="og">
+                            <option selected="selected" disabled="disabled">{% trans 'group' %}</option>
+                            <option value="">-</option>
+                            {% for g in group %}
+                                <option value="{{ g.ext }}">{{ g.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select id="sRel" name="rg" data-select="1" multiple="multiple">
+                            <option selected="selected" disabled="disabled">{% trans 'related group' %}</option>
+                            {% for g in group %}
+                                <option value="{{ g.pk }}">{{ g.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input type="hidden" name="pk" value=""/>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-sm btn-info"><i class="fa fa-check"></i> <span class="hidden-xs hidden-sm">{% trans 'add' %}</span></button>
+                        <button data-dismiss="modal" class="btn btn-sm btn-default" type="button"><i class="fa fa-remove"></i> <span class="hidden-sm hidden-xs">{% trans 'cancel' %}</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

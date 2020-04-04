@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load DateConverter %}
+{% load QUrl %}
+{% block title %}
+    {% trans 'manage user documents' %}
+{% endblock %}
+{% block scriptblock %}
+    <script language="JavaScript">
+    function load_image(id){
+        var img = document.getElementById('imgPreview');
+        img.src = '/ajax/?a=imp&i=' + id;
+    }
+    </script>
+{% endblock %}
+{% block bodyblock %}
+    
+    <div class="table-form">
+        <h2>{% trans 'manage user documents' %}</h2>
+        <h4>{% trans 'search' %}</h4>
+        <form method="get">
+            <table>
+                <tr>
+                    <td><span>{% trans 'ibs id' %}</span></td>
+                    <td><input type="text" name="tii" placeholder="{% trans 'ibs id' %}" size="5" autocomplete="off"/></td>
+                </tr>
+                <tr>
+                    <td><span>{% trans 'user id' %}</span></td>
+                    <td><input type="text" name="u" placeholder="{% trans 'user id' %}" size="5" autocomplete="off"/></td>
+                </tr>
+                <tr>                    
+                    <td><span>{% trans 'username' %}</span></td>
+                    <td><input type="text" name="name" placeholder="{% trans 'username' %}" size="8" autocomplete="off"/></td>
+                </tr>
+                <tr>                    
+                    <td><span>{% trans 'file name' %}</span></td>
+                    <td><input type="text" name="fn" placeholder="{% trans 'file name' %}" size="10" autocomplete="off"/></td>
+                </tr>
+                <tr>                    
+                    <td><span>{% trans 'start date' %}</span></td>
+                    <td><input type="text" name="upSTime" placeholder="{% trans 'start date' %}" size="7" autocomplete="off"/></td>
+                </tr>
+                <tr>                    
+                    <td><span>{% trans 'end date' %}</span></td>
+                    <td><input type="text" name="upETime" placeholder="{% trans 'end date' %}" size="7" autocomplete="off"/></td>
+                </tr>
+                <tr>
+                    <td><span>{% trans 'accept state' %}</span></td>
+                    <td><select name="st">
+                            <option value="-1">{% trans 'accept state' %}</option>
+                            <option value="1">{% trans 'accepted' %}</option>
+                            <option value="2">{% trans 'waiting' %}</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <div class="btn-set">
+                <input type="submit" value="{% trans 'find' %}"/>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-list">
+        <table>
+            <thead>
+                <th><span>#</span></th>
+                {% if user.is_superuser or user.is_staff %}
+                <th><span>{% trans 'username' %}</span></th>
+                {% endif %}
+                <th>
+                    <span>{% trans 'file name' %}</span>
+                </th>
+                <th>{% trans 'upload time' %}</th>
+                <th>{% trans 'is accepted' %}</th>
+                {% if user.is_superuser or user.is_staff %}
+                    <th><span>{% trans 'management' %}</span></th>
+                {% endif %}
+            </thead>
+            {% for f in fs %}
+                <tr class="{% cycle 'rows0' 'rows1' %}">
+                <td><span>{{ f.pk }}</span></td>
+                {% if user.is_superuser or user.is_staff %}
+                    <td><span>{{ f.user.username }}</span></td>
+                {% endif %}
+                <td><span><a href="{% url 'download_file_attachment' %}?d={{ f.pk }}" onmouseover="load_image({{ f.pk }})">{{ f.upload_name }}</a></span></td>
+                <td><span>{{ f.upload_time|convert_date }}</span></td>
+                <td><span>{{ f.approved }}</span></td>
+                {% if user.is_superuser or user.is_staff %}
+                    <td>
+                    {% if not f.approved and perms.CRM.accept_files%}
+                    <a class="tbtn green" href="{% url 'accept_document' %}?d={{ f.pk }}">{% trans 'approve' %}</a>
+                    {% endif %}
+                    <a class="tbtn red" href="{% url 'delete_document' %}?d={{ f.pk }}">{% trans 'delete' %}</a>
+                    </td>
+                {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+        <div>
+            <h4>{% trans 'preview' %}</h4>
+            <img src="http://payment.gen-co.com/static/images/up_imgl.png" alt="{% trans 'image preview' %}" id="imgPreview" style="max-width: 400px;"/>
+        </div>
+    </div>
+{% endblock %}

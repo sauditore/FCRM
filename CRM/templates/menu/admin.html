@@ -1,0 +1,367 @@
+{% load i18n %}
+{% load DateConverter %}
+{% load cache %}
+
+<ul id="menu">
+     {% cache 1800 admin_menu5 user.username %}
+    {% if user.is_authenticated %}
+
+        <li><a class="head_menu" href="/"></a></li>
+        <li class="clock"><i class="fa fa-clock-o"></i>&nbsp;{{ "0"|current_date|convert_date:False }}</li>
+    <li><a href="/"><i class="fa fa-home"></i><span>{% trans 'home' %}</span></a></li>
+    {% endif %}
+    {% if perms.CRM.view_dashboard and user.is_staff %}
+        <li>
+        <a href="{% url 'view_dashboard' %}"><i class="fa fa-dashboard"></i><span>{% trans 'dashboard' %}&nbsp;&nbsp;<span id="spDashboardNewJobs" class="label label-default">0</span></span></a>
+        {% if perms.CRM.view_dashboard_routing %}
+            <ul>
+            <li><a href="{% url 'add_dashboard_route' %}"><i class="fa fa-road"></i><span>{% trans 'dahboard routing' %}</span></a></li>
+            </ul>
+        {% endif %}
+        </li>
+    {% endif %}
+         {% if perms.CRM.access_mail_box %}
+             <li>
+             <a href="{% url 'mail_view' %}"><i class="fa fa-inbox"></i> <span>{% trans 'email' %}</span> <span class="label label-danger" id="spMail"></span></a>
+             </li>
+         {% endif %}
+    {% if user.is_staff and perms.CRM.view_calendar %}
+        <li>
+        <a href="{% url 'calendar_view_all' %}"><i class="fa fa-calendar"></i><span>{% trans 'calendar' %}</span></a>
+        </li>
+    {% endif %}
+     {% if user.is_staff and perms.CRM.view_indicator %}
+        <li>
+        <a href="{% url 'indicator_view_all' %}"><i class="fa fa-book"></i><span>{% trans 'indicator' %}</span> </a>
+        <ul>
+            {% if perms.CRM.view_pocket_book %}
+                <li>
+                <a href="{% url 'indicator_pocket_book_view' %}"><span>{% trans 'pocket book' %}</span></a>
+                </li>
+            {% endif %}
+            {% if perms.CRM.view_letter_file %}
+                <li>
+                <a href="{% url 'indicator_letter_file_view' %}"><span>{% trans 'letter file' %}</span></a>
+                </li>
+            {% endif %}
+        </ul>
+        </li>
+     {% endif %}
+    {% if user.is_staff  %}
+        <li><a {% if perms.CRM.search_users %}href="{% url 'search for users' %}"{% endif %}><i class="fa fa-user"></i><span>{% trans 'users' %}</span></a>
+            <ul>
+                {% if user.fk_reseller_profile_user.exists %}
+                    <li><a href="{% url 'user_view_all' %}?t=4"><i class="fa fa-user"></i><span>{% trans 'customers' %}</span></a></li>
+                {% else %}
+                <li><a href="{% url 'user_view_all' %}?t=4"><i class="fa fa-user"></i><span>{% trans 'customers' %}</span></a></li>
+                {% endif %}
+                {% if perms.CRM.view_dedicated_user %}
+                    <li><a href="{% url 'user_view_all' %}?t=5">{% trans 'dedicated' %}</a> </li>
+                {% endif %}
+                {% if user.is_superuser %}
+                    <li><a href="{% url 'user_view_all' %}?t=2"><i class="fa fa-male"></i><span>{% trans 'personnel' %}</span></a></li>
+                    <li><a href="{% url 'user_view_all' %}?t=1"><i class="fa fa-coffee"></i><span>{% trans 'admins' %}</span></a></li>
+                {% endif %}
+                {% if perms.CRM.view_resellers %}
+                    <li><a href="{% url 'user_view_all' %}?t=3"><i class="fa fa-usd"></i><span>{% trans 'reseller' %}</span></a></li>
+                {% endif %}
+                {% if perms.CRM.add_new_users %}
+                    <li><a href="{% url 'create user' %}"><i class="fa fa-plus"></i><span>{% trans 'create' %}</span></a></li>
+                {% endif %}
+            </ul>
+        </li>
+    {% endif %}
+
+    {% if user.is_superuser %}
+    <li><a href="{% url 'show_all_groups' %}"><i class="fa fa-users"></i><span>{% trans 'groups' %}</span></a>
+    <ul>
+    {% if perms.CRM.view_vip_group %}
+        <li>
+        <a href="{% url 'view_vip_groups' %}"><i class="fa fa-star"></i><span>{% trans 'vip groups' %}</span></a>
+        </li>
+    {% endif %}
+    </ul>
+    </li>
+    {% endif %}
+
+    {% if perms.CRM.view_invoices %}
+    <li><a href="{% url 'show all factors' %}"><i class="fa fa-dollar"></i><span>{% trans 'fianancial' %}</span></a>
+    <ul>
+    {% if user.is_superuser %}
+        <li><a href="{% url 'bank_api_management' %}">{% trans 'gateways' %}</a></li>
+        <li><a href="{% url 'group_routing_management' %}">{% trans 'routing' %}</a></li>
+    {% endif %}
+    {% if perms.CRM.view_dedicated_invoice %}
+        <li><a href="{% url 'invoice_dedicate_view' %}" ><i class="fa fa-user"></i> <span>{% trans 'dedicate' %}</span></a>
+        <ul>
+            {%  if perms.CRM.view_dedicated_invoice_type %}
+                <li><a href="{% url 'invoice_dedicate_send_type_view' %}"><i></i> <span>{% trans 'send types' %}</span></a></li>
+            {% endif %}
+            {% if perms.CRM.view_invoice_type %}
+                <li><a href="{% url 'invoice_dedicate_type_view' %}"><span>{% trans 'invoice type' %}</span></a> </li>
+            {% endif %}
+        </ul>
+        </li>
+    {% endif %}
+    {% if perms.CRM.view_temp_charge_report %}
+
+        <li><a href="{% url 'temp_charge_report' %}">{% trans 'temp charges' %}</a> </li>
+    {% endif %}
+    {% if perms.CRM.view_discount %}
+        <li><a href="#">{% trans 'discount' %}</a>
+        <ul>
+            <li>
+                <a href="{% url 'view_all_discount' %}">{% trans 'service discount' %}</a>
+            </li>
+            <li>
+                <a href="{% url 'view_all_package_discount' %}">{% trans 'package discount' %}</a>
+        </ul>
+        </li>
+    {% endif %}
+    </ul>
+    </li>
+    {% endif %}
+    {% if user.is_staff and perms.CRM.view_user_debit %}
+        <li>
+        <a href="{% url 'debit_view' %}"><i class="fa fa-bank"></i><span>{% trans 'virtual bank' %}</span></a>
+        <ul>
+            {% if perms.CRM.view_debit_subject %}
+                <li>
+                <a href="{% url 'debit_subjects' %}"><i class="fa fa-file-text"></i><span>{% trans 'subject' %}</span></a>
+                </li>
+            {% endif %}
+            {% if perms.CRM.view_package_price %}
+                <li>
+                <a href="{% url 'debit_view_charge_package' %}"><i class="fa fa-usd"></i><span>{% trans 'packages' %}</span></a>
+                </li>
+            {% endif %}
+        </ul>
+        </li>
+    {% endif %}
+    {% if perms.CRM.view_equipment and user.is_staff %}
+        <li>
+        <a href="{% url 'equipment_view_type' %}"><i class="fa fa-book"></i><span>{% trans 'equipment' %}</span></a>
+        <ul>
+            {% if perms.CRM.view_equipment_code %}
+                <li>
+                    <a href="{% url 'equipment_code_view' %}">{% trans 'codes' %}</a>
+                </li>
+            {% endif %}
+            {% if perms.CRM.view_equipment_group %}
+                <li>
+                <a href="{% url 'view_product_group' %}">{% trans 'groups' %}</a>
+                </li>
+            {% endif %}
+            {% if perms.CRM.view_equipment_state_list %}
+                <li>
+                <a href="{% url 'equipment_state_list_view' %}">{% trans 'state list' %}</a>
+                </li>
+            {% endif %}
+            {% if perms.CRM.change_equipment %}
+                <li>
+                    <a href="{% url 'equipment_view' %}">{% trans 'details' %}</a>
+                </li>
+            {% endif %}
+            {% if perms.CRM.view_order_details %}
+                <li><a href="{% url 'equipment_order_view' %}">{% trans 'orders' %}</a> </li>
+            {% endif %}
+        </ul>
+        </li>
+    {% endif %}
+
+{% if user.is_staff and perms.CRM.view_services %}
+    <li><a href="{% url 'show all services' %}"><i class="fa fa-cubes"></i><span>{% trans 'service' %}</span></a>
+        <ul>
+        {% if perms.CRM.view_dedicated_services %}
+            <li><a href="{% url 'service_dedicate_view' %}"><span>{% trans 'dedicated' %}</span></a></li>
+        {% endif %}
+        {% if perms.CRM.view_float_service %}
+            <li>
+            <a href="{% url 'service_view_float' %}"><i class="fa fa-flag-o"></i><span>{% trans 'float services' %}</span></a>
+            <ul>
+                {% if perms.CRM.view_custom_option_group %}
+                    <li><a href="{% url 'service_float_option_group_view' %}"><i class="fa fa-group"></i><span>{% trans 'groups' %}</span></a> </li>
+                {% endif %}
+                <li>
+                    <a href="{% url 'service_float_view_formula' %}"><i class="fa fa-magic"></i><span>{% trans 'formula' %}</span></a>
+                </li>
+                <li>
+                    <a href="{% url 'service_float_option_view' %}"><i class="fa fa-gear"></i><span>{% trans 'custom option' %}</span></a>
+                </li>
+            </ul>
+            </li>
+        {% endif %}
+        {% if perms.CRM.view_packages %}
+            <li><a href="{% url 'view all traffics' %}"><i class="fa fa-cube"></i><span>{% trans 'package' %}</span></a>
+                <ul>
+                    {% if user.is_superuser %}
+                        <li>
+                            <a href="{% url 'create traffic' %}"><i class="fa fa-plus"></i><span>{% trans 'create' %}</span></a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </li>
+        {% endif %}
+        {% if perms.CRM.add_servicegroups %}
+            <li>
+            <a href="{% url 'service_group_management' %}">{% trans 'groups' %}</a>
+            </li>
+        {% endif %}
+        {% if perms.CRM.add_ippool %}
+            <li>
+            <a href="{% url 'view_ip_statics' %}">{% trans 'ip static' %}</a>
+            </li>
+        {% endif %}
+        </ul>
+    </li>
+{% endif %}
+         {% if perms.CRM.can_view_temp_charge %}
+             <li>
+             <a href="{% if perms.CRM.can_report_temp_recharge %}{% url 'temp_charge_report' %}{% endif %}"><i class="fa fa-bullseye"></i><span>{% trans 'temp charge' %}</span></a>
+             {% if perms.CRM.add_tempcharge %}
+                 <ul>
+                 <li>
+                     <a href="{% url 'temp_charge_charge' %}"><span>{% trans 'recharge' %}</span></a>
+                 </li>
+                 </ul>
+             {% endif %}
+             </li>
+         {% endif %}
+{% if perms.CRM.view_tower %}
+    <li>
+    <a href="{% url 'tower_view' %}"><i class="fa fa-building"></i><span>{% trans 'towers' %}</span></a>
+    </li>
+{% endif %}
+{% if perms.CRM.view_pop_site %}
+    <li>
+    <a href="{% url 'pop_site_view' %}"><i class="fa fa-road"></i><span>{% trans 'pop sites' %}</span></a>
+    </li>
+{% endif %}
+{% if perms.CRM.view_transportation %}
+    <li>
+    <a href="{% url 'transport_view' %}"><i class="fa fa-plane"></i><span>{% trans 'transport' %}</span></a>
+    </li>
+{% endif %}
+{% if user.is_staff and perms.CRM.view_polls %}
+    <li>
+    <a href="{% url 'poll_view' %}"><i class="fa fa-comments"></i><span>{% trans 'polls' %}</span></a>
+    </li>
+{% endif %}
+{% if perms.CRM.view_ip_request %}
+    <li>
+        <a href="{% url 'view_ip_static_request' %}"><i class="fa fa-globe"></i><span>{% trans 'static ip' %}</span></a>
+    </li>
+{% endif %}
+{% if perms.CRM.view_notification %}
+    <li>
+        <a href="{% url 'show_all_notifies' %}"><i class="fa fa-envelope"></i><span>{% trans 'notifications' %}</span></a>
+    {% if perms.CRM.send_notification and perms.CRM.view_normal_users %}
+        <ul>
+        <li><a href="{% url 'send_new_notification' %}">{% trans 'send' %}</a> </li>
+        {% if user.is_superuser %}
+            <li><a href="{% url 'notify_config' %}">{% trans 'settings' %}</a> </li>
+        {% endif %}
+        </ul>
+    {% endif %}
+
+    </li>
+{% endif %}
+{% if user.is_superuser %}
+    <li><a href="#"><i class="fa fa-puzzle-piece"></i><span>{% trans 'configuration' %}</span></a>
+        <ul>
+            {% if perms.CRM.import_services %}
+            <li><a href="{% url 'import ibs services' %}"><i class="fa fa-arrow-circle-down"></i><span>{% trans 'import from ibs' %}</span></a></li>
+            {% endif %}
+            {% if perms.CRM.view_settings %}
+            <li><a href="{% url 'system configuration' %}"><i class="fa fa-cogs"></i><span>{% trans 'system' %}</span></a></li>
+            {% endif %}
+        </ul>
+    </li>
+{% endif %}
+{% if perms.CRM.change_userprofile %}
+    <li><a href="#"><i class="fa fa-gear"></i><span>{% trans 'settings' %}</span></a>
+        <ul>
+            <li><a href="{% url 'show the user summery' %}"><i class="fa fa-info"></i>{% trans 'personal info' %}</a></li>
+            <li><a href="{% url 'change password' %}"><i class="fa fa-refresh"></i>{% trans 'change passowrd' %}</a></li>
+        </ul>
+    </li>
+{% endif %}
+{% if perms.CRM.view_help_desk %}
+    <li><a href="{% url 'show all tickets' %}"><i class="fa fa-support"></i><span>{% trans 'help desk' %}</span></a>
+
+        <ul>
+            {% if user.is_superuser %}
+            <li>
+                <a href="{% url 'show all help desk department' %}">{% trans 'departments' %}</a>
+            </li>
+            {% endif %}
+            {% if perms.CRM.view_call_history %}
+            <li>
+                <a href="{% url 'view_call_history' %}">{% trans 'calls' %}</a>
+                {% if user.is_staff or user.is_superuser %}
+                <ul>
+                {% if perms.CRM.add_calllogs %}
+                 <li>
+                <a href="{% url 'add_new_call_log' %}">{% trans 'add call' %}</a>
+                </li>
+                {% endif %}
+                {% if perms.CRM.add_userproblems %}
+                    <li>
+                    <a href="{% url 'view_call_problems' %}">{% trans 'problems' %}</a>
+                    </li>
+                {% endif %}
+                {% if perms.CRM.change_solutions %}
+                    <li>
+                        <a href="{% url 'view_all_solutions' %}">{% trans 'solutions' %}</a>
+                    </li>
+                {% endif %}
+                </ul>
+                {% endif %}
+            </li>
+            {% endif %}
+
+        </ul>
+    </li>
+{% endif %}
+    {% if user.is_staff %}
+        <li><a href="#"><i class="fa fa-tasks"></i><span>{% trans 'report' %}</span></a>
+        <ul>
+            {% if perms.CRM.view_expired_user %}
+
+            <li><a href="{% url 'expired_users' %}"><i class="fa fa-close"></i><span>{% trans 'expired' %}</span></a> </li>
+            {% endif %}
+            {% if perms.CRM.search_users %}
+
+            <li><a href="{% url 'search for users' %}"><i class="fa fa-users"></i><span>{% trans 'users' %}</span></a> </li>
+            {% endif %}
+            {% if perms.CRM.view_invoices %}
+
+            <li><a href="{% url 'show all factors' %}"><i class="fa fa-file"></i><span>{% trans 'invoice' %}</span></a> </li>
+            {% endif %}
+        </ul>
+        </li>
+
+    {% endif %}
+    {% endcache %}
+    <li>
+    {% if user.is_authenticated %}
+
+        <a href="{% url 'logout' %}"><i class="fa fa-power-off"></i><span>{% trans 'logout' %} {{ user.username }}</span></a>
+
+    {% else %}
+    </li>
+        <li><a class="head_menu" href="/"></a></li>
+        <li style="text-align: center"><span style="color: #ffffff">{{ "0"|current_date|convert_date:False }}</span> </li>
+        <li><a href="/ipl/"><i class="fa fa-dashboard"></i><span>{% trans 'home' %}</span></a></li>
+        <li><a href="{% url 'ip_login_invoices' %}">{% trans 'invoices' %}</a></li>
+        <li><a href="{% url 'login' %}?skip=1"><i class="fa fa-sign-in"></i><span>{% trans 'login' %}</span></a>
+    {% endif %}
+        </li>
+{#    {% if user.is_superuser %}#}
+{#        <li>#}
+{#        <a href="#" data-debug-data="1" class=""><i class="fa fa-bug"></i><span>{% trans 'debug' %}</span></a>#}
+{#        </li>#}
+{#    {% endif %}#}
+    <p>تمامی حقوق محفوظ می باشد<br />
+    گسترش ارتباطات نور ۱۳۹۳</p>
+</ul>

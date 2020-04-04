@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+{% trans 'custom option group management' %}
+{% endblock %}
+{% block page %}
+    {% trans 'custom option group management' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'service' %}</li>
+    <li>{% trans 'float services' %}</li>
+    <li>{% trans 'custom option group' %}</li>
+{% endblock %}
+{% block body %}
+<div class="ibox">
+<div class="ibox-title">
+    <h5>{% trans 'groups' %}</h5>
+    <div class="ibox-tools">
+        {% if perms.CRM.add_customoptiongroup %}
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#mAddNewGroup"><span>{% trans 'add' %}</span></button>
+        {% endif %}
+    </div>
+</div>
+    <div class="ibox-content">
+        <table class="table table-striped table-condensed" id="tCGroups" data-toggle="grid">
+            <thead>
+            <tr>
+                <th data-align="center" data-header-align="right" data-column-id="pk" data-type="numeric"
+                    data-identifier="true">{% trans 'id' %}
+                </th>
+                <th data-align="center" data-header-align="right" data-column-id="name">{% trans 'name' %}</th>
+                <th data-align="center" data-header-align="right" data-column-id="view_order">{% trans 'view order' %}</th>
+                <th data-align="center" data-header-align="right" data-formatter="req" data-column-id="is_required">{% trans 'is required' %}</th>
+                <th data-align="center" data-header-align="right" data-formatter="req" data-column-id="can_recharge">{% trans 'can recharge' %}</th>
+                <th data-align="center" data-header-align="right" data-column-id="metric">{% trans 'unit metric' %}</th>
+                <th data-align="right" data-header-align="right" data-column-id="group_help">{% trans 'help text' %}</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script language="javascript" type="text/javascript" src="{% static 'js/system/services/CustomOptionGroup.js' %}"></script>
+{% endblock %}
+{% block modals %}
+    {% if perms.CRM.add_customoptiongroup %}
+        {% include 'service/float_service/custom_options/group/AddNewGroupModal.html' %}
+    {% endif %}
+{% endblock %}
+{% block actions %}
+{% if perms.CRM.change_customoptiongroup %}
+    <button type="button" data-need-pk="1" class="btn btn-sm btn-info" data-toggle="modal" data-target="#mAddNewGroup"><i class="fa fa-edit"></i> <span class="hidden-sm hidden-xs">{% trans 'edit' %}</span></button>
+{% endif %}
+{% if perms.CRM.delete_customoptiongroup %}
+    <button data-url="{% url 'service_float_option_group_remove' %}" type="button" class="btn btn-danger btn-sm" data-need-pk="1" data-action="del"><i class="fa fa-trash"></i> <span class="hidden-xs hidden-sm">{% trans 'delete' %}</span></button>
+{% endif %}
+{% endblock %}

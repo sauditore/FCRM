@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load DateConverter %}
+{% block title %}
+    {% trans 'expired users' %}
+{% endblock %}
+{% block bodyblock %}
+    <div class="table-list">
+        <h2>{% trans 'expired users' %}</h2>
+        <table>
+            <thead>
+                <th><span>{% trans 'ibs id' %}</span></th>
+                <th><span>{% trans 'username' %}</span></th>
+                <th><span>{% trans 'first login' %}</span></th>
+                <th><span>{% trans 'expire date' %}</span></th>
+            </thead>
+            <tbody>
+            {% for u in users %}
+                <tr class="{% cycle 'rows0' 'rows1' %}">
+                    <td><a href="{% url 'show user navigation menu' %}?iid={{ u.user_id }}">{{ u.user_id }}</a></td>
+                    <td><span>{{ u.normal_username }}</span></td>
+                    <td><span>{{ u.first_login|convert_date }}</span></td>
+                    <td><span>{{ u.abs_exp_date|convert_date }}</span></td>
+
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="btn-set">
+            <a href="{% url 'expired_users' %}?s={{ start_link }}&e={{ end_link }}" class="buttons">{% trans 'next' %}<i class="fa fa-chevron-left"></i></a>
+            <a href="javascript:window.history.back()" class="buttons">{% trans 'back' %}<i class="fa fa-chevron-right"></i></a>
+            <a href="{% url 'expired_users' %}?s={{ c_s }}&e={{ c_e }}&p=1" class="buttons"><i class="fa fa-print"></i>{% trans 'print' %}</a>
+        </div>
+    </div>
+{% endblock %}

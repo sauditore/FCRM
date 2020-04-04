@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+    {% trans 'pop site management' %}
+{% endblock %}
+
+{#{% block search_header %}#}
+{#    <a href="#searchArea" role="button" class="navbar-brand" data-toggle="collapse"><i class="glyphicon glyphicon-search"></i></a>#}
+{#{% endblock %}#}
+{#{% block search %}#}
+{#    <div class="collapse navbar-form" id="searchArea">#}
+{#    <form role="search">#}
+{#        <div class="input-group">#}
+{#            <label class="input-group-addon"></label>#}
+{#            <input type="text" class="form-control input-sm" placeholder="{% trans 'id' %}" value="{{ request.GET.pk }}" name="pk"/>#}
+{#        </div>#}
+{#        <div class="input-group">#}
+{#            <label class="input-group-addon"></label>#}
+{#            <input type="text" class="form-control input-sm" placeholder="{% trans 'name' %}" value="{{ request.GET.searchPhrase }}" name="searchPhrase"/>#}
+{#        </div>#}
+{#        <button class="btn btn-info btn-sm navbar-btn"><i class="glyphicon glyphicon-search"></i><span class="hidden-sm hidden-xs">{% trans 'search' %}</span></button>#}
+{#    </form>#}
+{#    </div>#}
+{#{% endblock %}#}
+{% block body %}
+    <div class="ibox">
+    <div class="ibox-title">
+        <h5>{% trans 'popsites' %}</h5>
+        <div class="ibox-tools">
+            <button type="button" data-toggle="modal" data-target="#mAddNewPopSite" class="btn btn-xs btn-primary"><span class="">{% trans 'add' %}</span></button>
+        </div>
+    </div>
+    <div class="ibox-content">
+    <table class="table table-striped" data-toggle="grid">
+            <thead>
+            <tr>
+                <th data-align="right" data-header-align="right" data-column-id="pk" data-identifier="true" data-type="numeric">{% trans 'id' %}</th>
+                <th data-align="right" data-header-align="right" data-column-id="name" >{% trans 'name' %}</th>
+                <th data-align="right" data-header-align="right" data-column-id="description">{% trans 'description' %}</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script language="javascript" type="text/javascript" src="{% static 'js/system/pop_site/popSiteMain.js' %}"></script>
+{% endblock %}
+{% block modals %}
+    {% if perms.CRM.add_popsite %}
+        {% include 'pop_site/AddNewPopSiteModal.html' %}
+    {% endif %}
+{% endblock %}
+{% block actions %}
+    {% if perms.CRM.delete_popsite %}
+        <button data-action="del" data-url="{% url 'pop_site_delete' %}" data-need-pk="1" type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i><span class="hidden-sm hidden-xs">{% trans 'delete' %}</span></button>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load assets %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+{% trans 'event type management' %}
+{% endblock %}
+{% block page %}
+{% trans 'event type management' %}
+{% endblock %}
+{% block sitemap %}
+<li>{% trans 'calendar' %}</li>
+<li>{% trans 'event type' %}</li>
+<li>{% trans 'view' %}</li>
+{% endblock %}
+{% block header %}
+
+{% endblock %}
+{% block body %}
+<div class="ibox">
+    <div class="ibox-title">
+        <h5>{% trans 'event types' %}</h5>
+        <div class="ibox-tools">
+            {% if perms.CRM.add_calendareventtype %}
+            <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#mAdd">
+                <span>{% trans 'add' %}</span></button>
+            {% endif %}
+        </div>
+    </div>
+    <div class="ibox-content">
+        <table class="table" data-toggle="grid">
+            <thead>
+            <tr>
+                <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric"
+                    data-identifier="true">{% trans 'id' %}
+                </th>
+                <th data-align="right" data-header-align="right" data-column-id="name">{% trans 'name' %}</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+    {% assets filters='jsmin', output='etm.js', 'js/system/calendar/EventTypeManagement.js' %}
+
+        <script language="JavaScript" type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+{% endblock %}
+{% block modals %}
+{% if perms.CRM.add_calendareventtype %}
+    {% include 'calendar/event_type/AddEventTypeModal.html' %}
+{% endif %}
+{% endblock %}
+{% block actions %}
+    {% if perms.CRM.change_calendareventtype %}
+        <button type="button" class="btn btn-sm btn-info" data-need-pk="1" data-toggle="modal" data-target="#mAdd"><i class="fa fa-edit"></i> <span>{% trans 'edit' %}</span></button>
+    {% endif %}
+    {% if perms.CRM.delete_calendareventtype %}
+        <button data-url="{% url 'calendar_event_type_rm' %}" type="button" class="btn btn-sm btn-danger" data-action="del" data-need-pk="1"><i class="fa fa-trash"></i> <span>{% trans 'delete' %}</span></button>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load DateConverter %}
+{% block title %}
+{% endblock %}
+{% block bodyblock %}
+    {% if perms.CRM.change_usertower %}
+        {% include 'towers/AssignUserToTowerModal.html' %}
+    {% endif %}
+    <div class="table-form">
+    <table>
+        <tr>
+            <td>
+                <span>{% trans 'username' %}</span>
+            </td>
+            <td>
+                <span>{{ service.user.username }}</span>
+            </td>
+        </tr>
+        {% if user.is_staff %}
+            <tr>
+            <td><span>{% trans 'name' %}</span></td>
+            <td><span>{{ service.user.first_name }}</span></td>
+            </tr>
+        {% endif %}
+        <tr>
+            <td><span>{% trans 'password' %}</span></td>
+            <td><span>{{ password }}</span></td>
+        </tr>
+        <tr>
+            <td>
+                <span>{% trans 'ibs id' %}</span>
+            </td>
+            <td><span>{{ ibs_id }}</span></td>
+        </tr>
+        <tr>
+            <td><span>{% trans 'join date' %}</span></td>
+            <td>
+                <span>{{ service.user.date_joined|convert_date}}</span>
+            </td>
+        </tr>
+        <tr>
+            <td><span>{% trans 'current service' %}</span></td>
+            <td><span>{{ service.service.name }} - {{ service.service_property.name }}</span></td>
+        </tr>
+
+            <tr>
+                <td><span>{% trans 'download/upload speed' %}</span></td>
+                <td><span>{{ service.service_property.bandwidth }}</span></td>
+            </tr>
+        {% if 'Temp' in state %}
+            <tr>
+            <td><span>{% trans 'account state' %}</span></td>
+            <td><span>{% trans 'temp recharged' %}</span></td>
+            </tr>
+        {% endif %}
+    {% if service.service_property.initial_package > 5 %}
+        <tr>
+            <td><span>{% trans 'remaining traffic' %}</span></td>
+            <td><span class="{% if low_credit %}stat red{% else %}stat green{% endif %}">{{ credit }}</span></td>
+        </tr>
+    {% endif %}
+            <tr><td><span>{% trans 'expire time' %}</span></td>
+            <td><span class="{% if expire_time|is_near_expire %}stat red{% else %}stat green{% endif %}">{{ service.expire_date|convert_date }}</span></td>
+{#            <td><span class="{% if cnd %}stat red{% else %}stat green{% endif %}">{{ expire_time|convert_date }}</span></td>#}
+        </tr>
+    {% if user.is_staff and perms.CRM.view_user_tower %}
+        <tr>
+        <td><span>{% trans 'tower' %}</span></td>
+        <td>
+            {% if perms.CRM.change_usertower %}
+                <a class="" role="button" href="#" data-target="#dvSelectUserTower" data-toggle="modal" data-pk="{{ service.user_id }}" data-name="{{ service.user.first_name }}">{{ service.user.fk_user_tower_user.get.tower.name }}</a>
+            {% else %}
+                <span>{{ service.user.fk_user_tower_user.get.tower.name }}</span>
+            {% endif %}
+        </td>
+        </tr>
+    {% endif %}
+    {% if user.is_staff and ip_pool %}
+        <tr>
+        <td><span>{% trans 'ip pool' %}</span></td>
+        <td><span>{{ ip_pool }}</span></td>
+        </tr>
+    {% endif %}
+    {% with service.user.fk_user_ip_static_user as ip_static %}
+        {% if ip_static.exists %}
+            {% with ip_static.get as ip %}
+            <tr>
+            <td><span>{% trans 'static ip' %}</span></td>
+            <td><span>{{ ip.ip.ip }}</span></td>
+            </tr>
+            <tr>
+            {% if ip.is_reserved %}
+                <td><span>{% trans 'release date' %}</span></td>
+                <td><span>{{ ip.release_date|convert_date }}</span></td>
+            {% else %}
+                <td><span>{% trans 'expire date' %}</span></td>
+                <td><span {% if ip.expire_date|is_near_expire %}class="stat red"{% endif%}>{{ ip.expire_date|convert_date }}</span></td>
+            {% endif %}
+            </tr>
+            {% endwith %}
+        {% endif %}
+    {% endwith %}
+        <tr>
+            <td><span>{% trans 'online status' %}</span></td>
+            <td>
+                {% if online_state == False %}
+                <b class="stat red">{% trans 'offline' %}</b>
+                {% elif online_state == True %}
+                <b class="stat green">{% trans 'online' %}</b>
+                {% endif %}</td>
+        </tr>
+        {% if online_state %}
+        <tr>
+            <td><span>{% trans 'ip address' %}</span></td>
+            <td><span>{{ ip_address }}</span></td>
+        </tr>
+        <tr>
+            <td><span>{% trans 'connect time' %}</span></td>
+            <td><span>{{ connection_time|convert_date  }}</span></td>
+        </tr>
+        {% if user.is_staff or user.issuperuser%}
+        <tr>
+            <td><span>
+                {% trans 'ras' %}
+            </span></td>
+            <td><span>{{ nas }}</span></td>
+        </tr>
+        <tr>
+            <td><span>{% trans 'actions' %}</span></td>
+            <td>
+                <a class="tbtn red" {% if online_state == True %}href="{% url 'kill_online_user' %}?u={{ service.user.pk }}" {% else %}href="#"{% endif %}>{% trans 'disconnect' %}</a>
+            </td>
+        </tr>
+        {% endif %}
+        {% endif %}
+        {% if tca%}
+        {% if perms.CRM.free_traffic or perms.CRM.unlimited_charge  %}
+        <tr>
+            <td><span>{% trans 'temp recharge' %}</span></td>
+            <td><a class="tbtn green" href="{% url 'temp recharge' %}?uid={{ service.user.pk }}">{% trans 'charge' %}</a></td>
+        </tr>
+        {% endif %}
+        {% endif %}
+        </table>
+    </div>
+
+    <div class="btn-set">
+        {% if user.is_superuser or user.is_staff %}
+        <a href="{% url 'update_user_service' %}?u={{ service.user.pk }}" class="buttons">{% trans 'update' %}</a>
+        {% endif %}
+        {% if perms.CRM.add_useripstatic %}
+        <a href="{% url 'view_ip_static_request' %}?u={{ service.user.pk }}" class="buttons">{% trans 'static ip' %}</a>
+        {% endif %}
+<a href="{% url 'connection_log' %}?u={{ service.user.pk }}" class="buttons">{% trans 'connection' %}</a>
+        {% if user.is_superuser or user.is_staff %}
+
+        {% if perms.CRM.view_credit_report %}
+<a href="{% url 'credit_change_log' %}?u={{ service.user.pk }}" class="buttons">{% trans 'credit log' %}</a>
+
+        {% endif %}
+        {% endif %}
+    </div>
+    <div class="btn-set">
+
+        {% if charge_unlocked or service.service_property.initial_package < 5 %}
+        {% if perms.CRM.add_invoice and perms.CRM.buy_service %}
+            <a class="buttons green" href="{% url 'create new factor' %}?u={{ service.user.pk }}&s={{ service.service.pk }}">{% trans 'recharge'%}</a>
+        {% endif %}
+        {% endif %}
+        {% if cnd or user.is_superuser or user.is_staff or charge_unlocked %}
+            {% if perms.CRM.buy_service %}
+            <a class="buttons green" href="{% url 'assign service to user' %}?u={{ service.user.pk }}">{% trans 'change service' %}</a>
+            {% endif %}
+        {% endif %}
+        {% if service.service_property.initial_package > 5 and not cnd%}
+            <a class="buttons" href="{% url 'buy traffic' %}?u={{ service.user.pk }}">{% trans 'buy traffic' %}</a>
+        {% endif %}
+        {% if not user.is_staff and not user.is_superuser %}
+            <a href="{% url 'index' %}" class="buttons">{% trans 'back' %}</a>
+        {% else %}
+            <a href="{% url 'show user navigation menu' %}?uid={{ service.user.pk }}" class="buttons">{% trans 'back' %}</a>
+        {% endif %}
+        {% if online_state %}
+            <a class="buttons" href="{%url 'show_bw_usage'  %}?u={{ service.user.pk }}&r={{ ras_id }}">{% trans 'graph' %}</a>
+        {% endif %}
+        {% if perms.CRM.expire_user %}
+            <a href="{% url 'user services summery' %}?ex=1&u={{ service.user.pk }}" class="buttons">{% trans 'expire user' %}</a>
+        {% endif %}
+    </div>
+{% endblock %}

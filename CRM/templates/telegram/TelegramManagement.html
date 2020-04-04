@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% load DateConverter %}
+{% load MathTags %}
+{% block title %}
+    {% trans 'telegram management' %}
+{% endblock %}
+{% block scriptblock %}
+    <script language="javascript" type="text/javascript" src="{% static 'js/bootstrap-editable.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-editable.css' %}"/>
+    <script language="JavaScript" type="text/javascript" src="{% static 'js/persianDatepicker.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/persianDatepicker-default.css' %}"/>
+    <script language="JavaScript" type="text/javascript">
+    $(function(){
+       $('#sd').persianDatepicker();
+        $('#ed').persianDatepicker();
+        $('button[data-x=1]').on('click', function(e){
+            var x_elem = $(e.target).data('xe');
+            $('[data-xe='+x_elem+']').editable();
+        });
+{#        $('[data-edit=1]').editable();#}
+    });
+    </script>
+{% endblock %}
+{% block bodyblock %}
+    <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#dvSearch"><i class="glyphicon glyphicon-search"></i></button>
+<div id="dvSearch" class="collapse">
+<div class="panel panel-default">
+    <div class="panel-body">
+        <form method="get" class="form-inline" action="{% url 'telegram_view_users' %}">
+            <div class="input-group">
+                <label class="input-group-addon">
+                    <i class="glyphicon glyphicon-user"></i>
+                </label>
+                <input type="text" class="form-control" name="ib" placeholder="{% trans 'ibs id' %}" maxlength="5" size="7"/>
+            </div>
+            <div class="input-group">
+                <label class="input-group-addon"><i class="glyphicon glyphicon-text-color"></i></label>
+                <input type="text" name="u" placeholder="{% trans 'username' %}" class="form-control"/>
+            </div>
+            <div class="input-group">
+                <label class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></label>
+                <div class="input-group">
+                    <label class="input-group-addon"><span>{% trans 'from' %}</span></label>
+                    <input size="10" maxlength="10" type="text" value="" name="sd" id="sd" placeholder="{% trans 'join date' %}" class="form-control"/>
+                </div>
+                <div class="input-group">
+                    <label class="input-group-addon">{% trans 'to' %}</label>
+                    <input size="10" maxlength="10" type="text" value="" name="ed" id="ed" placeholder="{% trans 'join date' %}" class="form-control"/>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success">{% trans 'filter' %}</button>
+        </form>
+    </div>
+</div>
+</div>
+    <div class="table-list">
+    <table>
+        <tr>
+            <th>#</th>
+            {% if user.is_staff %}
+            <th>{% trans 'ibs id' %}</th>
+            {% endif %}
+            <th>{% trans 'username' %}</th>
+            <th>{% trans 'join date' %}</th>
+            <th>{% trans 'actions' %}</th>
+        </tr>
+        {% for u in users %}
+            <tr>
+            <td>{{ page|sub:1|mul:per_page|plus:forloop.counter }}</td>
+                {% if user.is_staff %}
+                    <td>{{ u.user.fk_ibs_user_info_user.get.ibs_uid }}</td>
+                {% endif %}
+            <td><span data-xe="{{ u.pk }}" id="u" data-pk="{{ u.pk }}" data-title="{% trans 'username' %}" data-edit="1" data-url="{% url 'telegram_update_data' %}">{{ u.username }}</span></td>
+            <td><span>{{ u.register_date|convert_date }}</span></td>
+            <td>
+                {% if perms.change_telegramuser %}
+                    <button data-x="1" data-xe="{{ u.pk }}" type="button" class="btn btn-info">{% trans 'edit' %}</button>
+                {% endif %}
+            </td>
+            </tr>
+        {% endfor %}
+    </table>
+    </div>
+{% endblock %}

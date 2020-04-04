@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load DateConverter %}
+{% block title %}
+    {% trans 'personal information summery' %}
+{% endblock %}
+{% block page %}
+    {% trans 'personal information summery' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'user' %}</li>
+    <li>{% trans 'user information' %}</li>
+{% endblock %}
+{% block body %}
+
+<div class="table-form">
+    <h2>{% trans 'personal informations' %}</h2>
+
+    <table>
+        <tr>
+            <td><span>{% trans 'name' %}</span></td>
+            <td><span>{{ u.user.first_name }}</span></td>
+        </tr>
+        <tr>
+            <td><span>{% trans 'username' %}</span></td>
+            <td><span>{{ u.user.username }}</span></td>
+        </tr>
+        {% if ibi %}
+        <tr>
+            <td>
+                <span>{% trans 'ibs id' %}</span>
+            </td>
+            <td>
+                <span>{{ ibi }}</span>
+            </td>
+        </tr>
+        {% endif %}
+        {% if user.is_staff or user.is_superuser %}
+            <tr>
+                <td><span>{% trans 'user id' %}</span></td>
+                <td><span>{{ u.user.pk }}</span></td>
+
+            </tr>
+        {% endif %}
+        <tr>
+            <td><span>{% trans 'identity number' %}</span></td>
+            <td><span>{{ u.identity_number }}</span></td>
+        </tr>
+        {% if not u.user.is_staff %}
+        <tr>
+            <td><span>{% trans 'birth date' %}</span></td>
+            <td><span>{{ u.birth_date|convert_date }}</span></td>
+        </tr>
+
+        <tr>
+            <td><span>{% trans 'marriage date' %}</span></td>
+            <td><span>{{ u.marriage_date|convert_date }}</span></td>
+        </tr>
+        {% endif %}
+        <tr>
+            <td><span>{% trans 'join date' %}</span></td>
+            <td><span>{{ u.user.date_joined|convert_date }}</span></td>
+        </tr>
+        {% if not u.user.is_staff %}
+        {% if user.is_staff %}
+            <tr>
+            <td><span>{% trans 'service group' %}</span></td>
+            <td>{{ u.user.fk_user_service_group_user.get.service_group.name }}</td>
+            </tr>
+            <tr><td><span>{% trans 'vip user group' %}</span></td>
+            <td>
+                {% if is_vip %}{{ is_vip.vip_group.name}}{% else %}-{% endif %}
+            </td>
+            </tr>
+        {% endif %}
+        {% endif %}
+        {% if u.user.fk_user_owner_user.exists %}
+        <tr>
+            <td><span>{% trans 'reseller' %}</span></td>
+            <td><span>{{ u.user.fk_user_owner_user.get.owner.first_name }}</span></td>
+        </tr>
+        {% endif %}
+            <tr>
+            <td><span>{% trans 'email' %}</span> </td>
+            <td><span>{{ u.user.email }}</span></td>
+        </tr><tr>
+            <td><span>{% trans 'mobile number' %}</span></td>
+            <td><span>{{ u.mobile }}</span></td>
+        </tr><tr>
+            <td><span>{% trans 'telephone' %}</span></td>
+            <td><span>{{ u.telephone }}</span></td>
+        </tr>
+        <tr>
+            <td><span>{% trans 'address' %}</span></td>
+            <td><span>{{ u.address }}</span></td>
+         </tr>
+        {% if user.is_staff and not u.user.is_staff %}
+            <tr>
+            <td><span>{% trans 'geo' %}</span></td>
+            <td><span>{{ u.geo_code }}</span></td>
+            </tr>
+        <tr>
+        <td><span>{% trans 'comment' %}</span></td>
+        <td><span>{{ u.comment }}</span></td>
+        </tr>
+        {% endif %}
+        <tr>
+            <td><span>{% trans 'is locked?' %}</span></td>
+            <td>{% if locked %}<span style="color: red">{% trans 'yes' %}{% else %}{% trans 'no' %}{% endif %}</span></td>
+        </tr>
+        {% if locked %}
+            <tr>
+            <td><span>{% trans 'reason' %}</span></td>
+            <td><span>{{ locked.ibs_comment }}</span></td>
+            </tr>
+        {% endif %}
+    </table>
+
+    <div class="btn-set">
+        {% if perms.CRM.change_userowner %}
+            {% include 'user/Reseller/ChangeOwnerModal.html' %}
+            <button data-pk="{{ u.user_id }}" data-name="{{ u.user.first_name }}" role="button" data-target="#dvChangeOwner" data-toggle="modal" type="button" class="buttons">{% trans 'change owner' %}</button>
+        {% endif %}
+        {% if perms.CRM.change_userprofile %}
+        <a href="{% url 'change password'%}?uid={{ u.user_id }}" class="buttons"><i class="fa fa-asterisk"></i>{% trans 'change pass' %}</a>
+        {% endif %}
+        {% if perms.CRM.upload_files %}
+        {% if upload_documents  %}
+            {% if perms.CRM.upload_files %}
+            <a href="{% url 'upload_documents' %}" class="buttons"><i class="fa fa-upload"></i>{% trans 'upload' %}</a>
+            {% endif %}
+        {% endif %}
+            {% if user.is_staff %}
+            {% if perms.CRM.view_files %}
+            <a href="{% url 'manage_uploads' %}?u={{ u.user.pk }}" class="buttons">{% trans 'view docs' %}</a>
+            {% endif %}
+            {% endif %}
+        {% endif %}
+        {% if user.is_staff and perms.CRM.change_lockedusers %}
+            {% if not u.user.is_superuser and not u.user.is_staff %}
+            {% if u.user.is_active and not locked %}
+
+            <a href="{% url 'lock_account' %}?u={{ u.user.pk }}" class="buttons">{% trans 'lock' %}</a>
+                {% else %}
+                <a href="{% url 'unlock_account' %}?u={{ u.user.pk }}" class="buttons">{% trans 'unlock' %}</a>
+             {% endif %}
+            {% elif u.user.pk != user.pk %}
+                {% if u.user.is_active %}
+                    <a href="{% url 'toggle_lock_user' %}?u={{ u.user.pk }}" class="buttons red">{% trans 'lock' %}</a>
+                {% else %}
+                    <a href="{% url 'toggle_lock_user' %}?u={{ u.user.pk }}" class="buttons orange">{% trans 'unlock' %}</a>
+                {% endif %}
+            {% endif %}
+
+        {% endif %}
+    </div>
+    <div class="btn-set">
+        <a href="{% url 'show user navigation menu' %}?uid={{ u.user.pk }}" class="buttons"><i class="fa fa-chevron-left"></i>{% trans 'back' %}</a>
+        {% if perms.CRM.change_userprofile %}
+        <a href="{% url 'edit user basic info' %}?u={{ u.user.pk }}" class="buttons"><i class="fa fa-edit"></i>{% trans 'edit' %}</a>
+        {% endif %}
+        {% if user.is_superuser %}
+        <a href="{% url 'assign a group' %}?u={{ u.user.username }}" class="buttons">{% trans 'groups' %}</a>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

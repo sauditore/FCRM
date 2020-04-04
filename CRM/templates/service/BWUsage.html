@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+{% endblock %}
+{% block scriptblock %}
+<link href="{% static 'css/graph.css' %}" rel="stylesheet" type="text/css">
+<script language="javascript" type="text/javascript" src="{% static 'js/jquery.flot.js' %}"></script>
+<script lang="javascript" type="text/javascript" src="{% static 'js/jquery.flot.time.js' %}"></script>
+	<script type="text/javascript">
+
+    var storage = [];
+    var storage2 = [];
+$(function() {
+
+		function convert_date(d){
+            var date = new Date(d*1000);
+            return date;
+        }
+        var plot = $.plot("#placeholder", [100,2000,3000,1000], {
+			series: {
+				shadowSize: 0,
+                lines: {
+					show: true
+				},
+				points: {
+					show: true
+				}
+			},
+			yaxis: {
+				//min: 0,
+				//max: 500000
+			},
+			xaxis: {
+				show: true,
+                mode: 'time'
+                //min: 20,
+                //max: 100
+			},
+            grid: {
+				hoverable: true,
+				clickable: true
+			}
+		});
+    $("<div id='tooltip'></div>").css({
+			position: "absolute",
+			display: "none",
+			border: "1px solid #fdd",
+			padding: "2px",
+			"background-color": "#fee",
+			opacity: 0.80
+		}).appendTo("body");
+
+    $("#placeholder").bind("plothover", function (event, pos, item) {
+				if (item) {
+					var x = item.datapoint[0].toFixed(2),
+						y = item.datapoint[1].toFixed(2);
+
+					$("#tooltip").html('{% trans 'time' %}' + " : " + convert_date(x) + ", {% trans 'usage' %} : " + y)
+						.css({top: item.pageY+5, left: item.pageX+5})
+						.fadeIn(200);
+				} else {
+					$("#tooltip").hide();
+				}
+
+		});
+
+		function getRandomData() {
+            var uid = document.getElementById('uid').value;
+            var rs = document.getElementById('r').value;
+			$.ajax({
+                type: 'GET',
+                url: '/ajax/?a=grp&u='+uid+'&r=' + rs,
+                dataType: "json",
+                success: function(data){storage.push(data);plot.setData([storage]);plot.draw();plot.setupGrid();update_download(data);},
+                error: function(data){res = 0}
+            });
+            setTimeout(getRandomData, 2000);
+		}
+    var plot2 = $.plot("#placeholder2", [], {
+			series: {
+				shadowSize: 0,
+                lines: {
+					show: true
+				},
+				points: {
+					show: true
+				}
+			},
+			yaxis: {
+				//min: 0,
+				//max: 500000
+			},
+			xaxis: {
+				show: true,
+                mode: "time"
+                //tickLength: 5
+                //min: 20,
+                //max: 100
+			},
+            grid: {
+				hoverable: true,
+				clickable: true
+			}
+		});
+    $("<div id='tooltip2'></div>").css({
+			position: "absolute",
+			display: "none",
+			border: "1px solid #fdd",
+			padding: "2px",
+			"background-color": "#fee",
+			opacity: 0.80
+		}).appendTo("body");
+
+    $("#placeholder2").bind("plothover", function (event, pos, item) {
+				if (item) {
+					var x = item.datapoint[0].toFixed(2),
+						y = item.datapoint[1].toFixed(2);
+
+					$("#tooltip2").html('{% trans 'time' %}' + " : " + convert_date(x) + ", {% trans 'usage' %} : " + y)
+						.css({top: item.pageY+5, left: item.pageX+5})
+						.fadeIn(200);
+				} else {
+					$("#tooltip2").hide();
+				}
+
+		});
+
+		function getRandomData2() {
+            var uid = document.getElementById('uid').value;
+			$.ajax({
+                type: 'GET',
+                url: '/ajax/?a=grp&t=d&u='+uid+'&r='+document.getElementById('r').value,
+                dataType: "json",
+                success: function(data){storage2.push(data);plot2.setData([storage2]);plot2.draw();plot2.setupGrid();update_upload(data);},
+                error: function(data){res = 0}
+            });
+            setTimeout(getRandomData2, 2000);
+		}
+		getRandomData();
+        getRandomData2();
+       function update_download(data){
+           var download_ = document.getElementById('down');
+           var amount2 = (parseInt(download_.innerText)) + ((parseInt(data[1])));
+
+
+           download_.innerText = (amount2).toString() + " کیلوبایت";
+       }
+
+    function update_upload(data) {
+        var upload_ = document.getElementById('up');
+        amount = parseInt(upload_.innerText) + ((parseInt(data[1])));
+         upload_.innerText = (parseInt(amount)).toString() + " کیلوبایت";
+    }
+	});
+
+	</script>
+
+{% endblock %}
+{% block bodyblock %}
+    <div class="graph-container">
+    <h4>{% trans 'upload rate' %}</h4>
+			<div id="placeholder" class="graph-placeholder"></div>
+    <label>میزان کل آپلود : </label><label id="down">0</label>
+    </div>
+    <div class="graph-container">
+    <h4>{% trans 'download rate' %}</h4>
+        <div id="placeholder2" class="graph-placeholder"></div>
+    <label>{% trans 'total download' %} : </label><label id="up">0</label>
+    </div>
+    <input type="hidden" value="{{ uid }}" id="uid"/>
+    <input type="hidden" value="{{ r }}" id="r"/>
+    <a href="{% url 'user services summery' %}?u={{ uid }}" class="buttons">{% trans 'back' %}</a>
+{% endblock %}

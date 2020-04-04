@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load DateConverter %}
+{% block title %}
+    {% trans 'bank management' %}
+{% endblock %}
+{% block page %}
+    {% trans 'bank management' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'finance' %}</li>
+    <li>{% trans 'bank management' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+    <div class="ibox-title">
+        <h5>{% trans 'installed' %}</h5>
+    </div>
+    <div class="ibox-content">
+        <div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>{% trans 'name' %}</th>
+                    <th>{% trans 'identifier' %}</th>
+                    <th>{% trans 'install date' %}</th>
+                    <th>{% trans 'modify' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for bank in installed_api %}
+                    <tr>
+
+                        <td>{{ bank.name }}</td>
+                        <td>{{ bank.internal_value }}</td>
+                        <td>{{ bank.install_date|convert_date }}</td>
+                        <td>
+                            <a href="{% url 'bank_api_data_management' %}?b={{ bank.pk }}">{% trans 'edit' %}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+    <div class="ibox">
+    <div class="ibox-title">
+        <h5>{% trans 'not installed' %}</h5>
+    </div>
+        <div class="ibox-content">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>{% trans 'name' %}</th>
+                    <th>{% trans 'identifier' %}</th>
+                    <th>{% trans 'author' %}</th>
+                    <th>{% trans 'actions' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for api in ready_api %}
+                    {% if api.identifier not in installed_ids %}
+                        <tr>
+                            <td>{{ api.name }}</td>
+                            <td>{{ api.identifier }}</td>
+                            <td>{{ api.author }}</td>
+                            <td><a href="{% url 'bank_api_management' %}?a=i&i={{ api.identifier }}">{% trans 'install' %}</a> </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

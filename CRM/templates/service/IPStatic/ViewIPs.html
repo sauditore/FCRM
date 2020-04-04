@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load DateConverter %}
+{% load static %}
+{% block title %}
+    {% trans 'ip pool management' %}
+{% endblock %}
+{% block page %}
+     {% trans 'ip pool management' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'service' %}</li>
+    <li>{% trans 'ip static' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'view ip' %}</h5>
+            <div class="ibox-tools">
+
+            </div>
+        </div>
+        <div class="ibox-content">
+            <table class="table table-striped" data-toggle="grid">
+                <thead>
+                <tr>
+                    <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric" data-identifier="true">{% trans 'id' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="used" data-formatter="in_use">{% trans 'state' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="ip">{% trans 'ip' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="expire_date">{% trans 'expire date' %}</th>
+                    <th data-align="right" data-header-align="right" data-formatter="is_free" data-column-id="is_free">{% trans 'is free' %}</th>
+                    <th data-align="right" data-header-align="right" data-formatter="user_nav" data-column-id="first_name">{% trans 'user' %}</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+        {% if perms.CRM.add_ippool %}
+            <div class="ibox-content">
+                <div class="row">
+                    <form method="get" action="{% url "add_ip_statics" %}">
+                        <div class="col-md-4 col-lg-4">
+                            <div class="form-group">
+                                <label>{% trans 'ip' %}</label>
+                                <input class="form-control" placeholder="{% trans 'ip address' %}" name="i" value="{{ ip.ip }}"/>
+                            </div>
+                            <div class="text-center">
+                                <input type="hidden" value="{{ ip.pk }}" name="e"/>
+                                <input class="btn btn-sm btn-success" type="submit" value="{% trans 'add' %}"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript" language="JavaScript" src="{% static 'js/system/services/IPPoolManagement.js'%}"></script>
+{% endblock %}
+{% block actions %}
+    <button type="button" class="btn btn-sm btn-danger" data-need-pk="1" data-url="{% url 'delete_ip_static' %}" data-action="del"><i class="fa fa-trash"></i> <span>{% trans 'delete' %}</span></button>
+    <a class="btn btn-sm btn-warning hidden" data-need-user="1" data-is-free="1"><i class="fa fa-usd"></i> <span>{% trans 'set as free' %}</span></a>
+    <a class="btn btn-sm btn-info hidden" data-need-user="1" data-is-free="0"><i class="fa fa-usd"></i> <span>{% trans 'set as paid' %}</span></a>
+{% endblock %}

@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% load DateConverter %}
+{% load TextUtils %}
+{% load assets %}
+{% block title %}
+    {% trans 'workbench' %}
+{% endblock %}
+{% block sitemap %}
+    <li class="active">{% trans 'workbench' %}</li>
+{% endblock %}
+{% block styles %}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/system/persianDate/persianDatepicker-default.css' %}"/>
+{% endblock %}
+{% block page %}
+    {% trans 'workbench' %}
+{% endblock %}
+{% block header %}
+    <form id="fSearchArea" class="" role="search">
+        <div class="form-group col-md-2 col-sm-2 col-xs-2 col-lg-2">
+            {#            <label class="">{% trans 'ibs id' %}</label>#}
+            <input size="7" class="form-control" type="text" value="{{ get.tu }}" name="tu" placeholder="{% trans 'ibs id' %}"/>
+        </div>
+        <div class="form-group col-md-2 col-sm-2 col-xs-2 col-lg-2">
+            {#            <label class="">{% trans 'user id' %}</label>#}
+            <input size="7" class="form-control" type="text" value="{{ get.tiu }}" name="tiu" placeholder="{% trans 'user id' %}"/>
+        </div>
+        <div class="form-group col-md-2 col-sm-2 col-xs-2 col-lg-2">
+            {#            <label class="">{% trans 'title' %}</label>#}
+            <input type="text" value="{{ get.t }}" placeholder="{% trans 'title' %}" class="form-control" name="t"/>
+        </div>
+        <div class="form-group col-md-2 col-sm-2 col-xs-2 col-lg-2">
+            {#            <label for="cGroups">{% trans 'groups' %}</label>#}
+            <select data-select="1" id="cGroups" name="sCG" class="form-control">
+                <option selected="selected" disabled="disabled">{% trans 'groups' %}</option>
+                <option value="">-</option>
+                {% for g in groups %}
+                    <option value="{{ g.pk }}">{{ g.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group col-md-2 col-sm-2 col-xs-2 col-lg-2">
+            {#            <label for="jst">{% trans 'state' %}</label>#}
+            <select data-select="1" id="jst" name="jst" class="form-control">
+                <option selected="selected" disabled="disabled">{% trans 'state' %}</option>
+                <option value="">{% trans 'none' %}</option>
+                <option value="0">{% trans 'not started' %}</option>
+                {#                    <option value="1">{% trans 'job started' %}</option>#}
+                <option value="2">{% trans 'doing' %}</option>
+                <option value="3">{% trans 'job finished successfully' %}</option>
+                <option value="4">{% trans 'job can not be completed' %}</option>
+                {#                    <option value="5">{% trans 'job referenced' %}</option>#}
+                <option value="6">{% trans 'canceled' %}</option>
+            </select>
+        </div>
+        <div class="form-group col-md-2 col-sm-2 col-xs-2 col-lg-2">
+            {#            <label for="sSender">{% trans 'sender' %}</label>#}
+            <select data-select="1" name="snd" id="sSender" class="form-control">
+                <option selected="selected" disabled="disabled">{% trans 'sender' %}</option>
+                <option value="">-</option>
+                {% for s in senders %}
+                    <option value="{{ s.pk }}">{{ s.first_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group col-md-2 col-sm-2 col-xs-2 col-lg-2">
+            {#            <label for="tRPP">{% trans 'responsible' %}</label>#}
+            <input id="tRPP" type="text" size="10" value="" name="rpp" class="form-control" placeholder="{% trans 'responsible' %}"/>
+        </div>
+        <div class="form-group col-md-2 col-sm-2 col-xs-2 col-lg-2">
+            {#            <label for="sTitles">{% trans 'title' %}</label>#}
+            <select data-select="1" id="sTitles" name="t" class="form-control">
+                <option selected="selected" disabled="disabled">{% trans 'title' %}</option>
+                <option value="">-</option>
+                {% for t in titles %}
+                    <option value="{{ t.title }}">{{ t.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group col-md-2 col-sm-2 col-xs-2 col-lg-2">
+            {#            <label>{% trans 'send date' %} {% trans 'from' %}</label>#}
+            <input type="text" data-date="1" value="" name="sds" id="sds" placeholder="{% trans 'send date' %} {% trans 'from' %}" size="10" class="form-control"/>
+        </div>
+        <div class="form-group col-md-2 col-sm-2 col-xs-2 col-lg-2">
+            {#            <label>{% trans 'send date' %} {% trans 'to' %}</label>#}
+            <input type="text" value="" data-date="1" name="sde" id="esd" placeholder="{% trans 'send date' %} {% trans 'to' %}" size="10" class="form-control"/>
+        </div>
+        <div class="form-group col-md-2 col-sm-2 col-xs-2 col-lg-2">
+            {#            <label>{% trans 'done date' %} {% trans 'from' %}</label>#}
+            <input type="text" value="" name="dds" data-date="1" placeholder="{% trans 'done date' %} {% trans 'from' %}" class="form-control" size="10"/>
+        </div>
+        <div class="form-group col-md-2 col-sm-2 col-xs-2 col-lg-2">
+            {#            <label>{% trans 'done date' %} {% trans 'to' %}</label>#}
+            <input type="text" value="" name="dde" data-date="1" placeholder="{% trans 'done date' %} {% trans 'to' %}" class="form-control" size="10"/>
+        </div>
+        <div class="form-group  col-md-2 col-sm-2 col-xs-2 col-lg-2">
+            {#            <label for="sSGroup">{% trans 'reference' %} {% trans 'source' %}</label>#}
+            <select data-select="1" id="sSGroup" name="srcGroup" class="form-control">
+                <option selected="selected" disabled="disabled">{% trans 'refernce source' %}</option>
+                <option value="">-</option>
+                {% for g in groups %}
+                    <option value="{{ g.pk }}">{{ g.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group  col-md-2 col-sm-2 col-xs-2 col-lg-2">
+            {#            <label for="sDGroup">{% trans 'reference' %} {% trans 'destination' %}</label>#}
+            <select data-select="1" id="sDGroup" name="dstGroup" class="form-control">
+                <option selected="selected" disabled="disabled">{% trans 'reference destination' %}</option>
+                <option value="">-</option>
+                {% for g in groups %}
+                    <option value="{{ g.pk }}">{{ g.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group col-md-2 col-sm-2 col-xs-2 col-lg-2">
+            {#            <label for="cGroups">{% trans 'current group' %}</label>#}
+            <select data-select="1" id="cGroups" name="sCG" class="form-control">
+                <option selected="selected" disabled="disabled">{% trans 'current group' %}</option>
+                <option value="">-</option>
+                {% for g in groups %}
+                    <option value="{{ g.pk }}">{{ g.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-12 text-center">
+            <button type="submit" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-search"></i> <span class="hidden-sm hidden-xs">{% trans 'search' %}</span></button>
+            {% if perms.CRM.dash_excel_report %}
+                <button class="btn btn-sm btn-default navbar-btn"><i class="glyphicon glyphicon-download"></i> <span>{% trans 'excel' %}</span></button>
+            {% endif %}
+        </div>
+
+    </form>
+{% endblock %}
+{% block body %}
+    <input type="hidden" id="hSearchData" value="{{ url_params }}"/>
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>{% trans 'workbench jobs' %}</h5>
+            <div class="ibox-tools">
+                {% if perms.CRM.add_callhistory %}
+                    <button data-single-user="1" type="button" class="btn btn-xs btn-primary hidden" data-toggle="modal" data-target="#mAddNewCall" data-pk="">{% trans 'add call' %}</button>
+                {% endif %}
+                {% if perms.CRM.fill_working_time %}
+                    <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#mAssignJob">{% trans 'schedule' %}</button>
+                {% endif %}
+                <a href="{% url 'show user navigation menu' %}?uid=" data-single-user="1" role="button" class="btn btn-xs btn-primary hidden" data-pk="">{% trans 'back' %}</a>
+            </div>
+        </div>
+        <div class="ibox-content">
+            <table class="table table-condensed" data-toggle="grid">
+                <thead>
+                <tr>
+                    <th data-align="right" data-header-align="right" data-column-id="pk" data-identifier="true" data-type="numeric">{% trans 'id' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="last_state" data-formatter="state" data-sortable="false">{% trans 'state' %}</th>
+                    <th data-align="right" data-column-id="title" data-formatter="" data-header-align="right">{% trans 'title' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="create_date">{% trans 'send date' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="group__name">{% trans 'group' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="fk_dashboard_current_group_dashboard__group__name">{% trans 'current group' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="sender__first_name">{% trans 'sender' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="target_text">{% trans 'target' %}</th>
+
+                    <th data-formatter="chart" data-align="right" data-header-align="right" data-column-id="done_date">{% trans 'done date' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    {% assets filters='jsmin', output='wkm.js', 'js/system/workbench/workbench.js', 'js/system/persianDatepicker/persianDatepicker.min.js'%}
+        <script language="javascript" type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+{% endblock %}
+{% block modals %}
+    {% if perms.CRM.add_callhistory %}
+        {% include 'help_desk/call/AddNewCallModal.html' %}
+    {% endif %}
+    {% if perms.CRM.reference_to_others %}
+        {% include 'dashboard/ReferenceModal.html' %}
+    {% endif %}
+    {% if perms.CRM.fill_working_time %}
+        {% include 'calendar/AssignJobModal.html' %}
+    {% endif %}
+    {% if perms.CRM.add_userworkhistory %}
+        {% include 'dashboard/AddWorkHistoryModal.html' %}
+    {% endif %}
+    {% if perms.CRM.add_ticket_partner %}
+        {% include 'dashboard/ChoosePartnetModal.html' %}
+    {% endif %}
+    {% if perms.CRM.add_tickettransportation %}
+        {% include 'dashboard/AddJobTransportModal.html' %}
+    {% endif %}
+    {% if perms.CRM.cancel_job %}
+        {% include 'dashboard/CancelJobModal.html' %}
+    {% endif %}
+    {% if perms.CRM.upload_workbench_document %}
+        {% include 'upload/UploadModal.html' %}
+    {% endif %}
+    {% if perms.CRM.download_workbench_reports %}
+        {% include 'upload/ViewFilesModal.html' %}
+    {% endif %}
+{% endblock %}

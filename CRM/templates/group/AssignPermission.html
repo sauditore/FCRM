@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+    {% trans 'assign permissions to group' %}
+{% endblock %}
+{% block page %}
+    {% trans 'assign permissions to group' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'group' %}</li>
+    <li>{% trans 'permissions' %}</li>
+{% endblock %}
+{% block body %}
+    <h4 id="sp"></h4>
+    <div class="ibox">
+    <div class="ibox-content">
+        <div class="row">
+            <input type="hidden" value="{{ gid }}" id="GID"/>
+            <div class="panel-group">
+                {% for c in c_types %}
+                    <div class="col-lg-6 col-md-6">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h5 class="panel-title">{% trans c.name %}</h5>
+                            </div>
+                            <div class="panel-body">
+                                {% for p in c.permission_set.all %}
+                                    <div class="checkbox checkbox-rtl checkbox-info">
+                                        <input id="c{{ p.pk }}" type="checkbox" name="p" value="{{ p.pk }}" {% if p.pk in selected %}checked="checked"{% endif %} />
+                                        <label for="c{{ p.pk }}">{{ p.name }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="text-center">
+            <a class="btn btn-info" href="{% url 'show_all_groups' %}">{% trans 'done' %}</a>
+        </div>
+    </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+  $(function() {
+      $('[type=checkbox]').on('change', function(){
+          var $this = $(this);
+          var tx = 'b';
+          if($this.is(':checked')){
+            tx = 'a';
+          }
+          $.ajax({
+              url:'/groups/perm/?a='+tx+'&p='+$this.val()+'&g='+$('#GID').val(),
+              method: 'get',
+              error: function(er){
+                  post_error(er);
+              }
+          });
+      });
+  });
+  </script>
+{% endblock %}

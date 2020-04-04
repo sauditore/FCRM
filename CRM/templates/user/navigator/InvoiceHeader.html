@@ -1,0 +1,8 @@
+{% load i18n %}
+{% if perms.CRM.view_invoices or perms.CRM.view_single_invoice %}
+    {% if not is_personnel or profile.is_visitor %}
+        <a href="#" class="list-group-item text-center">
+            <h4 class="fa fa-2x fa-usd"></h4><p class="hidden-sm hidden-xs">{% trans 'financial' %}</p>
+        </a>
+    {% endif %}
+{% endif %}

@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load DateConverter %}
+{% load static %}
+{% block title %}
+    {% trans 'service properties management' %}
+{% endblock %}
+{% block scriptblock %}
+{#    <link type="text/css" rel="stylesheet" href="{% static 'css/persianDatepicker-default.css' %}"/>#}
+{#    <script language="JavaScript" src="{% static 'js/persianDatepicker.min.js' %}"></script>#}
+{#    <script language="javascript">#}
+{#        $(function(){#}
+{#            $('#sd').persianDatepicker();#}
+{#            $('#ed').persianDatepicker();#}
+{#        });#}
+{##}
+{#    </script>#}
+{% endblock %}
+{% block page %}
+    {{ service_name.name }}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'services' %}</li>
+    <li>{{ service_name.name }}</li>
+    <li>{% trans 'properties' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+    <div class="ibox-heading">
+        <h3 class="ibox-title">{% trans 'properties' %}</h3>
+    </div>
+    <div class="ibox-content">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th><span>#</span></th>
+                <th><span>{% trans 'name' %}</span></th>
+                <th><span>{% trans 'description' %}</span></th>
+                <th><span>{% trans 'price' %}</span></th>
+                <th><span>{% trans 'initial package' %}</span></th>
+                <th><span>{% trans 'package price' %}</span></th>
+                <th><span>{% trans 'period' %}</span></th>
+                <th><span>{% trans 'bandwidth' %}</span></th>
+                <th><span>{% trans 'is visible' %}</span></th>
+                <th><span>{% trans 'is vip' %}</span></th>
+                <th><span>{% trans 'start date' %}</span></th>
+                <th><span>{% trans 'end date' %}</span></th>
+                <th><span>{% trans 'actions' %}</span></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for p in properties %}
+                <tr>
+                    <td><span>{{ forloop.counter }}</span></td>
+                    <td><span>{{ p.properties.name }}</span></td>
+                    <td><span>{{ p.properties.description }}</span></td>
+                    <td><span>{{ p.properties.base_price }}</span></td>
+                    <td><span>{{ p.properties.initial_package }}</span></td>
+                    <td><span>{{ p.properties.package_price }}</span></td>
+                    <td><span>{{ p.properties.period }}</span></td>
+                    <td><span>{{ p.properties.bandwidth }}</span></td>
+                    <td><span>{{ p.properties.is_visible }}</span></td>
+                    <td><span>{{ p.properties.fk_vip_services_service.exists }}</span></td>
+                    <td><span>{{ p.properties.start_date|convert_date_no_day }}</span></td>
+                    <td><span>{{ p.properties.end_date|convert_date_no_day }}</span></td>
+                    <td>
+
+                        <div class="col-xs-12">
+                            <a href="{% url 'show_all_service_properties' %}?s={{ srv }}&e={{ p.properties.pk }}" class="btn btn-xs btn-info">{% trans 'edit' %}</a>
+                            <a href="{% url 'show_all_service_properties' %}?d={{ p.properties.pk }}&s={{ srv }}" class="btn btn-xs btn-danger">{% trans 'delete' %}</a>
+                            <a href="{% url 'show_all_service_properties' %}?s={{ srv }}&tvs={{ p.properties.pk }}" class="btn btn-xs btn-info">{% if p.properties.is_visible %}{% trans 'invisible' %}{% else %}{% trans 'visible' %}{% endif %}</a>
+                        {% if not p.properties.fk_default_service_property_default.exists %}
+                            <div class="col-xs-12">
+                                <a class="btn btn-xs btn-info" href="{% url 'show_all_service_properties' %}?s={{ srv }}&td={{ p.properties.pk }}">{% trans 'set default' %}</a>
+                            </div>
+                        {% endif %}
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="ibox-footer">
+        <a href="{% url 'show all services' %}" class="btn btn-sm btn-success">{% trans 'done' %}</a>
+    </div>
+    </div>
+    <div class="ibox">
+    <div class="ibox-heading">
+        <h3 class="ibox-title">{% trans 'add new' %}</h3>
+    </div>
+    <div class="ibox-content">
+        <div class="row">
+            <form method="post" class="col-xs-6">
+                <table class="table">
+                    <tr>
+                        <td>{% trans 'name' %}</td>
+                        <td><input class="form-control" type="text" autocomplete="on" name="name" placeholder="{% trans 'property name' %}" value="{{ edit.name }}"/></td>
+                    </tr>
+                    <tr>
+                        <td>{% trans 'description' %}</td>
+                        <td><input type="text" class="form-control" name="description" autocomplete="on" placeholder="{% trans 'property description' %}" value="{{ edit.description }}"/></td>
+                    </tr>
+                    <tr>
+                        <td>{% trans 'price' %}</td>
+                        <td><input type="text" class="form-control" value="{{ edit.base_price }}" placeholder="{% trans 'base price in IRT' %}" name="price"/></td>
+                    </tr>
+                    <tr>
+                        <td>{% trans 'initial package' %}</td>
+                        <td><input type="text" class="form-control" value="{{ edit.initial_package }}" autocomplete="on" placeholder="{% trans 'initial service package' %}" name="initPackage"/></td>
+                    </tr>
+                    <tr>
+                        <td>{% trans 'package price' %}</td>
+                        <td><input type="text" class="form-control" autocomplete="on" value="{{ edit.package_price }}" placeholder="{% trans 'package price' %}" name="packPrice"/></td>
+                    </tr>
+                    <tr>
+                        <td>{% trans 'period' %}</td>
+                        <td><input type="text" class="form-control" autocomplete="on" value="{{ edit.period }}" name="period" placeholder="{% trans 'service duration' %}"/></td>
+                    </tr>
+                    <tr>
+                        <td>{% trans 'bandwidth' %}</td>
+                        <td><input type="text" class="form-control" autocomplete="on" value="{{ edit.bandwidth }}" name="bw" placeholder="{% trans 'upload/download' %}"/></td>
+                    </tr>
+                    <tr>
+                        <td>{% trans 'start date' %}</td>
+                        <td>
+                            <input type="text" class="form-control" value="{{ edit.start_date|convert_date_no_day }}" name="sd" id="sd" placeholder="{% trans 'date' %}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{% trans 'end date' %}</td>
+                        <td>
+                            <input class="form-control" type="text" value="{{ edit.end_date|convert_date_no_day }}" name="ed" id="ed" placeholder="{% trans 'date' %}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{% trans 'is visible' %}</td>
+                        <td>
+                            <label for="isVisible">{% trans 'view this property to users' %}</label>
+                            <input type="checkbox" value="1" name="isVisible" id="isVisible" placeholder="{% trans 'visible for users' %}" {% if edit.is_visible %}checked{% endif %}/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="vpg">{% trans 'view this to group' %}</label></td>
+                        <td>
+
+                            <select class="form-control" name="vpg" id="vpg">
+                                <option value="">-</option>
+                                {% for v in vip_groups %}
+                                    <option value="{{ v.pk }}" {% if v.pk == edit.fk_vip_services_service.get.group.pk %}selected{% endif %}>{{ v.name }}</option>
+
+                                {% endfor %}
+
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                {% csrf_token %}
+                <input type="hidden" value="{{ edit.pk }}" name="pk"/>
+                <input type="hidden" value="{{ srv }}" name="srv"/>
+                <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-check"></i> {% trans 'send' %}</button>
+            </form>
+        </div>
+    </div>
+    </div>
+{% endblock %}

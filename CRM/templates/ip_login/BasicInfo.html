@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load DateConverter %}
+{% block title %}
+{% trans 'welcome'%} {% if p.user.first_name %}{{ p.user.first_name }}{% else %}{{ p.user.username }}{% endif %}
+{% endblock %}
+
+{% block page %}
+{% trans 'welcome'%} {% if p.user.first_name %}{{ p.user.first_name }}{% else %}{{ p.user.username }}{% endif %}
+{% endblock %}
+
+{% block sitemap %}
+    <li>{% trans 'ip login' %}</li>
+    <li>{% trans 'basic info' %}</li>
+{% endblock %}
+
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'ip login' %}</h5>
+        </div>
+        <div class="ibox-content">
+            {% if polls %}
+                {% include 'polls/UserIndex.html' %}
+            {% endif %}
+            <div class="table-form">
+                <h4>{% trans 'user information' %}</h4>
+                <table>
+                    <tr>
+                        <td>
+                            <span>{% trans 'username' %}</span></td>
+                        <td>
+                            <span>{{ p.user.username }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span>{% trans 'name' %}</span>
+                        </td>
+                        <td>
+                            <span>{{ p.user.first_name }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span>{% trans 'phone number' %}</span>
+                        </td>
+                        <td>
+                            <span>{{ p.telephone }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span>{% trans 'join date' %}</span></td>
+                        <td><span>{{ p.user.date_joined|convert_date }}</span></td>
+                    </tr>
+                </table>
+
+
+                <h4>{% trans 'service information' %}</h4>
+                <table>
+                    <tr>
+                        <td><span>{% trans 'service name' %}</span></td>
+                        <td><span>{{ s.service.name }}</span></td>
+                    </tr>
+                    <tr>
+                        <td><span>{% trans 'account state' %}</span></td>
+                        <td><span>{{ state }}</span></td>
+                    </tr>
+                    <tr>
+                        <td><span>{% trans 'credit left' %}</span></td>
+                        <td><span class="{% if low_credit %}stat red{% else %}stat green{% endif %}">
+                    {% if s.service_property.initial_package > 1 %}
+                        {{ credit }}
+                    {% else %}
+                        {% trans 'unlimited' %}
+                    {% endif %}
+                </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span>{% trans 'expire date' %}</span></td>
+                        <td><span class="{% if cnd %}stat red{% else %}stat green{% endif %}">{{ s.expire_date|convert_date }}</span></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="text-center">
+                {% if tmp_unlocked %}
+                    <a href="{% url 'ip_login_temp_charge' %}" class="buttons orange">{% trans 'temp recharge' %}</a>
+                {% endif %}
+                {% if recharge_unlocked %}
+                    <a href="{% url 'ip_login_recharge' %}" class="buttons green">{% trans 'recharge' %}</a>
+                {% endif %}
+                {% if not cnd %}
+                    {% if s.service_property.initial_package > 5%}
+                        <a href="{% url 'ip_login_buy_traffic' %}" class="buttons">{% trans 'buy traffic' %}</a>
+                    {% endif %}
+                {% endif %}
+                <a href="{% url 'ip_login_invoices' %}" class="buttons">{% trans 'invoice' %}</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

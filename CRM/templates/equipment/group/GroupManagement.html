@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+    {% trans 'equipment groups' %}
+{% endblock %}
+{% block page %}
+    {% trans 'equipment groups' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'equipment' %}</li>
+    <li>{% trans 'group' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'equipment group' %}</h5>
+            <div class="ibox-tools">
+                {% if perms.CRM.add_equipmentgroup %}
+                    <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#mAddNewEquipmentGroup"><span> {% trans 'add' %}</span></button>
+                {% endif %}
+            </div>
+        </div>
+        <div class="ibox-content">
+            <table class="table table-striped" data-toggle="grid">
+            <thead>
+            <tr>
+                <th data-align="center" data-header-align="center" data-column-id="pk" data-type="numeric" data-identifier="true">{% trans 'id' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="name" data-formatter="set_pri">{% trans 'name' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="description">{% trans 'description' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="equipment_type__name">{% trans 'type' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="code__code">{% trans 'sell code' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="remain_items">{% trans 'remian items' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="used_remain_items">{% trans 'used remian items' %}</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script language="JavaScript" type="text/javascript" src="{% static 'js/system/equipment/EquipmentGroupManagement.js' %}"></script>
+{% endblock %}
+{% block modals %}
+    {% if perms.CRM.add_equipmentgroup or perms.CRM.change_equipmentgroup %}
+        {% include 'equipment/group/AddNewGroupModal.html'%}
+    {% endif %}
+    {% if perms.CRM.change_equipmentgroup %}
+        {% include 'equipment/group/ChangeCounterModal.html' %}
+    {% endif %}
+{% endblock %}
+
+{% block actions %}
+    {% if perms.CRM.change_equipmentgroup %}
+        <button type="button" data-need-pk="1" class="btn btn-info btn-sm" data-toggle="modal" data-target="#mAddNewEquipmentGroup"><i class="fa fa-edit"></i><span class="hidden-sm hidden-xs" > {% trans 'edit' %}</span></button>
+        <button type="button" data-need-pk="1" class="btn btn-info btn-sm" data-toggle="modal" data-target="#mChangeCounter"><i class="fa fa-refresh"></i> <span>{% trans 'items' %}</span></button>
+    {% endif %}
+    {% if perms.CRM.delete_equipmentgroup %}
+        <button type="button" data-need-pk="1" data-action="del" data-url="{% url 'equipment_group_remove' %}" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i><span class="hidden-xs hidden-sm"> {% trans 'remove' %}</span> </button>
+    {% endif %}
+{% endblock %}

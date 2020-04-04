@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title%}
+    {% trans 'delete group' %}
+{% endblock %}
+{% block scriptblock %}
+{% endblock %}
+{% block bodyblock%}
+    <form method="post">
+        {% trans 'are you sure you want to delete this group?' %}
+        <br/><span>Groups Name : {{ group.name }}</span><br/><br/>
+    <input type="submit" value="{% trans 'delete group' %}" name="btnDelete"/>
+    <input type="button" onclick="document.location='/groups/show/all/'" value="{% trans 'cancel' %}"/>
+    <input type="hidden" name="gid" value="{{ group.pk }}" />
+    {% csrf_token %}
+    </form>
+{% endblock %}

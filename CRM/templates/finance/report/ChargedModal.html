@@ -1,0 +1,25 @@
+{% load i18n %}
+{% load assets %}
+<div class="modal fade" id="mCharged">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>{% trans 'time' %}</th>
+                        <th>{% trans 'action' %}</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <div class="text-center">
+                    <button data-dismiss="modal" type="button" class="btn btn-sm btn-default"><i class="fa fa-remove"></i> <span>{% trans 'close' %}</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% assets filters='jsmin', output='chargerep.js', 'js/system/invoice/ChargeReport.js' %}
+    <script language="javascript" type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}

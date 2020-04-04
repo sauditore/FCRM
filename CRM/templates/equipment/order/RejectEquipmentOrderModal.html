@@ -1,0 +1,22 @@
+{% load i18n %}
+
+    <div class="modal fade" id="mRejectOrderModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form id="fRejectOrderModal">
+                        <div class="form-group">
+                            <input class="form-control input-sm" placeholder="{% trans 'reason' %}" name="r"/>
+                            <input type="hidden" name="pk"/>
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-sm btn-danger" type="submit"><i class="fa fa-trash"></i> <span class="hidden-xs hidden-sm">{% trans 'remove' %}</span></button>
+                            <button class="btn btn-sm btn-default" type="button" data-dismiss="modal"><i class="fa fa-remove"></i> <span class="hidden-sm hidden-xs">{% trans 'cancel' %}</span></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+

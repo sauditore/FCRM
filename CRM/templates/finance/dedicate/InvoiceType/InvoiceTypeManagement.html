@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+{% trans 'invoice type management' %}
+{% endblock %}
+{% block page %}
+    {% trans 'invoice type management' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'financial' %}</li>
+    <li>{% trans 'dedicated' %}</li>
+    <li>{% trans 'invoice types' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+    <div class="ibox-title">
+        <h5>{% trans 'invoice type' %}</h5>
+        <div class="ibox-tools">
+            {% if perms.CRM.add_dedicatedinvoicetype %}
+            <button class="btn btn-xs btn-primary" type="button" data-toggle="modal" data-target="#mAdd"><span>{% trans 'add' %}</span></button>
+            {% endif %}
+        </div>
+    </div>
+        <div class="ibox-content">
+            <table class="table" id="tTypes" data-toggle="grid">
+                <thead>
+                <tr>
+                    <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric"
+                        data-identifier="true">{% trans 'id' %}
+                    </th>
+                    <th data-align="right" data-header-align="right" data-column-id="name">{% trans 'name' %}</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+<script language="javascript" type="text/javascript" src="{% static 'js/system/invoice/InvoiceTypeManagement.js' %}"></script>
+{% endblock %}
+{% block modals %}
+    {% if perms.CRM.add_dedicatedinvoicetype or perms.CRM.change_dedicatedinvoicetype %}
+        {% include 'finance/dedicate/InvoiceType/AddNewModal.html' %}
+    {% endif %}
+{% endblock %}
+{% block actions %}
+{% if perms.CRM.change_dedicatedinvoicetype %}
+    <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#mAdd" data-pk="" data-need-pk="1"><i class="fa fa-edit"></i><span class="hidden-sm hidden-xs">{% trans 'edit' %}</span></button>
+{% endif %}
+{% if perms.CRM.delete_dedicatedinvoicetype %}
+    <button type="button" class="btn btn-sm btn-danger" data-action="del" data-url="{% url 'invoice_dedicate_type_delete' %}" data-need-pk="1" data-pk=""><i class="fa fa-trash"></i> <span class="hidden-xs hidden-sm">{% trans 'delete' %}</span></button>
+{% endif %}
+{% endblock %}

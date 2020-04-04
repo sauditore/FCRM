@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+    {% trans 'addd new call for' %} {{ username }}
+{% endblock %}
+{% block scriptblock %}
+    <script language="JavaScript">
+    load_problems();
+    $(function(){
+       $('select').select2({
+           tags: true,
+           dir: "rtl"
+       });
+    });
+    </script>
+    <script language="JavaScript" type="text/javascript" src="{% static 'js/select2.full.min.js' %}"></script>
+    <link type="text/css" rel="stylesheet" href="{% static 'css/select2.min.css' %}"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'css/select2-bootstrap.css' %}"/>
+{% endblock %}
+{% block bodyblock %}
+<form method="post">
+{% csrf_token %}
+    <input type="hidden" value="{{ username.pk }}" name="u"/>
+<div class="panel-group col-lg-4 col-md-4">
+    <div class="panel">
+        <div class="panel-body">
+            <div class="input-group">
+                <label class="input-group-addon">{% trans 'operator' %}</label>
+                <input type="text" class="form-control" readonly value="{{ user.username }}"/>
+            </div>
+        </div>
+    </div>
+    <div class="panel">
+        <div class="panel-body">
+            <div class="input-group">
+                <label class="input-group-addon">{% trans 'user' %}</label>
+                <input type="text" class="form-control" readonly value="{{ username.first_name }}"/>
+            </div>
+        </div>
+    </div>
+    <div class="panel">
+        <div class="panel-body">
+            <div class="input-group">
+                <label class="input-group-addon">{% trans 'problem' %}</label>
+                <select name="q" id="slProblem" class="form-control" onchange="load_solution();"></select>
+
+            </div>
+            <div class="panel">
+                <div class="panel-body">
+                    <span id="dvPDescription"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel">
+        <div class="panel-body">
+            <div class="input-group">
+                <label class="input-group-addon">{% trans 'solution' %}</label>
+                <select class="form-control" name="s" id="slSolution" onchange="load_description_for(1);"></select>
+            </div>
+            <div class="panel">
+                <div class="panel-body">
+                    <span id="dvSDescription"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="btn-group" data-toggle="buttons">
+        <label class="btn btn-default">
+            <input type="checkbox" value="1" name="ref"/>{% trans 'ref to other' %}
+        </label>
+    </div>
+    <button type="submit" class="btn btn-success">{% trans 'add'%}</button>
+</div>
+    </form>
+{% endblock %}

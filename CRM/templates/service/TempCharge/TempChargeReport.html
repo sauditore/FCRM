@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+{% trans 'temp charge report' %}
+{% endblock %}
+{% block scriptblock %}
+<link type="text/css" rel="stylesheet" href="{% static 'css/jquery.bootgrid.min.css' %}"/>
+<script language="JavaScript" type="text/javascript" src="{% static 'js/jquery.bootgrid.min.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'js/TempChargeReport.js' %}"></script>
+{% endblock %}
+{% block search_header %}
+{% endblock %}
+{% block search %}
+{% endblock %}
+{% block actions %}
+<div class="">
+
+</div>
+{% endblock %}
+{% block bodyblock %}
+<div>
+    <table class="table table-hover table-striped" id="tReport">
+        <thead>
+        <tr>
+            <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric"
+                data-identifier="true">{% trans 'id' %}
+            </th>
+            <th data-align="right" data-header-align="right" data-column-id="code">{% trans 'code' %}</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+{% endblock %}

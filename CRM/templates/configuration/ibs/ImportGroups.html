@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'import services' %}
+{% endblock %}
+{% block page %}
+    {% trans 'import services' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'configuration' %}</li>
+    <li>{% trans 'import servicess' %}</li>
+{% endblock %}
+
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-content">
+            {% if not is_importing %}
+        {% if perms.CRM.import_users %}
+    <form action="{% url 'import ibs services' %}" method="post">
+    {% csrf_token %}
+    <div class="modal fade" id="assignNewPrice">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <select name="sg" data-select="1">
+                        {% for g in groups %}
+                            <option value="{{ g.pk }}">{{ g.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <input value="{% trans 'assign' %}" name="current" type="submit"/>
+                </div>
+            </div>
+        </div>
+    </div>
+{#  Import All Users...  #}
+    <div class="modal fade" id="importAllUsers">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p>{% trans 'this will import all users from server into system. all old data will be updated' %}</p>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" value="{% trans 'start' %}" name="users"/>
+                </div>
+            </div>
+        </div>
+    </div>
+{#  end Import Users  #}
+{#  Import Single User  #}
+    <div class="modal fade" id="importSingleUser">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <input type="text" placeholder="{% trans 'ibs uid' %}" name="su" class="form-control"/>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-primary btn-sm" type="submit">{% trans 'import' %}</button>
+                </div>
+                <hr>
+            </div>
+        </div>
+    </div>
+{#  End Import  #}
+
+{#  Import Services  #}
+    <div class="modal fade" id="importNewServices">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    {% trans 'this will import all groups from server. old data will be updated and new services will be added to system' %}
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-primary btn-sm" type="submit" name="groups">{% trans 'import' %}</button>
+                </div>
+                <hr>
+            </div>
+        </div>
+    </div>
+{#  End Import  #}
+    <div class="modal fade" id="importIPStatic">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    {% trans 'this will import ip statics and assign them to user' %}
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-primary btn-sm" type="submit" name="ips">{% trans 'import' %}</button>
+                </div>
+                <hr>
+            </div>
+        </div>
+    </div>
+{#  Import IP Statics  #}
+
+{#        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#assignNewPrice">{% trans 'change price list' %}</button>#}
+{#        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#importAllUsers">{% trans 'import users' %}</button>#}
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#importSingleUser">{% trans 'import single user' %}</button>
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#importNewServices">{% trans 'import services' %}</button>
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#importIPStatic">{% trans 'import ips' %}</button>
+    </form>
+    {% endif %}
+    {% else %}
+        <div class="alert alert-warning fade in">
+        <h2><i class="glyphicon glyphicon-lock"></i> {% trans 'system is importing data. please wait' %}</h2>
+        </div>
+    {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scriptblock %}
+{% endblock %}

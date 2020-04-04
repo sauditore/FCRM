@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'lock user acoount' %}
+{% endblock %}
+
+{% block page %}
+    {% trans 'lock user acoount' %}
+{% endblock %}
+
+{% block sitemap %}
+    <li>{% trans 'user' %}</li>
+    <li>{{ tu.first_name }}</li>
+    <li>{% trans 'lock' %}</li>
+{% endblock %}
+
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'lock user account' %}</h5>
+        </div>
+        <div class="ibox-content">
+            <form method="post">
+                <input type="hidden" name="u" value="{{ tu.pk }}"/>
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <h5><i class="fa fa-lock"></i> {% trans 'lock crm account' %}</h5>
+                            </div>
+                            <div class="panel-body">
+                                <div class="checkbox checkbox-rtl checkbox-primary">
+                                    <input id="cC" type="checkbox" name="c" placeholder="{% trans 'lock account' %}"/>
+                                    <label for="cC">{% trans 'lock account for this user' %} : {{ tu.username }}</label>
+                                </div>
+                                <textarea style="width: 100%;height: 100px;" name="ic" placeholder="{% trans 'a short reason' %}"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    {% if not tu.is_staff %}
+                        <div class="col-md-4">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <h5><i class="fa fa-lock"></i> {% trans 'lock ibs account' %}</h5>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="checkbox checkbox-rtl checkbox-success">
+                                        <input id="cI" type="checkbox" name="i" placeholder="{% trans 'lock account' %}"/>
+                                        <label for="cI">{% trans 'lock account for this user' %} : {{ tu.username }}</label>
+                                    </div>
+                                    <textarea class="form-control" style="width: 100%;height: 100px;" name="ib" placeholder="{% trans 'a short reason' %}"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="row">
+                    <div class="text-center">
+                        <button class="btn btn-info" type="submit"><i class="fa fa-check"></i> <span class="hidden-sm hidden-xs">{% trans 'lock' %}</span></button>
+                        <a class="btn btn-default" role="button" href="{% url 'show user navigation menu' %}?uid={{ tu.pk }}"><i class="fa fa-remove"></i><span class="hidden-xs hidden-sm">{% trans 'cancel' %}</span></a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

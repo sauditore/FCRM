@@ -1,0 +1,48 @@
+{% load i18n %}
+<script language="javascript" type="text/javascript">
+    $(function(){
+        $('#dvCancelJob').on('show.bs.modal', function(){
+            var m = $(this);
+            var f = $('#fCancelJob');
+            f.off('submit');
+            f.on('submit', function(ef){
+                ef.preventDefault();
+                sAlert('آیا از کنسل شدن این کار اطمینان دارید؟', 1, function(){
+                    $.ajax({
+                        url: f.attr('action'),
+                        method: 'post',
+                        data: f.serialize(),
+                        success: function(){
+                            m.modal('hide');
+                            reloadCurrent();
+                            sAlert('کار مورد نظر با موفقت کنسل شد',2);
+                        },
+                        error: function(er){
+                            post_error(er);
+                        }
+                    })
+                })
+            });
+        });
+    });
+</script>
+    <div class="modal fade" id="dvCancelJob" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form method="post" action="{% url 'dashboard_cancel_job' %}" id="fCancelJob">
+                        <div class="form-group">
+                            <label>{% trans 'cancel reason' %}</label>
+                            <textarea class="form-control" name="cre" placeholder="{% trans 'cancel reason' %}"></textarea>
+                            {% csrf_token %}
+                            <input type="hidden" value="" name="d" id="di"/>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-info">{% trans 'send' %}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'cancel' %}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>

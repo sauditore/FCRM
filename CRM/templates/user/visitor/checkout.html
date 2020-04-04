@@ -1,0 +1,23 @@
+{% load i18n %}
+{% load assets %}
+<div class="modal fade" id="mVisitorCheckout">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form method="get" action="{% url 'user_visitor_checkout' %}">
+                    <div class="form-group">
+                        <input type="text" value="0" name="a" class="form-control" placeholder="{% trans 'price to checkout' %}" maxlength="10"/>
+                    </div>
+                    <input type="hidden" name="u" value=""/>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-sm btn-info"><i class="fa fa-check"></i> <span>{% trans 'checout' %}</span></button>
+                        <button class="btn btn-default btn-sm"><i class="fa fa-remove"></i> <span>{% trans 'cancel' %}</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% assets filters='jsmin', output='visCheck.js', 'js/system/users/visitor/checkout.js' %}
+    <script language="JavaScript" type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}

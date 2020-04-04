@@ -1,0 +1,24 @@
+<table>
+    <tr>
+        <td>#</td>
+        <td>{{ traffic_name }}</td>
+        <td>{{ traffic_description }}</td>
+        <td>{{ traffic_amount }}</td>
+    </tr>
+    {% for t in traffic_list %}
+        <tr>
+            <td>
+                <input type="radio" name="rbTraffic" value="{{ t.traffic_id }}"/>
+            </td>
+        <td>
+            {{ t.traffic_name }}
+        </td>
+        <td>
+            {{ t.description }}
+        </td>
+        <td>
+            {{ t.amount }}
+        </td>
+        </tr>
+    {% endfor %}
+</table>

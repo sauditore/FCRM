@@ -1,0 +1,46 @@
+{% load i18n %}
+{% load DateConverter %}
+{% load TextUtils %}
+{% if user.is_staff and perms.CRM.view_dashboard %}
+    <div class="bhoechie-tab-content">
+        <div class="text-center">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="text-center">#</th>
+                    <th class="text-center">{% trans 'id' %}</th>
+                    <th class="text-center">{% trans 'create date' %}</th>
+                    <th class="text-center">{% trans 'title' %}</th>
+                    <th class="text-center">{% trans 'target user' %}</th>
+                    <th class="text-center">{% trans 'sender' %}</th>
+                    <th class="text-center">{% trans 'responsible' %}</th>
+                    <th class="text-center">{% trans 'done date' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for w in workbench %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ w.pk }}</td>
+                        <td>{{ w.create_date|convert_date }}</td>
+                        <td>{{ w.title|snip_text }}</td>
+                        <td>{{ w.target_text }}</td>
+                        <td>{{ w.sender.first_name }}</td>
+                        <td>{{ w.reader.first_name }}</td>
+                        <td>{{ w.done_date|convert_date }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="8"><h3 class="text-danger">{% trans 'no result' %}</h3></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="text-center">
+                <a href="{% url 'view_dashboard' %}?{% if tu.is_staff %}snd{% else %}tiu{% endif %}={{ tu.pk }}" class="btn btn-sm btn-info"><i class="fa fa-list"></i> <span class="hidden-sm hidden-xs">{% trans 'view all' %}</span></a>
+            </div>
+        </div>
+    </div>
+{% endif %}

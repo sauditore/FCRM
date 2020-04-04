@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+    {% trans 'equipment management' %}
+{% endblock %}
+{% block page %}
+    {% trans 'equipment management' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'equipment' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+{% block header %}
+    <form id="fSearchArea" class="" role="search" method="get" action="{% url 'equipment_view' %}">
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>{% trans 'description' %}</label>
+            <input type="text" value="" name="d" placeholder="{% trans 'description' %}" class="form-control"/>
+        </div>
+    </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="seGroups">{% trans 'equipment group' %}</label>
+                <select style="width: 100%" name="g" id="seGroups" data-select="1">
+                    <option value="">-</option>
+                    {% for g in equipment_groups %}
+                        <option value="{{ g.ext }}">{{ g.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    <div class="col-md-12">
+        <div class="text-center">
+            <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-search"></i> <span>{% trans 'search' %}</span></button>
+        </div>
+    </div>
+    </form>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'view equipment' %}</h5>
+            <div class="ibox-tools">
+                {% if perms.CRM.add_equipment %}
+                    <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#mAddNewEquipment"> <span>{% trans 'add' %}</span></button>
+                {% endif %}
+            </div>
+        </div>
+        <div class="ibox-content">
+            <table class="table table-striped" id="tEquipment" data-toggle="grid">
+                <thead>
+                <tr>
+                    <th data-align="center" data-header-align="center" data-column-id="pk" data-type="numeric" data-identifier="true">{% trans 'id' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="description">{% trans 'description' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="serial">{% trans 'serial' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="group__name">{% trans 'group' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="is_involved" data-formatter="bool_tran">{% trans 'is involved' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="is_used" data-formatter="bool_tran">{% trans 'is used' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="fk_equipment_state_equipment__state__name">{% trans 'state' %}</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+<script language="javascript" type="text/javascript" src="{% static 'js/system/equipment/EquipmentManagement.js' %}"></script>
+{% endblock %}
+{% block modals %}
+    {% if perms.CRM.add_equipment or perms.CRM.change_equipment %}
+        {% include 'equipment/AddNewEquipmentModal.html' %}
+    {% endif %}
+    {% if perms.CRM.add_equipmentreturn %}
+        {% include 'equipment/ChangeEquipmentStateModal.html' %}
+    {% endif %}
+    {% if perms.CRM.view_equipment_history %}
+        {% include 'equipment/ViewEquipmentAmountChangeModal.html' %}
+    {% endif %}
+{% endblock %}
+{% block actions %}
+    {% if perms.CRM.change_equipment %}
+        <button type="button" data-need-pk="1" class="btn btn-default btn-sm" data-toggle="modal" data-target="#mAddNewEquipment"><i class="fa fa-edit"></i> <span class="hidden-sm hidden-xs">{% trans 'edit' %}</span></button>
+        <button type="button" class="btn btn-info btn-sm" id="bUsed"><i class="fa fa-hand-o-up"></i> <span class="hidden-sm hidden-xs">{% trans 'used' %}</span></button>
+    {% endif %}
+    {% if perms.CRM.delete_equipment %}
+        <button type="button" data-need-pk="1" data-action="del" data-url="{% url 'equipment_delete' %}" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> <span class="hidden-xs hidden-sm">{% trans 'delete' %}</span></button>
+    {% endif %}
+    {% if perms.CRM.add_equipmentreturn %}
+        <button class="btn btn-warning btn-sm" type="button" id="bReturn" data-toggle="modal" data-target="#mChangeEquipmentState"><i class="fa fa-retweet"></i> <span class="hidden-sm hidden-xs">{% trans 'return' %}</span></button>
+    {% endif %}
+    {% if perms.CRM.view_equipment_history %}
+{#        <button type="button" class="btn btn-info btn-sm" data-need-pk="1" id="bHistory"><i class="glyphicon  glyphicon-record"></i> <span class="hidden-sm hidden-xs">{% trans 'history' %}</span></button>#}
+        <button type="button" data-toggle="modal" data-target="#mEquipmentAmountChange" class="btn btn-info btn-sm" data-need-pk="1" id="bChanges"><i class="fa fa-times"></i> <span class="hidden-xs hidden-sm">{% trans 'changes' %}</span></button>
+    {% endif %}
+{% endblock %}

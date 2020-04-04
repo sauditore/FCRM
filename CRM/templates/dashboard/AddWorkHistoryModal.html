@@ -1,0 +1,58 @@
+{% load i18n %}
+<script language="javascript" type="text/javascript">
+    $(function(){
+        $('#dvAddWorkHistory').on('show.bs.modal', function (){
+            var m = $(this);
+            clear_on_open(m);
+            var f = $('#fAddWorkH');
+            f.off('submit');
+            f.on('submit', function(sf){
+                sf.preventDefault();
+                sAlert('آیا از ثبت گزارش اطمینان دارید؟', 1, function(){
+                    $.ajax({
+                        url: f.attr('action'),
+                        method: 'post',
+                        data: f.serialize(),
+                        success: function(){
+                            m.modal('hide');
+                            reselectCurrent();
+                            sAlert('گزارش شما با موفقیت ثبت شد', 2);
+                        },
+                        error: function(er){
+                            post_error(er, null, m);
+                        }
+                    });
+                })
+            });
+        });
+    });
+</script>
+
+<div class="modal fade" id="dvAddWorkHistory" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="fAddWorkH" method="post" action="{% url 'add_new_job_state' %}">
+                    <div class="form-group">
+                        <label>{% trans 'report' %}</label>
+                        <textarea class="form-control" name="msg" style="height: 150px" placeholder="{% trans 'report' %}"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="s">{% trans 'state' %}</label>
+                        <select name="s" id="s" data-select="1">
+                            <option value="2" {% if report_to_edit.state == 2 %}selected{% endif %}>{% trans 'doing' %}</option>
+                            <option value="3" {% if report_to_edit.state == 3 %}selected{% endif %}>{% trans 'finished' %}</option>
+                            <option value="4" {% if report_to_edit.state == 4 %}selected{% endif %}>{% trans 'is not possible' %}</option>
+                        </select>
+                    </div>
+                    {% csrf_token %}
+                    <input type="hidden" value="" name="di" id="di"/>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-info"><i class="glyphicon glyphicon-check"></i><span class="hidden-xs hidden-sm"> {% trans 'add' %}</span></button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i><span class="hidden-sm hidden-xs"> {% trans 'cancel' %}</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

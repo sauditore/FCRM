@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+{% trans 'send type management' %}
+{% endblock %}
+{% block page %}
+    {% trans 'send type management' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'financial' %}</li>
+    <li>{% trans 'send type' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+{% block header %}
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+    <div class="ibox-title">
+        <h5>{% trans 'types' %}</h5>
+        <div class="ibox-tools">
+            {% if perms.CRM.add_sendtype %}
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#mAdd"><span>{% trans 'add' %}</span></button>
+            {% endif %}
+        </div>
+    </div>
+        <div class="ibox-content">
+            <table class="table" data-toggle="grid" id="tSendType">
+                <thead>
+                <tr>
+                    <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric"
+                        data-identifier="true">{% trans 'id' %}
+                    </th>
+                    <th data-align="right" data-header-align="right" data-column-id="name">{% trans 'name' %}</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+<script language="javascript" type="text/javascript" src="{% static 'js/system/invoice/SentTypeManagement.js' %}"></script>
+{% endblock %}
+{% block modals %}
+    {% if perms.CRM.add_send_type or perms.CRM.change_sendtype %}
+        {% include 'finance/dedicate/SendType/AddNewModal.html' %}
+    {% endif %}
+{% endblock %}
+{% block actions %}
+{% if perms.CRM.change_sendtype %}
+    <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#mAdd" data-need-pk="1" data-pk=""><i class="fa fa-edit"></i> <span class="hidden-sm hidden-xs">{% trans 'edit' %}</span></button>
+{% endif %}
+{% if perms.CRM.delete_sendtype %}
+    <button data-action="del" data-url="{% url 'invoice_dedicate_send_type_delete' %}" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#mBaseDel" data-need-pk="1" type="button" data-pk=""><i class="fa fa-trash"></i> <span class="hidden-sm hidden-xs">{% trans 'delete' %}</span></button>
+{% endif %}
+{% endblock %}

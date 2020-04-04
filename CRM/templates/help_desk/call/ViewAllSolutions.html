@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'manage solutions' %}
+{% endblock %}
+{% block bodyblock %}
+    <div class="table-list">
+    <table>
+    <tr>
+        <th><span>{% trans 'id' %}</span></th>
+        <th><span>{% trans 'short describtion' %}</span></th>
+        <th><span>{% trans 'actions' %}</span></th>
+    </tr>
+    {% for s in solutions %}
+        <tr class="{% cycle 'rows0' 'rows1' %}">
+        <td><span>{{ s.pk }}</span></td>
+        <td><span>{{ s.short_text }}</span></td>
+        <td>{% if user.is_superuser %}
+            <a href="{% url 'add_new_solution' %}?s={{ s.pk }}">{% trans 'edit' %}</a><span> | </span>
+        {% endif %}
+        {% if user.is_superuser %}
+            <a href="#">{% trans 'delete' %}</a>
+        {% endif %}
+        </td>
+        </tr>
+    {% endfor %}
+    </table>
+    </div>
+    <a href="{% url 'add_new_solution' %}" class="buttons">{% trans 'add solution' %}</a>
+{% endblock %}

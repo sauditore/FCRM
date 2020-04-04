@@ -1,0 +1,217 @@
+.btn > i{
+    margin: 0 2px 0 3px;
+}
+.margin-l4{
+    margin-left: 4px;
+}
+.soft-wrap{
+    white-space: pre-wrap!important;
+}
+.select2-container--open{
+    z-index: 10000;
+}
+
+.monthYear{
+    font-size: 13px;
+}
+.btn-pinned{
+    position: absolute;
+    left: -25px;
+    background-color: #1ab394;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    padding: 7px 10px 7px 23px;
+    -webkit-transition: all 0.8s ease-in-out;
+    -moz-transition: all 0.8s ease-in-out;
+    -o-transition: all 0.8s ease-in-out;
+    -ms-transition: all 0.8s ease-in-out;
+    transition: all 0.8s ease-in-out;
+    top: 30px;
+}
+/*.btn-pinned:hover{*/
+    /*left: -15px;*/
+    /*padding-left: 50px;*/
+/*}*/
+.btn-pinned>a{
+    color: white;
+}
+.form-group-float-persian{
+    font-size: 11px;
+    font-family: "Vazir", serif;
+    left: 10px;
+    z-index: 200;
+    text-align: center;
+    align-items: center;
+}
+.form-control.active-floatlabel{
+    height: 36px!important;
+}
+.form-control{
+    border-radius: 4px;
+    height: 28px;
+    font-size: 12px;
+    padding-bottom: 8px;
+}
+select .form-control{
+    height: 32px!important;
+    padding-bottom: 0!important;
+}
+.bootgrid-table td{
+    white-space: normal;
+}
+.select2-container--default .select2-selection--single{
+    border: 1px solid rgba(0,0,0,0.1)!important;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered{
+    color: rgba(0,0,0, 0.4)!important;
+}
+.bootgrid-header .actionBar{
+    padding: 0 0 0 0 ;
+}
+.bootgrid-header .actionBar .actions>div:last-child{
+    display: none;
+}
+.bootgrid-header .actionBar .actions{
+    height: 28px;
+    width: 10%;
+}
+.bootgrid-header .search{
+    width: calc(100% - 10%)!important;
+    margin: 0 0 0 0!important;
+}
+.bootgrid-header .search .glyphicon{
+    display: none;
+}
+.bootgrid-header .input-group{
+    display: block;
+}
+.bootgrid-header .actionBar .actions .btn{
+    height: 28px;
+    padding-top: 3px;
+}
+.bootgrid-header{
+    padding: 0 0 0 0;
+}
+.bootstrap-maxlength{
+    z-index: 5000!important;
+}
+.elem-focus:focus{
+    border-color: red!important;
+}
+/*#frmSearch .form-group{*/
+    /*margin-bottom: 5px;*/
+/*}*/
+.btn-sm{
+    height: 28px;
+}
+.input-group-btn:first-child>.btn, .input-group-btn:first-child>.btn-group{
+    margin-left: -14px;
+    -webkit-transition: all 0.4s ease-in-out;
+    -moz-transition: all 0.4s ease-in-out;
+    -o-transition: all 0.4s ease-in-out;
+    -ms-transition: all 0.4s ease-in-out;
+    transition: all 0.4s ease-in-out;
+}
+.input-group-btn:first-child>.btn:hover, .input-group-btn:first-child>.btn-group:hover{
+    margin-left: -1px;
+}
+.list-group h4>i, .panel-heading h4>i{
+    margin-left: 5px;
+}
+.elem-focus{
+    border: inset 1px red;
+}
+/*
+ * Row with equal height columns
+ * --------------------------------------------------
+ */
+.row-eq-height {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display:         flex;
+}
+
+/*
+ * Styles copied from the Grid example to make grid rows & columns visible.
+ */
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+h4 {
+  margin-top: 25px;
+}
+.row {
+  margin-bottom: 20px;
+}
+.row .row {
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+[class*="col-"] {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+/*
+ * Callout styles copied from Bootstrap's main docs.
+ */
+/* Common styles for all types */
+.bs-callout {
+  padding: 20px;
+  margin: 20px 0;
+}
+.bs-callout h4 {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+.bs-callout p:last-child {
+  margin-bottom: 0;
+}
+.bs-callout code {
+  border-radius: 3px;
+}
+.table.table-vertical th{
+    background-color: #5c5c5e;
+    color: white;
+}
+.table.table-info td:first-child,.table.table-info th:first-child{
+    border-right: solid 5px #1DA388;
+}
+.table.table-info td:last-child,.table.table-info th:last-child{
+    border-left: solid 5px #1DA388;
+}
+/*.table.table-info tr:hover{*/
+    /*background-color: #1DA388;*/
+    /*color: white;*/
+/*}*/
+.data-accepted{
+    border-right: inset 4px green;
+}
+.data-waiting{
+    border-right: solid 4px orange;
+}
+.data-rejected{
+    border-right: solid 4px red;
+}
+.opened-grid{
+    border-right: solid 4px silver;
+    border-bottom: solid 1px silver;
+}
+.selected-grid{
+    border-right: solid 4px #1a7bb9;
+    border-top: solid #1a7bb9 1px;
+    border-left: solid #1a7bb9 1px;
+}
+.gradient-bg {
+  background: rgba(245,245,245,1);
+background: -moz-linear-gradient(top, rgba(245,245,245,1) 0%, rgba(245,245,245,1) 33%, rgba(255,255,255,1) 100%);
+background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(245,245,245,1)), color-stop(33%, rgba(245,245,245,1)), color-stop(100%, rgba(255,255,255,1)));
+background: -webkit-linear-gradient(top, rgba(245,245,245,1) 0%, rgba(245,245,245,1) 33%, rgba(255,255,255,1) 100%);
+background: -o-linear-gradient(top, rgba(245,245,245,1) 0%, rgba(245,245,245,1) 33%, rgba(255,255,255,1) 100%);
+background: -ms-linear-gradient(top, rgba(245,245,245,1) 0%, rgba(245,245,245,1) 33%, rgba(255,255,255,1) 100%);
+background: linear-gradient(to bottom, rgba(245,245,245,1) 0%, rgba(245,245,245,1) 33%, rgba(255,255,255,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f5f5', endColorstr='#ffffff', GradientType=0 );
+}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load DateConverter %}
+{% block title %}
+    {% trans 'user equipment' %}
+{% endblock %}
+{% block scriptblock %}
+{% endblock %}
+{% block bodyblock %}
+    {% with target_user as mini_user_nav %}
+        {% if user.is_staff %}
+        {% include 'menu/UserMiniNavigation.html' %}
+        {% endif %}
+    {% endwith %}
+    <div class="table">
+    <div class="table-list">
+        <table>
+            <tr>
+                <th>#</th>
+                <th>{% trans 'name' %}</th>
+                <th>{% trans 'serial number' %}</th>
+                <th>{% trans 'brand' %}</th>
+                <th>{% trans 'order id' %}</th>
+                <th>{% trans 'resposible' %}</th>
+                <th>{% trans 'exit date' %}</th>
+                {% if user.is_staff and perms.CRM.add_product %}
+                    <th>{% trans 'actions' %}</th>
+                {% endif %}
+{#                <th>{% trans 'personnel' %}</th>#}
+            </tr>
+            {% for p in equip %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ p.group.name }}</td>
+                    <td>{{ p.serial_number }}</td>
+                    <td>{{ p.brand.name }}</td>
+                    {% with p.fk_product_exit_receipt_product.last as order_data %}
+                        <td>{{ order_data.order_id }}</td>
+                        <td>{{ order_data.user.first_name }}</td>
+                        <td>{{ order_data.exit_date|convert_date }}</td>
+                    {% endwith %}
+                    {% if user.is_staff and perms.CRM.add_product %}
+                        <td><a class="tbtn green" href="{% url 'equipment_release_product' %}?p={{ p.pk }}">{% trans 'release product' %}</a></td>
+                    {% endif %}
+{#                <th></th>#}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    </div>
+{#    <div class="table-list"></div>#}
+{% endblock %}

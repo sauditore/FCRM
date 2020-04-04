@@ -1,0 +1,58 @@
+{% load i18n %}
+<div class="modal fade" id="mAdd">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title">{% trans 'add indicator' %}</h3>
+            </div>
+            <div class="modal-body">
+            <form id="fAdd">
+                <div class="form-group">
+                    <input maxlength="255" data-float="1" type="text" name="t" value="" placeholder="{% trans 'person' %}" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <input data-float="1" maxlength="500" type="text" name="s" class="form-control" placeholder="{% trans 'title' %}"/>
+                </div>
+                <div class="form-group">
+                    <input data-date="1" data-float="1" maxlength="20" type="text"  name="sd" class="form-control" placeholder="{% trans 'send date' %}"/>
+                </div>
+                <div class="form-group">
+                    <input name="rp" class="form-control" type="text" maxlength="255" placeholder="{% trans 'related person' %}" data-float="1"/>
+                </div>
+                <div class="form-group">
+                    <select name="bt" class="form-control" data-select="1">
+                        <option selected="selected" disabled="disabled">{% trans 'type' %}</option>
+                        <option value="0">{% trans 'send to' %}</option>
+                        <option value="1">{% trans 'received' %}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control"><input type="checkbox" name="ha" value="1"/> {% trans 'this letter includes attachments' %}</label>
+                </div>
+                <div class="form-group">
+                    <select name="lf" class="form-control" data-select="1">
+                        <option disabled="disabled" selected="selected">{% trans 'letter file' %}</option>
+                        {% for l in letter %}
+                            <option value="{{ l.ext }}">{{ l.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select class="form-control" name="pb" data-select="1">
+                        <option disabled="disabled" selected="selected">{% trans 'pocket book' %}</option>
+                        {% for p in pocket %}
+                            <option value="{{ p.ext }}">{{ p.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="hidden" value="" name="pk"/>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-sm btn-info" type="submit"><i class="glyphicon glyphicon-plus"></i> <span class="hidden-sm hidden-xs">{% trans 'add' %}</span></button>
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i> <span class="hidden-xs hidden-sm">{% trans 'cancel' %}</span></button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>

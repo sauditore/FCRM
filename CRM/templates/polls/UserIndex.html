@@ -1,0 +1,43 @@
+{% load i18n %}
+{% load TextUtils %}
+<script language="JavaScript">
+    $(function(){
+        $('#dvPolls').modal('show');
+    });
+</script>
+    <div class="modal fade" id="dvPolls">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">{% trans 'to win traffic package and service period click on start button and join polls'%}</h4>
+            </div>
+            <div class="modal-body">
+
+                    <div class="table-list">
+                        <table>
+                            <tr>
+                                <th>{% trans 'name' %}</th>
+                                <th>{% trans 'desciption' %}</th>
+                                <th>{% trans 'extra package' %}</th>
+                                <th>{% trans 'extra days' %}({% trans 'unnlimited only' %})</th>
+                                <th>{% trans 'start' %}</th>
+                            </tr>
+                            {% for p in polls %}
+                                <tr>
+                                <td>{{ p.name }}</td>
+                                <td>{{ p.description }}</td>
+                                <td>{{ p.extra_package|convert_credit }}</td>
+                                <td>{{ p.extra_days }}</td>
+                                <td><a href="{% url 'poll_start' %}?p={{ p.pk }}" class="btn btn-info">{% trans 'start' %}</a></td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" data-dismiss="modal" aria-label="Close">{% trans 'close' %}</button>
+            </div>
+        </div>
+    </div>
+    </div>

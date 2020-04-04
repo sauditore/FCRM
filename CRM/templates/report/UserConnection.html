@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load DateConverter %}
+{% load QUrl %}
+{% load TextUtils %}
+{% load MathTags %}
+{% load static %}
+{% block title %}
+    {% trans 'user connection log' %}
+{% endblock %}
+{% block styles %}
+    <link type="text/css" href="{% static 'css/system/persianDate/persianDatepicker-default.css' %}" rel="stylesheet"/>
+{% endblock %}
+{% block page %}
+    {% trans 'user connection log' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'user' %}</li>
+    <li>{% trans 'service' %}</li>
+    <li>{% trans 'connections' %}</li>
+{% endblock %}
+
+{% block header %}
+
+{% endblock %}
+
+
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'connections' %}</h5>
+        </div>
+        <div class="ibox-content">
+            <form method="get">
+                <table class="table table-bordered">
+                    <tr>
+                        <td>{% trans 'date range' %}</td>
+                        <td>
+                            <div class="radio radio-inline radio-rtl">
+                                <input checked type="radio" id="lastDay" name="sd0" value="{{ last_day|convert_date_no_day }}"/>
+                                <label for="lastDay">{% trans 'yesterday' %}</label>
+                            </div>
+                            <div class="radio radio-inline radio-rtl">
+                                <input type="radio" id="lastWeek" name="sd0" value="{{ last_week|convert_date_no_day }}"/>
+                                <label for="lastWeek">{% trans 'last week' %}</label>
+                            </div>
+                            <div class="radio radio-inline radio-rtl">
+                                <input type="radio" id="lastMonth" name="sd0" value="{{ last_month|convert_date_no_day }}"/>
+                                <label for="lastMonth">{% trans 'last month' %}</label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{% trans 'start date' %}</td>
+                        <td> <input class="form-control" type="text" name="sd" placeholder="{% trans 'start date' %}" id="sd" value="{{ last_day|convert_date_no_day }}"/></td>
+                    </tr>
+                    <tr>
+                        <td>{% trans 'end date' %}</td>
+                        <td>
+                            <input type="text" name="ed" class="form-control" placeholder="{% trans 'end date' %}" id="ed"/>
+                        </td>
+                    </tr>
+                </table>
+                <input type="hidden" name="a" value="b"/>
+                <input type="hidden" value="{{ u }}" name="u"/>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-sm btn-info    "><i class="fa fa-search"></i> <span class="hidden-sm hidden-xs">{% trans 'search' %}</span></button>
+                </div>
+            </form>
+        </div>
+        <div class="ibox-content">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th><span>#</span></th>
+                    <th><span>{% trans 'login time' %}</span></th>
+                    {% if user.is_staff %}
+                        <th><span>{% trans 'retry count' %}</span></th>
+                    {% endif %}
+                    <th><span>{% trans 'logout time' %}</span></th>
+                    {% if user.is_staff %}
+                        <th><span>{% trans 'kill reason' %}</span></th>
+                    {% endif %}
+                    <th><span>{% trans 'sucess' %}</span></th>
+                    {% if user.is_staff %}
+                        {#                    <th><span>{% trans 'service' %}</span></th>#}
+                        {#                    <th><span>{% trans 'port' %}</span></th>#}
+                        <th><span>{% trans 'mac' %}</span></th>
+                        <th><span>{% trans 'ip pool' %}</span></th>
+                    {% endif %}
+                    <th><span>{% trans 'online time' %}</span></th>
+                    <th><span>{% trans 'download' %}</span></th>
+                    <th><span>{% trans 'upload' %}</span></th>
+                    <th><span>{% trans 'ip address' %}</span></th>
+                    <th><span>{% trans 'ras' %}</span></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for d in data  %}
+                    <tr class="{% cycle 'rows0' 'rows1' %}">
+                        <td><span>{{ page|sub:1|mul:per_page|plus:forloop.counter }}</span></td>
+                        <td><span>{{ d.login_time_formatted|convert_date }}</span></td>
+                        {% if user.is_staff %}
+                            <td>{{ d.retry_count }}</td>
+                        {% endif %}
+                        <td><span>{{ d.logout_time_formatted|convert_date }}</span></td>
+                        {% if user.is_staff %}
+                            <td><span>{{ d.details|get_state_from_array:'kill_reason' }}</span></td>
+                        {% endif %}
+                        <td><span>{% if d.successful == 't' %}{% trans 'yes' %}{% else %}{% trans 'no' %}{% endif %}</span></td>
+                        {% if user.is_staff %}
+                            {#                <td><span>{{ d.details.1.1 }}</span></td>#}
+                            {#                <td><span>{{ d.details.2.1 }}</span></td>#}
+                            <td><span>{{ d.details|get_state_from_array:'mac' }}</span></td>
+                            <td><span>{{ d.details|get_state_from_array:'ippool' }}</span></td>
+                        {% endif %}
+                        <td><span>{{ d.duration_seconds|convert_time }}</span></td>
+                        <td><span>{{ d.bytes_in|convert_credit:True }}</span></td>
+                        <td><span>{{ d.bytes_out|convert_credit:True }}</span></td>
+                        <td><span>{{ d.remote_ip }}</span></td>
+                        <td><span>{{ d.ras_description }}</span></td>
+                        {% comment %}
+                <td><span>{{ d.retry_count }}</span></td>
+
+                <td><span>{{ d.credit_used }}</span></td>
+
+
+                <td><span>{{ d.details.1.1 }}</span></td>
+                {% endcomment %}
+                    </tr>
+                    </tbody>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="ibox-content">
+            <div class="text-center">
+                <table class="table table-bordered">
+                    <tr>
+                        <td>{% trans 'records' %}</td>
+                        <td>{{ total }}</td>
+                        <td>{% trans 'total upload' %}</td>
+                        <td>{{ upload|convert_credit:True }}</td>
+                        <td>{% trans 'total download' %}</td>
+                        <td>{{ download|convert_credit:True }}</td>
+                        <td>{% trans 'total usage' %}</td>
+                        <td>{{ total_usage|convert_credit:True }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="ibox-content">
+            <div class="text-center">
+                {% if back_link > -1 %}
+                    <a href="{% q_url req.get_full_path nx=back_link %}" class="btn btn-sm btn-info"><i class="fa fa-chevron-right"></i> <span class="hidden-sm hidden-xs">{% trans 'back' %}</span></a>
+                {% endif %}
+                {% if total > next_link %}
+                    <a href="{% q_url req.get_full_path nx=next_link %}" class="btn btn-sm btn-info"><span class="hidden-sm hidden-xs">{% trans 'next page' %}</span> <i class="fa fa-chevron-left"></i></a>
+                {% endif %}
+                <a href="{% url 'show user navigation menu' %}?uid={{ u }}" class="btn btn-primary btn-sm"><i class="fa fa-check"></i><span class="hidden-sm hidden-xs">{% trans 'done' %}</span></a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script language="JavaScript" type="text/javascript" src="{% static 'js/system/persianDatepicker/persianDatepicker.min.js' %}"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#sd").persianDatepicker();
+            $("#ed").persianDatepicker();
+            $('input[type=radio]').on('change', function(e){
+                $('#sd')[0].value= e.target.value;
+            });
+        });
+    </script>
+{% endblock %}

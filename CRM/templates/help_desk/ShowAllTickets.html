@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load DateConverter %}
+{% load QUrl %}
+{% block title %}
+    {% trans 'show all tickets' %}
+{% endblock %}
+{% block page %}
+    {% trans 'show all tickets' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'help desk' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+{% block header %}
+    <div class="row">
+        <div method="get" class="col-md-4 col-lg-4">
+            <table class="table">
+                <tr>
+                    {% if user.is_staff or user.is_superuser %}
+                        <tr>
+                            <td><span>{% trans 'user id' %}</span></td>
+                            <td><input class="form-control" type="text" name="u" size="6" maxlength="8" autocomplete="off" placeholder="{% trans 'user id' %}" value="{{ request.GET.u }}"/> </td>
+                        </tr>
+                    {% endif %}
+                <tr>
+                    <td><span>{% trans 'ticket id' %}</span></td>
+                    <td><input class="form-control" type="text" name="txtTID" size="6" maxlength="8" autocomplete="off" placeholder="{% trans 'ticket id' %}" value="{{ request.GET.txtTID }}"/> </td>
+                </tr>
+                <tr>
+                    <td><span>{% trans 'title' %}</span></td>
+                    <td><input class="form-control" type="text" name="txtTitle" size="10" maxlength="20" autocomplete="off" placeholder="{% trans 'title' %}" value="{{ request.GET.txtTitle }}"/></td>
+                </tr>
+                <tr>
+                    <td><span>{% trans 'department' %}</span></td>
+                    <td><select name="slDepartment" data-select="1">
+                        <option value="-1">-</option>
+                        {% for d in departments %}
+                            <option value="{{ d.pk }}">{{ d.department_name }}</option>
+                        {% endfor %}
+                    </select></td>
+                </tr>
+                <tr>
+                    <td><span>{% trans 'state' %}</span></td>
+                    <td><select name="slState" data-select="1">
+                        <option value="-1">-</option>
+                        <option value="2">{% trans 'new question' %}</option>
+                        <option value="1">{% trans 'answered' %}</option>
+                        <option value="3">{% trans 'closed' %}</option>
+                        <option value="4">{% trans 'referenced' %}</option>
+                    </select></td>
+                </tr>
+            </table>
+            <div class="text-center">
+                <button type="submit" class="btn btn-success">{% trans 'find' %}</button>
+            </div>
+            <input type="hidden" name="s" value="1"/>
+        </div>
+    </div>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'tickets' %}</h5>
+            <div class="ibox-tools">
+                {% if user.is_staff or user.is_superuser%}
+                    {% if tu %}
+                        <a href="{% url 'add_new_call_log' %}?u={{ tu }}" class="btn btn-xs btn-primary">{% trans 'add new call' %}</a>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'create new ticket' %}?u={{ tu }}" class="btn btn-xs btn-primary"><i class="fa fa-support"></i>{% trans 'new ticket' %}</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="ibox-content">
+            <table class="table table-bordered">
+                <thead>
+                <th><span>{% trans 'ticket id' %}</span></th>
+                {% if user.is_staff or user.is_superuser %}
+                    <th>
+                        <span>{% trans 'ibs id' %}</span>
+                    </th>
+                    <th><span>{% trans 'username' %}</span>
+                    </th>
+                {% endif %}
+                <th><span>{% trans 'title' %}</span></th>
+                <th><span>{% trans 'department' %}</span></th>
+                <th><span>{% trans 'time' %}</span></th>
+                <th><span>{% trans 'state' %}</span></th>
+                </thead>
+                <tbody>
+                {% for t in tickets %}
+                    <tr>
+                        <td>{{ t.help_desk_id }}</td>
+                        {% if user.is_staff or user.is_superuser %}
+                            <td>{% if perms.CRM.view_profile %}<a href="{% url 'show user navigation menu' %}?uid={{ t.user.pk }}">{{ t.user.fk_ibs_user_info_user.get.ibs_uid }}</a>{% else %} {{ t.user.fk_ibs_user_info_user.get.ibs_uid }}{% endif %}</td>
+                            <td>
+                                <a href="{% url 'show user navigation menu' %}?uid={{ t.user.pk }}">{{ t.user.username }}</a>
+                            </td>
+
+                        {% endif %}
+                        <td><a href="{% url 'ticket details' %}?t={{ t.help_desk_id }}">{{ t.title }}</a></td>
+                        <td>{{ t.department.department_name }}</td>
+                        <td>{{ t.create_time|convert_date }}</td>
+                        <td>{% trans t.state.description %}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% include 'menu/Pager.html' %}
+        </div>
+    </div>
+{% endblock %}

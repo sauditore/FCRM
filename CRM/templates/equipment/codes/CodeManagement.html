@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+    {% trans 'equipment code management' %}
+{% endblock %}
+{% block page %}
+    {% trans 'equipment code management' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'equipment' %}</li>
+    <li>{% trans 'code' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'equipment code' %}</h5>
+            <div class="ibox-tools">
+                {% if perms.CRM.add_equipmentcode %}
+                    <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#mAddNewEquipmentCode"><span class="">{% trans 'add' %}</span></button>
+                {% endif %}
+            </div>
+        </div>
+        <div class="ibox-content">
+            <table class="table table-hover table-striped" id="tEquipmentCode" data-toggle="grid">
+                <thead>
+                    <tr>
+                        <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric" data-identifier="true">{% trans 'id' %}</th>
+                        <th data-align="right" data-header-align="right" data-column-id="name">{% trans 'name' %}</th>
+                        <th data-align="right" data-header-align="right" data-column-id="code">{% trans 'code' %}</th>
+                        <th data-align="right" data-header-align="right" data-formatter="price" data-column-id="sell_price">{% trans 'sell price' %}</th>
+                        <th data-align="right" data-header-align="right" data-formatter="price" data-column-id="used_sell_price">{% trans 'used sell price' %}</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script language="javascript" type="text/javascript" src="{% static 'js/system/equipment/EquipmentCodeManagement.js' %}"></script>
+{% endblock %}
+
+{% block modals %}
+    {% if perms.CRM.add_equipmentcode or perms.CRM.change_equipmentcode %}
+        {% include 'equipment/codes/AddNewCodeModal.html' %}
+    {% endif %}
+{% endblock %}
+{% block actions %}
+    {% if perms.CRM.change_equipmentcode %}
+        <button type="button" class="btn btn-sm btn-info" data-need-pk="1" data-toggle="modal" data-target="#mAddNewEquipmentCode"><i class="fa fa-edit"></i><span class="hidden-sm hidden-xs"> {% trans 'edit' %}</span></button>
+    {% endif %}
+    {% if perms.CRM.delete_equipmentcode %}
+        <button data-action="del" data-url="{% url 'equipment_code_remove' %}" data-need-pk="1" type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> <span class="hidden-sm hidden-xs">{% trans 'delete' %}</span></button>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load TextUtils %}
+{% load humanize %}
+{% load DateConverter %}
+{% load static %}
+{% block title %}
+    {% trans 'users debit'%}
+{% endblock %}
+{% block styles %}
+    <link href="{% static 'css/system/persianDate/persianDatepicker-default.css' %}" type="text/css" rel="stylesheet"/>
+{% endblock %}
+{% block page %}
+    {% trans 'users debit'%}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'financial' %}</li>
+    <li>{% trans 'debit' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+{% block header %}
+    <form id="fSearchHeader">
+    <div class="form-group col-md-2">
+        <input type="text" size="7" maxlength="5" placeholder="{% trans 'ibs id' %}" name="ib" class="form-control"/>
+    </div>
+    <div class="form-group col-md-2">
+        <input type="text" class="form-control" name="ps" maxlength="11" placeholder="{% trans 'price' %} {% trans 'from' %}" size="10"/>
+    </div>
+    <div class="form-group col-md-2">
+        <input type="text" class="form-control" name="pe" maxlength="11" placeholder="{% trans 'price' %} {% trans 'to' %}" size="10"/>
+    </div>
+    <div class="form-group col-md-2">
+        <input type="text" id="ds" maxlength="10" data-date="1" class="form-control" name="ds" placeholder="{% trans 'date' %} {% trans 'from' %}" size="10"/>
+    </div>
+    <div class="form-group col-md-2">
+        <input type="text" id="de" maxlength="10" data-date="1" class="form-control" name="de" placeholder="{% trans 'date' %} {% trans 'to' %}" size="10"/>
+    </div>
+    <div class="col-md-12">
+        <div class="text-center">
+            <button type="submit" class="btn btn-success">{% trans 'search' %}</button>
+        </div>
+    </div>
+    </form>
+{% endblock %}
+{% block body %}
+{% if perms.CRM.view_debit_history %}
+    <div class="" id="dDebitDetails" style="display: none;">
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <th data-align="center" data-header-align="center" data-column-id="pk" data-type="numeric">{% trans 'id' %}</th>
+                <th data-align="center" data-header-align="center" data-formatter="price2" data-column-id="old_value">{% trans 'old value' %}</th>
+                <th data-align="center" data-header-align="center" data-formatter="price2" data-column-id="new_value">{% trans 'new value' %}</th>
+                <th data-align="center" data-header-align="center" data-formatter="view_invoice" data-column-id="invoice_id">{% trans 'invoice' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="subject_name">{% trans 'subject' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="new_comment">{% trans 'comment' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="update_time">{% trans 'last update' %}</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+{% endif %}
+<div class="ibox">
+    <div class="ibox-title">
+        <h5>{% trans 'history' %}</h5>
+    </div>
+    <div class="ibox-content">
+        <table class="table" data-toggle="grid">
+            <thead>
+            <tr>
+                <th data-align="center" data-header-align="center" data-column-id="pk" data-type="numeric" data-identifier="true">{% trans 'id' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="user__first_name">{% trans 'user' %}</th>
+                <th data-align="center" data-header-align="center" data-formatter="price" data-column-id="amount">{% trans 'price' %}</th>
+                <th data-align="center" data-header-align="center" data-formatter="price" data-column-id="last_amount">{% trans 'last amount' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="last_update">{% trans 'last update' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="subject__name">{% trans 'subject' %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+    <script language="javascript" type="text/javascript" src="{% static 'js/system/persianDatepicker/persianDatepicker.min.js' %}"></script>
+    <script language="javascript" type="text/javascript" src="{% static 'js/system/virtualBank/ViewDebits.js' %}"></script>
+{% endblock %}
+{% block modals %}
+    {% include 'finance/debit/AddNewModal.html' %}
+{% endblock %}
+{% block actions %}
+    {% if perms.CRM.change_userdebit %}
+        <button data-cpk="" data-need-cpk="1" class="btn btn-sm btn-info" data-target="#addNewModal" data-toggle="modal">{% trans 'change' %}</button>
+    {% endif %}
+    {% if perms.CRM.delete_userdebit %}
+        <button data-url="{% url 'debit_reset' %}" data-need-cpk="1" class="btn btn-sm btn-danger" data-action="del">{% trans 'delete' %}</button>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,33 @@
+{% load i18n %}
+<div class="modal fade" id="mChangeEquipmentState">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="fChangeEquipmentState">
+                    <div class="form-group">
+                        <select id="sEQStates" name="st" data-select="1"></select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="{% trans 'return amount' %}" name="ram" value="1"/>
+                    </div>
+                    <br/>
+                    <div class="form-group">
+                        <div class="checkbox checkbox-inline checkbox-rtl">
+                            <input id="cSRT" type="checkbox" value="1" name="srt" placeholder=""/>
+                            <label for="cSRT">{% trans 'return to equipment store' %}</label>
+                        </div>
+                        <div class="checkbox checkbox-inline checkbox-rtl">
+                            <input type="checkbox" id="cRelease" value="no" name="rls" placeholder=""/>
+                            <label for="cRelease">{% trans 'free equipment' %}</label>
+                        </div>
+                    </div>
+                    <input type="hidden" name="pk"/>
+                    <div class="text-center">
+                        <button class="btn btn-sm btn-info" type="submit"><i class="fa fa-check"></i> <span class="hidden-xs hidden-sm">{% trans 'add' %}</span></button>
+                        <button class="btn btn-sm btn-default" type="button" data-dismiss="modal"><i class="fa fa-remove"></i> <span class="hidden-sm hidden-xs"></span>{% trans 'cancel' %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load humanize %}
+{% load MathTags %}
+
+{% block title %}
+    {% trans 'create a new invoice' %}
+{% endblock %}
+
+{% block page %}
+    {% trans 'create a new invoice' %}
+{% endblock %}
+
+{% block sitemap %}
+    <li>{% trans 'ip login' %}</li>
+    <li>{% trans 'create a new invoice' %}</li>
+{% endblock %}
+
+{% block body %}
+
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'create a new invoice' %}</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="table-form">
+                <form method="post">
+                    <table>
+                        <tr>
+                            <td><span>{% trans 'username' %}</span></td>
+                            <td><span>{{ u.username }}</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>{% trans 'service name' %}</span></td>
+                            <td><span>{{  s.name }}</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>{% trans 'service duration' %}</span></td>
+                            <td>
+                                <select name="m" id="m">
+                                    <option {% if m == '1'%}selected{% endif %} value="1">{% trans '1 month' %}</option>
+                                    <option {% if m == '2'%}selected{% endif %} value="2">{% trans '2 month' %}</option>
+                                    <option {% if m == '3'%}selected{% endif %} value="3">{% trans '3 month' %}</option>
+                                    <option {% if m == '4'%}selected{% endif %} value="4">{% trans '4 month' %}</option>
+                                    <option {% if m == '5'%}selected{% endif %} value="5">{% trans '5 month' %}</option>
+                                    <option {% if m == '6'%}selected{% endif %} value="6">{% trans '6 month' %}</option>
+                                    <option {% if m == '7'%}selected{% endif %} value="7">{% trans '7 month' %}</option>
+                                    <option {% if m == '8'%}selected{% endif %} value="8">{% trans '8 month' %}</option>
+                                    <option {% if m == '9'%}selected{% endif %} value="9">{% trans '9 month' %}</option>
+                                    <option {% if m == '10'%}selected{% endif %} value="10">{% trans '10 month' %}</option>
+                                    <option {% if m == '11'%}selected{% endif %} value="11">{% trans '11 month' %}</option>
+                                    <option {% if m == '12'%}selected{% endif %} value="12">{% trans '12 month' %}</option>
+                                </select>
+                            </td>
+                        </tr>
+                        {% if s.traffic > 0 %}
+                            <tr>
+                                <td><span>{% trans 'traffic' %}</span></td>
+                                <td><span>{{ service_traffic }}</span></td>
+                            </tr>
+                            <tr>
+                                <td><span>{% trans 'traffic trasfer amount' %}</span></td>
+                                <td><span>{{ transfer_amount }}</span></td>
+                            </tr>
+                        {% endif %}
+                        <tr>
+                            <td><span>{% trans 'base service price' %}</span></td>
+                            <td><span>{{ base_service_price|floatformat:0|intcomma:False }} {% trans 'toman' %}</span></td>
+                        </tr>
+
+                        <tr>
+                            <td><span>{% trans 'discount price' %}</span></td>
+                            <td><span>{{ discount_price|floatformat:0|intcomma:False }} {% trans 'toman' %}</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>{% trans 'extended month' %}</span></td>
+                            <td><span>{{ extra_days|floatformat:0 }} {% trans 'days' %}</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>{% trans 'price' %}</span></td>
+                            <td><span>{{ service_price|floatformat:0|intcomma:False }} {% trans 'toman' %}</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>{% trans 'tax' %}</span></td>
+                            <td><span>{{ tax|floatformat:0|intcomma:False }} {% trans 'toman' %}</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>{% trans 'debit' %}</span></td>
+                            <td><span>{{ debit|floatformat:0|intcomma:False }} {% trans 'toman' %}</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>{% trans 'final price' %}</span></td>
+                            <td><span>{{ final_price|floatformat:0|intcomma:False }} {% trans 'toman' %}</span></td>
+                        </tr>
+                    </table>
+                    {% csrf_token %}
+                    <div class="text-center">
+                        <input type="hidden" value="{{ s.pk }}" name="s" id="s"/>
+                        <input type="hidden" value="{{ u.pk }}" name="u" id="u"/>
+                        <input type="submit" value="{% trans 'create invoice' %}" name="create"/>
+                        {% if user.is_superuser or user.is_staff %}
+                            <input class="white" type="submit" value="{% trans 'cancel' %}" name="cancel"/>
+                        {% else %}
+                            <a href="/" class="buttons">{% trans 'cancel' %}</a>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    <script language="JavaScript" type="text/javascript">
+    $(document).ready(function(){
+        $('#m').change(function(e){
+            s = document.getElementById('s').value;
+            u = document.getElementById('u').value;
+            m = document.getElementById('m').value;
+            document.location='?s=' + s + '&u=' + u + '&m=' + m;
+        })});
+    </script>
+{% endblock %}

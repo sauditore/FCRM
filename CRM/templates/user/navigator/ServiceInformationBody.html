@@ -1,0 +1,186 @@
+{% load i18n %}
+{% load DateConverter %}
+{% load TextUtils %}
+{% if not tu.is_staff and perms.CRM.view_service_summery and state.current_service and not is_personnel and not is_reseller %}
+    <div class="bhoechie-tab-content">
+        <div class="">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>{% trans 'service information' %}</h5>
+                </div>
+                <div class="ibox-content no-padding no-margins">
+                    <div class="row no-padding no-margins">
+                        <div class="col-md-6 no-padding">
+                            {% if state.current_service %}
+                                <table class="table table-info">
+                                    <tr>
+                                        <td>{% trans 'service name' %}</td>
+                                        <td>{{ state.current_service.service.name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans 'expire date' %}</td>
+                                        <td><span class="{% if state.account_expiring %}text-danger{% endif %}">{{ state.current_service.expire_date|convert_date }}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans 'credit' %}</td>
+                                        <td>{% if state.is_limited %}<span class="{% if state.credit < 500 and state.credit > 100 %}label label-warning{% elif state.credit < 100 %}label label-danger{% else %}text-success{% endif %}">{{ state.credit|view_credit_sign }}</span>{% else %}{% trans 'unlimited' %}{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans 'password' %}</td>
+                                        <td>{% if ip_login %}*******{% else %}{% if ibs_password %}{{ ibs_password }}{% else %}<i class="fa fa-warning"></i> {% trans 'no password!' %}{% endif %}{% endif %}</td>
+                                    </tr>
+                                    {% if user.is_staff and ip_pool %}
+                                        <tr>
+                                            <td>{% trans 'ip pool' %}</td>
+                                            <td>{{ ip_pool }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    <tr>
+                                        <td>{% trans 'online status' %}</td>
+                                        <td>{% if online_state %}<span class="label label-success">{{ assigned_ip }}</span>{% else %}<span class="label label-danger">{% trans 'offline' %}</span>{% endif %}</td>
+                                    </tr>
+                                    {% with tu.fk_user_ip_static_user as ip_static %}
+                                        {% if ip_static.exists %}
+                                            {% with ip_static.get as ip %}
+                                                <tr>
+                                                    <td>{% trans 'ip static' %}</td>
+                                                    <td>{{ ip.ip }} - {% trans 'expire date : ' %}{% if ip.is_reserved %}<span class="label-danger">{{ ip.expire_date|convert_date }}</span>{% else %}<span class="label {% if ip.expire_date|is_near_expire %}label-warning{% else %}label-success{% endif %}">{{ ip.expire_date|convert_date }}</span>{% endif %}</td>
+                                                </tr>
+                                            {% endwith %}
+                                        {% endif %}
+                                    {% endwith %}
+                                    {% if user.is_staff %}
+                                        <tr>
+                                            <td>{% trans 'tower' %}</td>
+                                            <td>{{ tu.fk_user_tower_user.get.tower.name }} - {{ tu.fk_user_tower_user.get.tower.description }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    <tr>
+                                        <td>{% trans 'state' %}</td>
+                                        <td>
+                                            {% if state.account_expired %}
+                                                <h5 class="text-danger">{% trans 'service has expired' %}</h5>
+                                            {% else %}
+                                                <h5 class="text-info">{{ state.current_service.expire_date|get_remaining_time }} {% trans 'days remain' %}</h5>
+                                            {% endif %}
+                                            {% if state.is_limited %}
+                                                {% if state.credit < 100 %}
+                                                    <h5 class="text-danger">{% trans 'user credit is low' %}</h5>
+                                                {% endif %}
+                                            {% endif %}
+                                            {% if can_use_temp %}
+                                                <h5 class="text-success">{% trans 'user can use temp recharge' %}</h5>
+                                            {% elif state.account_expired %}
+                                                <h5 class="text-danger">{% trans 'user can not use temp reccharge' %}</h5>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans 'contracts' %}</td>
+                                        <td>
+                                            {% for c in accepted_contracts %}
+                                                <span>{{ c.contract.title }} - {{ c.accept_date|convert_date }} | </span>
+                                            {% empty %}
+                                                <span>{% trans 'no contracts accepted' %}</span>
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                </table>
+                            {% else %}
+                                <div class="text-center text-danger">
+                                    <h4>{% trans 'current user has no active internet service' %}</h4>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-2">
+                            <div class="btn-group btn-group-vertical">
+                                {% if perms.CRM.buy_service and state.active_service and state.is_limited and not state.account_expired %}
+                                    <a href="{% if state.is_float_service %}{% url 'service_float_buy' %}?u={{ tu.pk }}{% else %}{% url 'buy traffic' %}?u={{ tu.pk }}&s={{ state.current_service.service_id }}{% endif %}" role="button" class="btn btn-sm btn-info"><i class="fa fa-refresh hidden-xs hidden-sm"></i> <span>{% trans 'buy package' %}</span></a>
+                                {% endif %}
+                                {% if state.account_expiring and perms.CRM.buy_service %}
+                                    <a class="btn btn-sm btn-info" role="button" href="{% if state.current_service.is_float %}{% url 'service_float_buy' %}?u={{ tu.pk }}&nv!=:)){% else %}{% url 'assign service to user' %}?u={{ tu.pk }}{% endif %}"><i class="fa fa-gears hidden-xs hidden-sm"></i> <span>{% trans 'change service' %}</span></a>
+                                    {% if user.is_staff and state.current_service.is_float %}
+                                        <a class="btn btn-sm btn-info" role="button" href="{% url 'service_switch_old' user_id=tu.pk %}"><i class="fa fa-gear hidden-xs hidden-sm"></i> <span>{% trans 'switch service' %}</span></a>
+                                    {% endif %}
+                                {% endif %}
+                                {% if perms.CRM.buy_service and state.current_service.is_float and state.account_expiring and state.active_service %}
+                                    <form method="post" action="{% url 'service_float_invoice' %}" class="btn-group">
+                                        <input type="hidden" value="{{ tu.pk }}" name="u"/>
+                                        <input type="hidden" value="{{ state.active_float_template.ext }}" name="utm"/>
+                                        <button type="submit" class="btn btn-sm btn-info"><i class="fa fa-cog hidden-xs hidden-sm"></i> <span class="">{% trans 'recharge' %}</span></button>
+                                    </form>
+                                {% endif %}
+                                {% if perms.CRM.buy_service and state.account_expiring and state.is_normal_service %}
+                                    <a href="{% url 'create new factor' %}?u={{ tu.pk }}&s={{ current.service_id }}&pr={{ current.service_property_id }}" role="button" class="btn btn-sm btn-info"><i class="fa fa-refresh hidden-xs hidden-sm"></i> <span class="">{% trans 'recharge' %}</span></a>
+                                {% endif %}
+                                {#                                                    {% if perms.CRM.buy_service and state.account_expired and state.is_normal_service %}#}
+                                {#                                                        <a role="button" class="btn btn-sm btn-info" href="{% url 'service_float_buy' %}?u={{ tu.pk }}"><i class="fa fa-cog"></i> <span class="">{% trans 'change service' %}</span></a>#}
+                                {#                                                    {% endif %}#}
+                                {% if state.is_float_service and perms.CRM.buy_service and state.account_expiring %}
+                                    <button data-pk="{{ tu.pk }}" type="button" class="btn btn-info" data-toggle="modal" data-target="#mViewAssigned"><i class="fa fa-cubes hidden-xs hidden-sm"></i> <span>{% trans 'templates' %}</span></button>
+                                {% endif %}
+                                {#                                                    {% if current.is_float and  is_unlimited %}#}
+                                {#                                                        <a href="{% url 'create new factor' %}?u={{ tu.pk }}&s={{ current.service_id }}&pr={{ current.service_property_id }}" role="button" class="btn btn-sm btn-info"><i class="fa fa-refresh"></i> <span class="">{% trans 'recharge' %}</span></a>#}
+                                {#                                                    {% endif %}#}
+                                {% if state.is_float_service %}
+                                    <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#mViewTemplate"><i class="fa fa-cogs  hidden-xs hidden-sm"></i> <span>{% trans 'active service' %}</span></button>
+                                {% endif %}
+                                {% if can_use_temp  %}
+                                    <a href="{% url 'temp_charge_charge' %}?u={{ tu.pk }}" class="btn btn-warning btn-sm"><i class="fa fa-cog hidden-xs hidden-sm"></i> <span class="">{% trans 'temp charge' %}</span></a>
+                                {% elif user.is_staff and perms.CRM.can_reset_temp and state.account_expired or state.credit < 100 %}
+                                    <a id="aResetTemp" href="{% url 'temp_charge_reset_usage' %}?u={{ tu.pk }}" class="btn btn-danger btn-sm"><i class="fa fa-refresh"></i> <span>{% trans 'reload temp' %}</span></a>
+                                {% endif %}
+                                {% if online_state and not ip_login %}
+                                    {% if perms.CRM.kill_user %}
+                                        <a role="button" href="{% url 'kill_online_user' %}?u={{ tu.pk }}" class="btn btn-sm btn-danger"><i class="fa fa-remove hidden-xs hidden-sm"></i> <span class="">{% trans 'disconnect' %}</span></a>
+                                    {% endif %}
+                                    {#                                                        <button type="button" class="btn btn-sm btn-success"><i class="fa fa-pie-chart"></i> <span class="">{% trans 'show graph' %}</span></button>#}
+                                {% endif %}
+                                {% if not ip_login %}
+                                    {% if state.current_service %}
+                                        <a href="{% url 'connection_log' %}?u={{ tu.pk }}" class="btn btn-sm btn-info"><i class="fa fa-globe hidden-xs hidden-sm"></i> <span class="">{% trans 'connection' %}</span></a>
+                                        {% if perms.CRM.view_credit_report %}
+                                            <a href="{% url 'credit_change_log' %}?u={{ tu.pk }}" class="btn btn-sm btn-info"><i class="fa fa-history hidden-xs hidden-sm"></i><span class="">{% trans 'credit log' %}</span></a>
+                                        {% endif %}
+                                        {% if perms.CRM.add_useripstatic %}
+                                            <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#mBuyIP"><i class="fa fa-globe hidden-xs hidden-sm"></i> <span>{% trans 'buy ip static' %}</span></button>
+                                        {% endif %}
+                                    {% endif %}
+                                    {% if perms.CRM.change_usertower and user.is_staff %}
+                                        <button data-pk="{{ tu.pk }}" type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#dvSelectUserTower">
+                                            <i class="fa fa-building  hidden-xs hidden-sm"></i>
+                                            <span class="">{% trans 'change tower' %}</span>
+                                        </button>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if state.is_float_service %}
+                <div class="modal fade" id="mViewTemplate">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                            </div>
+                            <div class="modal-body">
+                                <ul class="list-group">
+                                    {% for x in tu.fk_user_service_state_user.all %}
+                                        <li class="list-group-item">
+                                            <span class="badge badge-info">{% if not x.option.is_custom_value %}<i class="fa fa-check"></i>{% else %}{{ x.value }}{% endif %}</span>
+                                            <span class="">{{ x.option.group.name }} - {{ x.option.name }}</span>
+                                        </li>
+                                    {% empty %}
+                                        <li class="list-group-item list-group-item-danger"><i class="fa fa-warning"></i>{% trans 'no items found' %}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+    {% trans 'debit subjects' %}
+{% endblock %}
+{% block page%}
+    {% trans 'debit subjects' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'financial' %}</li>
+    <li>{% trans 'virtual bank' %}</li>
+    <li>{% trans 'debit subjects' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+{% block header %}
+<form class="" id="fSearchArea" method="get" role="search">
+    <div class="form-group col-md-2">
+        <input type="text" class="form-control" placeholder="{% trans 'name' %}" name="n" size="10" maxlength="10"/>
+    </div>
+    <div class="form-group col-md-5">
+        <input type="text" value="" class="form-control" maxlength="500" placeholder="{% trans 'description' %}" name="d"/>
+    </div>
+    <div class="col-md-12">
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-search"></i>{% trans 'filter' %}</button>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block body %}
+    <div class="ibox">
+    <div class="ibox-title">
+        <h5>{% trans 'subjects' %}</h5>
+        <div class="ibox-tools">
+            {% if perms.CRM.add_debitsubject %}
+                <button data-toggle="modal" data-target="#mEditSubject" class="btn btn-info btn-xs" type="button">{% trans 'add' %}</button>
+            {% endif %}
+        </div>
+    </div>
+    <div class="ibox-content">
+        <table data-toggle="grid" class="table table-striped">
+            <thead>
+            <tr>
+                <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric" data-identifier="true">{% trans 'id' %}</th>
+                <th data-align="right" data-header-align="right" data-column-id="name">{% trans 'name' %}</th>
+                <th data-align="right" data-header-align="right" data-column-id="description" data-sortable="false">{% trans 'description' %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script language="javascript" type="text/javascript" src="{% static 'js/system/virtualBank/SubjectManagement.js' %}"></script>
+{% endblock %}
+{% block modals %}
+    {% if perms.CRM.add_debitsubject or perms.CRM.change_debitsubject %}
+        {% include 'finance/debit/EditSubjectModal.html' %}
+    {% endif %}
+{% endblock %}
+{% block actions %}
+    {% if perms.CRM.change_debitsubject %}
+    <button class="btn btn-info btn-sm" type="button" data-need-pk="1" data-toggle="modal" data-target="#mEditSubject"><i class="fa fa-edit"></i> {% trans 'edit' %}</button>
+    {% endif %}
+    {% if perms.CRM.delete_debitsubject %}
+    <button data-action="del" data-url="{% url 'debit_delete_subject' %}" data-need-pk="1" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> {% trans 'delete' %}</button>
+    {% endif %}
+{% endblock %}

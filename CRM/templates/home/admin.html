@@ -1,0 +1,55 @@
+{% load i18n %}
+<div class="ca-menu_wrap">
+    <ul class="ca-menu">
+        {% if perms.CRM.search_users %}
+        <li>
+            <a href="{% url 'search for users' %}" data-perm="1" data-perms="search_users">
+                <span class="ca-icon"><i class="fa fa-search"></i></span>
+
+                <div class="ca-content">
+                    <h2 class="ca-main">{% trans 'search users' %}</h2>
+
+                    <h3 class="ca-sub">{% trans 'search, find and manage users' %}</h3>
+                </div>
+            </a>
+        </li>
+        {% endif %}
+        {% if perms.CRM.add_new_users %}
+        <li>
+            <a href="{% url 'create user' %}" data-perm="1" data-perms="add_new_users">
+                <span class="ca-icon"><i class="fa fa-user"></i></span>
+
+                <div class="ca-content">
+                    <h2 class="ca-main">{% trans 'create user' %}</h2>
+
+                    <h3 class="ca-sub">{% trans 'create a new user' %}</h3>
+                </div>
+            </a>
+        </li>
+        {% endif %}
+        {% if perms.CRM.view_personnel %}
+        <li>
+            <a href="{% url 'user_view_all' %}?t=2" data-perm="1" data-perms="view_personnel">
+                <span class="ca-icon"><i class="fa fa-male"></i></span>
+
+                <div class="ca-content">
+                    <h2 class="ca-main">{% trans 'personnel' %}</h2>
+
+                    <h3 class="ca-sub">{% trans 'search, find and manage users' %}</h3>
+                </div>
+            </a>
+        </li>
+        {% endif %}
+        {% if perms.CRM.view_normal_users %}
+        <li>
+            <a data-perm="1" data-perms="view_normal_users" href="{% if user.fk_reseller_profile_user.exists %}{% url 'user_view_reseller' %}?rs={{ user.pk }}{% else %}{% url 'user_view_all' %}?ut=4{% endif %}">
+                <span class="ca-icon"><i class="fa fa-users"></i></span>
+
+                <div class="ca-content">
+                    <h2 class="ca-main">{% trans 'internet users' %}</h2>
+
+                    <h3 class="ca-sub"></h3>
+                </div>
+            </a>
+        </li>
+        {% endif %}

@@ -1,0 +1,6 @@
+{% load i18n %}
+{% if perms.CRM.view_help_desk %}
+    <a href="#" class="list-group-item text-center">
+        <h4 class="fa fa-2x fa-circle-o-notch"></h4> <p class="hidden-sm hidden-xs">{% trans 'help desk' %}</p>
+    </a>
+{% endif %}

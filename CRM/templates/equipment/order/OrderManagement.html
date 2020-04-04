@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+    {% trans 'order management' %}
+{% endblock %}
+{% block page %}
+    {% trans 'order management' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'equipment' %}</li>
+    <li>{% trans 'orders' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+
+{% block header %}
+    <form id="fSearchArea" class="" role="search">
+        <div class="col-md-3">
+            <div class="form-group">
+                <input size="5" class="form-control" type="text" value="{{ get.oi }}" name="oi" placeholder="{% trans 'order id' %}"/>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <input type="text" size="5" class="form-control" name="t" placeholder="{% trans 'target' %}"/>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <input type="text" size="5" class="form-control" name="eqe" placeholder="{% trans 'equipment' %}"/>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <select id="sIB" name="ibe" class="form-control" data-select="1">
+                    <option selected hidden disabled>{% trans 'borrow' %}</option>
+                    <option value="">-</option>
+                    <option value="1">{% trans 'yes' %}</option>
+                    <option value="2">{% trans 'no' %}</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <select id="sts" name="st" class="form-control" data-select=1>
+                    <option selected disabled hidden>{% trans 'state' %}</option>
+                    <option value="">-</option>
+                    <option value="1">{% trans 'not started' %}</option>
+                    <option value="2">{% trans 'started' %}</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <select id="sds" name="ds" class="form-control" data-select="1">
+                    <option hidden selected disabled>{% trans 'deliver state' %}</option>
+                    <option value="">-</option>
+                    <option value="1">{% trans 'delivered' %}</option>
+                    <option value="2">{% trans 'not delivered' %}</option>
+                    {#                    <option value="4">{% trans 'unknown' %}</option>#}
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <select id="sIn" name="ist" class="form-control" data-select="1">
+                    <option hidden="hidden" selected="selected" disabled="disabled">{% trans 'install state' %}</option>
+                    <option>-</option>
+                    <option value="1">{% trans 'installed' %}</option>
+                    <option value="2">{% trans 'unknown' %}</option>
+                    <option value="3">{% trans 'checkout waiting' %}</option>
+                    <option value="4">{% trans 'checkout done' %}</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <select id="sdu" class="form-control" name="pi" data-select="1">
+                    <option disabled selected hidden>{% trans 'sender' %}</option>
+                    <option value="">-</option>
+                    {% for p in personnel %}
+                        <option value="{{ p.personnel__pk }}">{{ p.personnel__first_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <select id="sRcv" name="rcv" class="form-control" data-select="1">
+                    <option disabled hidden selected>{% trans 'receiver' %}</option>
+                    <option>-</option>
+                    {% for o in rcv %}
+                        <option value="{{ o.receiver__pk }}">{{ o.receiver__first_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success navbar-btn btn-sm"><i class="glyphicon glyphicon-search"></i> <span class="hidden-xs hidden-sm">{% trans 'search' %}</span></button>
+    </form>
+{% endblock %}
+
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'equipment orders' %}</h5>
+            <div class="ibox-tools">
+            </div>
+            <div class="ibox-content">
+                <table class="table table-striped" data-toggle="grid" id="tOrders">
+                    <thead>
+                    <tr>
+                        <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric" data-identifier="true">{% trans 'id' %}</th>
+                        <th data-align="right" data-header-align="right" data-column-id="request_date">{% trans 'send date' %}</th>
+                        <th data-align="right" data-header-align="right" data-column-id="item_text">{% trans 'request for' %}</th>
+                        <th data-align="right" data-header-align="right" data-column-id="personnel__first_name">{% trans 'sender' %}</th>
+                        <th data-align="right" data-header-align="right" data-column-id="is_processing" data-formatter="trans_bool">{% trans 'is processing' %}</th>
+                        <th data-align="right" data-header-align="right" data-column-id="order__is_borrow" data-formatter="trans_bool">{% trans 'is borrow' %}</th>
+                        <th data-align="right" data-header-align="right" data-column-id="receive_date">{% trans 'receive date' %}</th>
+                        <th data-align="right" data-header-align="right" data-column-id="receiver__first_name">{% trans 'receiver name' %}</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+                <div id="dvDetailContainer">
+
+                    <table class="table table-striped" id="tOrderDetails">
+                        <thead>
+                        <tr>
+                            <th>{% trans 'id' %}</th>
+                            <th>{% trans 'name' %}</th>
+                            <th>{% trans 'serial' %}</th>
+                            <th>{% trans 'owner tag' %}</th>
+                            <th>{% trans 'is rejected' %}</th>
+                            <th>{% trans 'last update' %}</th>
+                            <th>{% trans 'is used' %}</th>
+                            <th>{% trans 'actions' %}</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+<script language="javascript" type="text/javascript" src="{% static 'js/system/equipment/EquipmentOrderManagement.js' %}"></script>
+{% endblock %}
+
+{% block modals %}
+    {% include 'equipment/order/AcceptEquipmentOrderModal.html' %}
+    {% include 'equipment/order/RejectEquipmentOrderModal.html' %}
+    {% include 'equipment/order/DeliverOrderModal.html' %}
+    {% if perms.CRM.equipment_checkout %}
+        {% include 'equipment/order/CommitDelivery.html' %}
+    {% endif %}
+{% endblock %}
+{% block actions %}
+        {% if perms.CRM.change_equipmentorder %}
+            <button class="btn btn-sm btn-info" type="button" id="bStart" data-need-pk="1"><i class="fa fa-play-circle"></i> <span class="hidden-sm hidden-xs">{% trans 'start' %}</span> </button>
+            <button data-toggle="modal" data-target="#mDeliverOrder" class="btn btn-default btn-sm" type="button" id="bDeliver" data-need-pk="1"><i class="fa fa-check"></i> <span class="hidden-xs hidden-sm">{% trans 'deliver' %}</span></button>
+        {% endif %}
+{#            <button type="button" data-need-pk="1" data-toggle="modal" data-target="#mCommitDelivery" class="btn btn-sm btn-default" id="bCommit"><i class="fa fa-briefcase"></i> <span class="hidden-sm hidden-xs">{% trans 'delivered' %}</span></button>#}
+{% endblock %}

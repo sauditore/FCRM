@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}
+    {% trans 'groups management' %}
+{% endblock %}
+{% block page %}{% trans 'groups management' %}{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'groups' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+    <div class="ibox-title">
+        <h5>{% trans 'groups management' %}</h5>
+        <div class="ibox-tools">
+            {% if perms.CRM.add_group %}
+                <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#mAdd"><span>{% trans 'add' %}</span></button>
+            {% endif %}
+        </div>
+    </div>
+    <div class="ibox-content">
+        <table class="table" data-toggle="grid">
+            <thead>
+            <tr>
+                <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric" data-identifier="true">{% trans 'id' %}</th>
+                <th data-align="right" data-header-align="right" data-column-id="name">{% trans 'name' %}</th>
+                <th data-align="right" data-header-align="right" data-column-id="users">{% trans 'users' %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    </div>
+    <div class="table-list mini">
+        <form id="frmShowAllGroups" method="post">
+            {% for group in group_list %}
+                <fieldset>
+                    <table>
+                        <tr>
+                            <td><span>{{ group.name }}</span></td>
+                        {% if group.pk > 1 or debug or user.username == 'saeed'%}
+                        {% if perms.CRM.change_group %}
+                            <td><a class="tbtn" href="{% url 'create_group' %}?uid={{ group.pk }}">{% trans 'edit' %}</a></td>
+                        {% endif %}
+                        {% if perms.CRM.change_group %}
+                            <td>
+                                <a class="tbtn red" href="{% url 'delete_group' %}?gid={{ group.pk }}">{% trans 'delete' %}</a>
+                            </td>
+                            <td>
+                                <a href="{% url 'assign_permission' %}?g={{ group.pk }}" class="tbtn grey">{% trans 'permissions' %}</a>
+                            </td>
+                        {% endif %}
+                        {% endif %}
+                        </tr>
+                    </table>
+                </fieldset>
+            {% endfor %}
+        </form>
+    </div>
+
+    {% if user.is_staff and perms.CRM.add_group %}
+    <div class="btn-set">
+        <a class="buttons green" href="{% url 'create_group' %}"><i class="fa fa-plus"></i>{% trans 'new group' %}</a>
+    </div>
+    {% endif %}
+{% endblock %}
+{% block script %}
+    <script language="javascript" type="text/javascript" src="{% static 'js/system/group/GroupManagement.js' %}"></script>
+{% endblock %}
+{% block modals %}
+    {% if perms.CRM.add_group or perms.CRM.change_group %}
+        {% include 'group/CreateGroup.html' %}
+    {% endif %}
+{% endblock %}
+{% block actions %}
+    {% if perms.CRM.change_group %}
+        <button data-need-pk="1" type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#mAdd"><i class="fa fa-edit"></i> <span class="hidden-sm hidden-xs">{% trans 'edit' %}</span></button>
+        <a data-need-pk="1" data-link="1" data-url="{% url 'assign_permission' %}" type="button" class="btn btn-sm btn-info" ><i class="fa fa-lock"></i> <span class="hidden-sm hidden-xs">{% trans 'permissions' %}</span></a>
+    {% endif %}
+    {% if perms.CRM.delete_group %}
+        <button data-url="{% url 'delete_group' %}" type="button" class="btn btn-sm btn-danger" data-action="del" data-need-pk="1" data-pk=""><i class="fa fa-train"></i> <span class="hidden-xs hidden-sm">{% trans 'delete' %}</span></button>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+{% trans 'float service management' %}
+{% endblock %}
+{% block page %}
+    {% trans 'float service management' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'service' %}</li>
+    <li>{% trans 'float service' %}</li>
+    <li>{% trans 'management' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+    <div class="ibox-title">
+        <h5>{% trans 'services' %}</h5>
+        <div class="ibox-tools">
+            {% if perms.CRM.add_basicservice %}
+                <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#mAddNewBasicService"><span>{% trans 'add' %}</span></button>
+            {% endif %}
+            {% if perms.CRM.import_ibs_groups %}
+                <button type="button" class="btn btn-xs btn-info" id="importIBS">{% trans 'import services' %}</button>
+            {% endif %}
+        </div>
+    </div>
+        <div class="ibox-content">
+            <table class="table table-striped" id="tFloatService" data-toggle="grid">
+                <thead>
+                <tr>
+                    <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric"
+                        data-identifier="true">{% trans 'id' %}
+                    </th>
+                    <th data-align="right" data-header-align="right" data-column-id="name">{% trans 'name' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="base_ratio">{% trans 'ratio' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="service_index">{% trans 'index' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="max_bw">{% trans 'bandwidth' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="formula__name">{% trans 'formula' %}</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+<script language="javascript" type="text/javascript" src="{% static 'js/system/services/FloatServiceManagement.js' %}"></script>
+{% endblock %}
+{% block modals %}
+    {% if perms.CRM.add_basicservice or perms.CRM.change_basicservice %}
+        {% include 'service/float_service/AddNewBasicServiceModal.html' %}
+        {% include 'service/float_service/RelatedServicesModal.html' %}
+    {% endif %}
+    {% if perms.CRM.add_serviceoptions %}
+        {% include 'service/float_service/AssignOptionsModal.html' %}
+    {% endif %}
+    {% if perms.CRM.addbasicservicedefaultgroup %}
+        {% include 'service/float_service/DefaultServicesModal.html' %}
+    {% endif %}
+{% endblock %}
+{% block actions %}
+{% if perms.CRM.change_basicservice %}
+    <button type="button" class="btn btn-info btn-sm" data-need-pk="1" data-toggle="modal" data-target="#mAddNewBasicService"><i class="fa fa-edit"></i> <span class="hidden-sm hidden-xs">{% trans 'edit' %}</span></button>
+    <button data-toggle="modal" data-target="#mrs" class="btn btn-sm btn-primary" data-need-pk="1"><i class="fa fa-list"></i> <span class="hidden-sm hidden-xs">{% trans 'related services' %}</span></button>
+{% endif %}
+{% if perms.CRM.delete_basicservice %}
+    <button class="btn btn-danger btn-sm" data-need-pk="1" data-action="del" data-url="{% url 'service_float_remove' %}" type="button"><i class="fa fa-trash"></i> <span class="hidden-sm hidden-xs">{% trans 'delete' %}</span></button>
+{% endif %}
+{% if perms.CRM.add_serviceoptions %}
+    <button data-need-pk="1" class="btn btn-sm btn-info" data-toggle="modal" data-target="#mAssignOption"><i class="fa fa-list"></i> <span class="hidden-sm hidden-xs">{% trans 'options' %}</span></button>
+{% endif %}
+{% if perms.CRM.addbasicservicedefaultgroup %}
+    <button data-need-pk="1" type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#mAssignDefault"><i class="fa fa-check-circle"></i> <span class="hidden-sm hidden-xs">{% trans 'assign default' %}</span></button>
+{% endif %}
+{% endblock %}

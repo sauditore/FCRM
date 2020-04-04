@@ -1,0 +1,23 @@
+{% load i18n %}
+{% load static %}
+<script language="javascript" type="text/javascript" src="{% static 'js/system/tower/AssignUserTower.js' %}"></script>
+<div class="modal fade" id="dvSelectUserTower">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form method="get" action="{% url 'tower_assign_user' %}" id="fAssignUserTower">
+                    <div class="form-group">
+                        <select data-select="1" name="t" id="sTowers"></select>
+                    </div>
+                    <br/>
+                    <div class="alert alert-info hidden" id="dvDes"></div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-sm btn-info"><i class="fa fa-check"></i><span class="hidden-sm hidden-xs">{% trans 'add' %}</span></button>
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal"><i class="fa fa-remove"></i> <span class="hidden-sm hidden-xs">{% trans 'cancel' %}</span></button>
+                        <input type="hidden" name="u" value=""/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

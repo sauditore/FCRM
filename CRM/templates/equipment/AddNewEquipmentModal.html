@@ -1,0 +1,25 @@
+{% load i18n %}
+<div class="modal fade" id="mAddNewEquipment">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="fAddNewEquipment">
+                    <div class="form-group">
+                        <input type="text" value="" name="d" placeholder="{% trans 'description' %}" class="form-control"/>
+                        <input type="hidden" name="pk"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="s" placeholder="{% trans 'serial number' %}" class="form-control" value=""/>
+                    </div>
+                    <div class="form-group">
+                        <select id="sGroups" name="g" data-select="1"></select>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-info btn-sm"><i class="fa fa-check"></i> <span class="hidden-sm hidden-xs">{% trans 'add' %}</span></button>
+                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-remove"></i> <span class="hidden-sm hidden-xs">{% trans 'cancel' %}</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

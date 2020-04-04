@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'property management' %}
+{% endblock %}
+{% block page %}
+    {% trans 'property management' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'financial' %}</li>
+    <li>{% trans 'bank management' %}</li>
+    <li>{% trans 'properties' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+    <div class="ibox-title">
+        <h5>{% trans 'properties' %}</h5>
+    </div>
+    <div class="ibox-content">
+        <form method="post">
+            <div class="table-form">
+                <table class="table">
+                    <tr>
+                        <th>{% trans 'name' %}</th>
+                        <th>{% trans 'value' %}</th>
+                    </tr>
+                    {% for p in properties %}
+                        <tr>
+                            <td>{{ p.name }}</td>
+                            <td>
+                                <input maxlength="100" class="form-control" type="text" name="{{ p.name }}" value="{{ p.value }}" placeholder="{{ p.name }}"/>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            {% csrf_token %}
+            <input type="hidden" value="{{ bid }}" name="bid"/>
+            <button type="submit" class="btn btn-sm btn-primary">{% trans 'save' %}</button>
+        </form>
+    </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,211 @@
+{% load assets %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>فراتر-محاسبه سود</title>
+    {% assets 'css_all' %}
+        <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}"/>
+    {% endassets %}
+    <link type="text/css" href="{% static 'css/system/Fonts.css' %}" rel="stylesheet">
+    <style>
+        *{
+            font-size: 15px;
+        }
+        button{
+            font-weight: bolder;
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="row">
+    <div class="text-center">
+
+    </div>
+    <div class="col-lg-10 col-lg-offset-1" style="margin-top: 40px;">
+        <div class="panel-group payments-method" id="accordion" style="border-radius: 5px;">
+            <div class="panel panel-default" style="border-radius: 5px; !important">
+                <div class="panel-heading" style="border-radius: 5px;">
+                    <div class="pull-left">
+                        <img src="{% static 'img/handshake-icon.png' %}" class="img-responsive">
+                    </div>
+                    <h5 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">فروش سرویس</a>
+                    </h5>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div class="row">
+                            <form method="post" action="{% url 'public_dedicate_view' %}" id="f1">
+                                <input type="hidden" name="a" value="1"/>
+                                <h4>حداقل میزان</h4>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <input type="text" autocomplete="off" name="s" class="form-control" placeholder="میزان فروش(تومان)">
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-sm btn-info">محاسبه</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <table class="table table-bordered text-center">
+                                    <thead style="color: white;">
+                                    <tr>
+                                        <th style="background-color:#32639D;" class="text-center">نوع پرداخت</th>
+                                        <th style="background-color:#32639D;" class="text-center">میزان پرداخت(تومان)</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>یکبار</td>
+                                        <td><span id="sSAtOnce" class="price">0</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ماهانه</td>
+                                        <td><span id="sSMonthly" class="price">0</span></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div> <!--.col-md-4-->
+                        </div> <!--.row-->
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default" style="border-radius: 5px; !important">
+                <div class="panel-heading" style="border-radius: 5px;">
+                    <div class="pull-left">
+                        <img src="{% static 'img/handshake-icon.png' %}" class="img-responsive">
+                    </div>
+                    <h5 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">فروش سرویس اختصاصی</a>
+                    </h5> <!--.panel-title-->
+                </div> <!--.panel-heading-->
+                <div id="collapseTwo" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="row">
+                            <form method="post" action="{% url 'public_dedicate_view' %}" id="f2">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <input name="sd" type="text" class="form-control" placeholder="مبلغ هر مگابیت(تومان)">
+                                    </div> <!--.form-group-->
+                                </div> <!--.col-md-3-->
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <input type="text" name="b" class="form-control" placeholder="مقدار پهنای باند(مگابیت)">
+                                    </div> <!--.from-group-->
+                                </div> <!--.col-md-2-->
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <div class="checkbox checkbox-inline checkbox-rtl checkbox-primary">
+                                            <input type="checkbox" value="1" name="cSP" id="cSP"/>
+                                            <label for="cSP">IPM</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-info">محاسبه</button>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="a" value="2"/>
+                            </form>
+                        </div> <!--.row-->
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <table class="table table-bordered text-center">
+                                    <thead style="color: white;">
+                                    <tr>
+                                        <th style="background-color:#32639D;" class="text-center">نوع پرداخت</th>
+                                        <th style="background-color:#32639D;" class="text-center">میزان پرداخت(تومان)</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>یکبار</td>
+                                        <td><span id="sDOnce" class="price">0</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ماهانه</td>
+                                        <td><span id="sDMonthly" class="price">0</span></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div> <!--.col-md-4-->
+                        </div> <!--.row-->
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default" style="border-radius: 5px; !important">
+                <div class="panel-heading" style="border-radius: 5px;">
+                    <div class="pull-left">
+                        <img src="{% static 'img/handshake-icon.png' %}" class="img-responsive">
+                    </div>
+                    <h5 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo3">فروش اینترانت</a>
+                    </h5> <!--.panel-title-->
+                </div> <!--.panel-heading-->
+                <div id="collapseTwo3" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="row">
+                            <form method="post" action="{% url 'public_dedicate_view' %}" id="f3">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <input name="si" type="text" class="form-control" placeholder="مبلغ هر مگابیت(تومان)">
+                                    </div> <!--.form-group-->
+                                </div> <!--.col-md-3-->
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <input type="text" name="bi" class="form-control" placeholder="مقدار پهنای باند(مگابیت)">
+                                    </div> <!--.from-group-->
+                                </div> <!--.col-md-2-->
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-info">محاسبه</button>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="a" value="3"/>
+                            </form>
+                        </div> <!--.row-->
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <table class="table table-bordered text-center">
+                                    <thead style="color: white;">
+                                    <tr>
+                                        <th style="background-color:#32639D;" class="text-center">نوع پرداخت</th>
+                                        <th style="background-color:#32639D;" class="text-center">میزان پرداخت(تومان)</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>یکبار</td>
+                                        <td><span id="sIOnce" class="price">0</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ماهانه</td>
+                                        <td><span id="sIMonthly" class="price">0</span></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div> <!--.col-md-4-->
+                        </div> <!--.row-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% assets 'js_all' %}
+    <script language="javascript" type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+{% assets filters='jsmin', output='resProf.js', 'js/system/public/reseller_profit.js' %}
+    <script language="javascript" type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+</body>
+</html>

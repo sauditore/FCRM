@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+    {% trans 'pocket book management' %}
+{% endblock %}
+{% block page %}
+    {% trans 'pocket book management' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'indicator' %}</li>
+    <li>{% trans 'pocket book' %}</li>
+{% endblock %}
+{% block header %}
+{% endblock %}
+
+{% block body %}
+<div class="ibox float-e-margin">
+    <div class="ibox-title">
+        <h5>{% trans 'pocket book' %}</h5>
+        <div class="ibox-tools">
+            {% if perms.CRM.add_pocketbook %}
+    <button type="button" data-toggle="modal" data-target="#mAdd" class="btn btn-primary btn-xs"><span class="hidden-sm hidden-xs">{% trans 'add' %}</span></button>
+            {% endif %}
+        </div>
+    </div>
+    <div class="ibox-content">
+        <table class="table table-striped" data-toggle="grid">
+            <thead>
+            <tr>
+                <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric"
+                    data-identifier="true">{% trans 'id' %}
+                </th>
+                <th data-align="right" data-header-align="right" data-column-id="name">{% trans 'name' %}</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script language="javascript" type="text/javascript" src="{% static 'js/system/indicator/PocketBookManagement.js' %}"></script>
+{% endblock %}
+{% block modals %}
+    {% if perms.CRM.add_pocketbook or perms.CRM.change_pocketbook %}
+        {% include 'indicator/PocketBook/AddPocketBookModal.html' %}
+    {% endif %}
+{% endblock %}
+{% block actions %}
+{% if perms.CRM.change_pocketbook %}
+    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#mAdd" data-need-pk="1" data-pk=""><i class="glyphicon glyphicon-edit"></i> <span class="hidden-xs hidden-sm">{% trans 'edit' %}</span></button>
+{% endif %}
+{% if perms.CRM.delete_pocketbook %}
+    <button data-url="{% url 'indicator_pocket_book_remove' %}" type="button" data-action="del" data-toggle="modal" data-target="#mBaseDel" class="btn btn-danger btn-sm" data-need-pk="1" data-pk=""><i class="glyphicon glyphicon-trash"></i> <span class="hidden-sm hidden-xs">{% trans 'delete' %}</span></button>
+{% endif %}
+{% endblock %}

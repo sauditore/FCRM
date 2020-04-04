@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load DateConverter %}
+{% block title %}
+    {% trans 'call detail' %} {{ call.user.username }}
+{% endblock %}
+{% block bodyblock %}
+    <fieldset class="enter_data">
+    <legend>{% trans 'call time' %} : {{ call.call_time|convert_date }}</legend>
+        <span>{% trans 'operator' %} : {{ call.operator.username }}</span><br/><br/>
+        <fieldset>
+            <legend>{% trans 'problem' %}</legend>
+            <p>{{ call.problem.description }}</p>
+        </fieldset>
+        <fieldset>
+            <legend>{% trans 'solution' %}</legend>
+            <p>{{ call.solution.description }}</p>
+        </fieldset>
+    </fieldset><br/><br/>
+    <a href="{% url 'view_call_history' %}" class="buttons">{% trans 'back' %}</a>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+    {% trans 'bank payment result' %}
+{% endblock %}
+{% block styles %}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/plugins/odoMeter/odoMeter.min.css' %}"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'css/plugins/odoMeter/default.css' %}"/>
+{% endblock %}
+{% block page %}
+    {% trans 'bank payment result' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'financial' %}</li>
+    <li>{% trans 'bank payment result' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="row">
+        <div class="col-md-3 col-md-offset-4">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h5>{% trans 'payment result' %}</h5>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>{% trans 'invoice number' %}</td>
+                            <td>{{ i.pk }}</td>
+                        </tr>
+                        <tr>
+                            <td>{% trans 'service' %}</td>
+                            <td>{{ i.service_text }}</td>
+                        </tr>
+                        <tr>
+                            <td>{% trans 'result' %}</td>
+                            <td>{{ msg }}</td>
+                        </tr>
+                    </table>
+                    <div class="col-md-12 text-center">
+                        {% if done %}
+                        <h3 id="hWait">{% trans 'please wait' %}</h3>
+                        <h3 id="hHere" class="hidden"><a href="/">{% trans 'here' %}</a> </h3>
+                        <h3 dir="ltr" class="odometer" id="dTimer">60</h3>
+                        {% else %}
+                            <h3 id="hHere"><a href="/">{% trans 'back' %}</a> </h3>
+                        {% endif %}
+                    </div>
+                </div>
+{#                <div class="panel-footer">#}
+{#                    <a href="{% url 'show all factors' %}" class="btn btn-sm btn-info">{% trans 'accept' %}</a>#}
+{#                </div>#}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    {% if done %}
+    <script type="text/javascript" language="JavaScript" src="{% static 'js/plugins/odoMeter.js' %}"></script>
+    <script type="text/javascript" language="JavaScript" src="{% static 'js/system/invoice/PostBack.js' %}"></script>
+    {% endif %}
+{% endblock %}

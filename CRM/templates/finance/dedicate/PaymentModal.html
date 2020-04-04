@@ -1,0 +1,25 @@
+{% load i18n %}
+<div class="modal fade" id="mPay">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="fPay">
+                    <div class="form-group">
+                        <input type="text" maxlength="20" class="form-control" name="rf" placeholder="{% trans 'bank ref' %}"/>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" name="c" placeholder="{% trans 'comment' %}" style="height: 100px; resize: none"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" maxlength="10" value="" class="form-control" data-date="1" name="pd" placeholder="{% trans 'pay time' %}"/>
+                    </div>
+                    <input type="hidden" value="" name="pk"/>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-sm btn-info"><i class="fa fa-check"></i> <span class="hidden-sm hidden-xs">{% trans 'checkout' %}</span></button>
+                        <button class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-remove"></i> <span class="hidden-xs hidden-sm">{% trans 'cancel' %}</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

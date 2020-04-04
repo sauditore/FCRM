@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'price list' %}
+{% endblock %}
+{% block page %}
+    {% trans 'price list management' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'service' %}</li>
+    <li>{% trans 'price list' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+    <div class="ibox-heading">
+        <div class="ibox-title"><span>{% trans 'price list' %}</span>
+            <div class="ibox-tools">
+                <a href="{% url 'show all services' %}" class="btn btn-xs btn-primary">{% trans 'services' %}</a>
+            </div>
+        </div>
+    </div>
+    <div class="ibox-content">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>{% trans 'id' %}</th>
+                <th>{% trans 'name' %}</th>
+                <th>{% trans 'manage' %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for p in price_lists %}
+                <tr>
+                    <td>{{ p.pk }}</td>
+                    <td>{{ p.name }}</td>
+                    <td><a href="{% url 'service_group_management' %}?p={{ p.pk }}&a=e">{% trans 'edit' %}</a> | <a href="{% url 'service_group_management' %}?p={{ p.pk }}&a=d">{% trans 'delete' %}</a> </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="ibox-footer">
+        <div class="row">
+            <form action="{% url 'service_group_management' %}" method="post">
+                {% csrf_token %}
+                <table class="table">
+                    <tr>
+                        <td>{% trans 'name' %}</td>
+                        <td>
+                            <input class="form-control" type="text" name="n" placeholder="{% trans 'group name' %}" {% if to_edit %}value="{{ to_edit.name }}{% endif %}"/>
+                            {% if to_edit %}<input name="i" type="hidden" value="{{ to_edit.pk }}"/>
+                                <input type="hidden" value="e" name="em"/>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+
+                    </tr>
+                </table>
+                <button type="submit" class="btn btn-sm btn-info"><i class="fa fa-check"></i> {% trans 'send' %}</button>
+            </form>
+        </div>
+    </div>
+    </div>
+{% endblock %}

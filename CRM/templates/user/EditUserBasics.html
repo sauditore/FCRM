@@ -1,0 +1,414 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load DateConverter %}
+{% load assets %}
+{% load static %}
+{% block title %}
+    {% trans 'edit user info' %}
+{% endblock %}
+{% block styles %}
+    <link type="text/css" href="{% static 'css/system/persianDate/persianDatepicker-default.css' %}" rel="stylesheet"/>
+{% endblock %}
+{% block page %}
+    {% trans 'edit user info' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'user' %}</li>
+    <li>{{ u.first_name }}</li>
+    <li>{% trans 'edit' %}</li>
+{% endblock %}
+{% block body %}
+    {% if not user.is_staff %}
+    <div class="alert alert-warning text-center">
+    <h3>احتراما بنا بر دستور سازمان تنظیم مقررات و ارتباطات رادیویی لطفا جهت ادامه همکاری کلیه اطلاعات کاربری خود را به صورت صحیح وارد نمایید</h3>
+    </div>
+    {% if profile.validation_state == 0 %}
+        <div class="alert alert-danger text-center">
+        <h3>صحت اطلاعات وارد شده تایید نشده است. لطفا اطلاعات خود را بررسی نمایید</h3>
+        </div>
+    {% elif profile.validation_state == 1 %}
+        <div class="alert alert-info text-center">
+        <h3>اطلاعات وارد شده توسط شما در حال بررسی و صحت سنجی است</h3>
+        </div>
+    {% elif profile.validation_state == 2 %}
+        <div class="alert alert-success text-center">
+        <h3>اطلاعات کاربری شما مورد تایید میباشد</h3>
+        </div>
+    {% endif %}
+    {% endif %}
+    <div class="row">
+    <div class="col-md-12">
+    {% if user.is_staff %}
+        <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">{% trans 'history' %}</h3>
+        </div>
+            <div class="col-md-12">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>{% trans 'id' %}</th>
+                        <th>{% trans 'name' %}</th>
+                        <th>{% trans 'identity number' %}</th>
+                        <th>{% trans 'father name' %}</th>
+                        <th>{% trans 'sh number' %}</th>
+                        <th>{% trans 'birth' %}</th>
+                        <th>{% trans 'telephone' %}</th>
+                        <th>{% trans 'mobile' %}</th>
+                        {#                    <th>{% trans 'email' %}</th>#}
+                        <th>{% trans 'address' %}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for h in history %}
+                        <tr>
+                            <td>{{ h.pk }}</td>
+                            <td>{{ h.name }}</td>
+                            <td>{{ h.identity_number }}</td>
+                            <td>{{ h.father_name }}</td>
+                            <td>{{ h.sh_number }}</td>
+                            <td>{{ h.birth_date|convert_date_no_day }}</td>
+                            <td>{{ h.telephone }}</td>
+                            <td>{{ h.mobile }}</td>
+                            {#                    <td>{{ h.user.email }}</td>#}
+                            <td>{{ h.address }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </div>
+    {% endif %}
+    </div>
+
+    </div>
+
+    <div class="row">
+        <form action="{% url 'edit user basic info' %}" method="post">
+            <div class="col-lg-4 col-md-4 col-sm-9 col-xs-12 col-lg-offset-4 col-md-offset-4">
+                <div class="panel-group">
+                    {% if user.is_staff %}
+                        <div class="panel panel-success">
+                            <div class="panel-heading text-center">
+                                <a class="panel-title" href="#0" data-toggle="collapse" data-parent=".panel-group"><h5>{% trans 'account type' %}</h5></a>
+                            </div>
+                            <div id="0" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    {% if not u.is_staff %}
+                                        <div class="">
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="radio radio-inline radio-primary radio-rtl">
+                                                    <input data-actor="1" {% if not profile.is_company %}checked="checked"{% endif %} id="cATN" type="radio" value="1" name="atn"/>
+                                                    <label for="cATN">{% trans 'normal user' %}</label>
+                                                </div>
+                                            </div>
+                                            {% if perms.CRM.change_companydata %}
+                                                <div class="col-lg-6 col-md-6">
+                                                    <div class="radio radio-inline radio-primary radio-rtl">
+                                                        <input data-actor="1" id="cATD" type="radio" value="2" name="atn" {% if profile.is_company %}checked="checked"{% endif %}/>
+                                                        <label for="cATD">{% trans 'company user' %}</label>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                    {% if u.is_staff %}
+                                        <div class="">
+                                            {% if not u.is_superuser %}
+                                                {% if perms.CRM.change_resellerprofile %}
+                                                    <div class="col-md-6 col-lg-6">
+                                                        <div class="radio radio-inline radio-primary radio-rtl">
+                                                            <input {% if profile.is_reseller %}checked="checked"{% endif %} data-actor="1" id="cATR" type="radio" value="1" name="atr"/>
+                                                            <label for="cATR">{% trans 'resellere' %}</label>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                {% if perms.CRM.change_visitorprofile %}
+                                                    <div class="col-md-6 col-lg-6">
+                                                        <div class="radio radio-inline radio-primary radio-rtl">
+                                                            <input {% if profile.is_visitor %}checked="checked"{% endif %} data-actor="1" id="cATV" type="radio" name="atr" value="2"/>
+                                                            <label for="cATV">{% trans 'visitor' %}</label>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+                                        {% if user.is_superuser %}
+                                            <div>
+                                                <div class="col-md-6 col-lg-6">
+                                                    <div class="radio radio-inline radio-primary radio-rtl">
+                                                        <input id="rUT" type="radio" {% if u.is_staff and not u.is_superuser %}checked="checked"{% endif %} name="ut" value="1"/>
+                                                        <label for="rUT">{% trans 'personnel' %}</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6">
+                                                    <div class="radio radio-inline radio-rtl radio-primary">
+                                                        <input id="rUT2" type="radio" {% if u.is_superuser %}checked="checked"{% endif %} name="ut" value="2"/>
+                                                        <label for="rUT2">{% trans 'superuser' %}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                    {% endif %}
+                    <div class="panel panel-success">
+                        <div class="panel-heading text-center">
+                            <a class="panel-title" href="#1" data-toggle="collapse" data-parent=".panel-group"><h5>{% trans 'basic info' %}</h5></a>
+                        </div>
+                        <div id="1" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <table class="table">
+                                    <tr>
+                                        <td><span>{% trans 'username' %}</span></td>
+                                        <td>{{ u.username }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>{% trans 'user id' %}</span></td>
+                                        <td>{{ u.pk }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>{% trans 'identity number' %}</span></td>
+                                        <td>
+{#                                            {% if user.is_staff %}#}
+                                                <input data-related="#cATN" {% if profile.is_company %}disabled="disabled"{% endif %} class="form-control" type="text" name="idn" value="{{ profile.identity_number }}" placeholder="{% trans 'identity number' %}"/>
+{#                                            {% elif not profile.is_company %}#}
+{#                                                <span>{{ profile.identity_number }}</span>#}
+{#                                            {% endif %}#}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-success">
+                        <div class="panel-heading text-center">
+                            <a class="panel-title" data-toggle="collapse" data-parent=".panel-group" href="#2"><h5>{% trans 'personal information' %}</h5></a>
+                        </div>
+                        <div class="panel-collapse collapse" id="2">
+                            <div class="panel-body">
+                                <table class="table">
+                                    <tr>
+                                        <td><span>{% trans 'name' %} {% trans 'and' %} {% trans 'last name' %}</span></td>
+                                        <td><input class="form-control" type="text" name="fn" value="{{ u.first_name }}" placeholder="{% trans 'name' %}"/></td>
+                                    </tr>
+                                    {% if not u.is_staff %}
+                                        <tr class="{% if profile.is_company %}hidden{% endif %}" data-group="#cATN">
+                                            <td><span>{% trans 'birth date' %}</span></td>
+                                            <td>
+                                                <input {% if profile.is_company %}disabled="disabled"{% endif %} data-related="#cATN" class="form-control" type="text" value="{{ profile.birth_date|convert_date_no_day }}" name="b" id="b" placeholder="{% trans 'birth date' %}"/>
+                                            </td>
+                                        </tr>
+{#                                        <tr class="{% if profile.is_company %}hidden{% endif %}" data-group="#cATN">#}
+{#                                            <td>{% trans 'marriage date' %}</td>#}
+{#                                            <td>#}
+{#                                                <input {% if profile.is_company %}disabled="disabled"{% endif %} data-related="#cATN" class="form-control" type="text" value="{{ profile.marriage_date|convert_date_no_day }}" name="mrd" id="mrd" placeholder="{% trans 'marriage date' %}"/>#}
+{#                                            </td>#}
+{#                                        </tr>#}
+                                        {% if not profile.is_company %}
+                                            <tr>
+                                                <td>{% trans 'father name' %}</td>
+                                                <td>
+                                                    <input value="{{ profile.father_name }}" type="text" class="form-control" name="ftn" placeholder="{% trans 'father name' %}"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>{% trans 'sh number' %}</td>
+                                                <td>
+                                                    <input value="{{ profile.sh_number }}" type="text" placeholder="{% trans 'sh number' %}" name="shn" class="form-control"/>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endif %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-success">
+                        <div class="panel-heading text-center">
+                            <a class="panel-title" href="#3" data-toggle="collapse" data-parent=".panel-group"><h5>{% trans 'contact information' %}</h5></a>
+                        </div>
+                        <div class="panel-collapse collapse" id="3">
+                            <div class="panel-body">
+                                <table class="table">
+                                    <tr>
+                                        <td><span>{% trans 'telephone' %}</span></td>
+                                        <td><input class="form-control" type="text" maxlength="15" name="ph" value="{{ profile.telephone }}" placeholder="{% trans 'telephone' %}"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>{% trans 'mobile' %}</span></td>
+                                        <td><input class="form-control" type="text" name="m" value="{{ profile.mobile }}" placeholder="{% trans 'mobile' %}"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>{% trans 'email' %}</span></td>
+                                        <td><input class="form-control" type="text" maxlength="30" name="eml" value="{{ u.email }}" placeholder="{% trans 'email' %}"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="address">{% trans 'address' %}</label></td>
+                                        <td><textarea class="form-control" id="address" name="ad">{{ profile.address }}</textarea></td>
+                                    </tr>
+                                    {% if user.is_staff and not u.is_staff%}
+                                        <tr>
+                                            <td><span>{% trans 'comment' %}</span></td>
+                                            <td><textarea class="form-control" name="des" placeholder="{% trans 'comment' %}">{{ profile.comment }}</textarea></td>
+                                        </tr>
+                                    {% endif %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    {% if perms.CRM.change_companydata and not u.is_staff %}
+                        <div class="panel panel-success {% if not profile.is_company %}hidden{% endif %}" data-group="#cATD">
+                            <div class="panel-heading text-center">
+                                <a class="panel-title" data-toggle="collapse" href="#4" data-parent=".panel-group"><h5>{% trans 'company data' %}</h5></a>
+                            </div>
+                            <div id="4" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <table class="table">
+                                        <tr>
+                                            <td>{% trans 'company identity' %}</td>
+                                            <td>
+                                                <input type="text" data-related="#cATD" value="{{ u.fk_company_data_user.identity_code }}" name="cs" class="form-control" placeholder="{% trans 'company identity' %}" maxlength="50"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>{% trans 'company zip code' %}</td>
+                                            <td>
+                                                <input type="text" data-related="#cATD" value="{{ u.fk_company_data_user.zip_code }}" name="cz" class="form-control" placeholder="{% trans 'company zip code' %}" maxlength="20"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>{% trans 'economic code' %}</td>
+                                            <td>
+                                                <input type="text" data-related="#cATD" value="{{ u.fk_company_data_user.economic_code }}" name="ce" class="form-control" placeholder="{% trans 'economic code' %}" maxlength="50"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>{% trans 'registration number' %}</td>
+                                            <td>
+                                                <input type="text" data-related="#cATD" value="{{ u.fk_company_data_user.registration_number }}" name="cr" class="form-control" placeholder="{% trans 'registration number' %}" maxlength="50"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if u.is_staff and perms.CRM.change_resellerprofile and not u.is_superuser%}
+                        <div class="panel panel-success {% if not profile.is_reseller %}hidden{% endif %}" data-group="#cATR">
+                            <div class="panel-heading text-center">
+                                <a class="panel-title" href="#5" data-toggle="collapse" data-parent=".panel-group"><h5>{% trans 'reseller' %}</h5></a>
+                            </div>
+                            <div class="panel-collapse collapse" id="5">
+                                <div class="panel-body">
+                                    <table class="table">
+                                        <tr>
+                                            <td>{% trans 'service profit percent' %}</td>
+                                            <td>
+                                                <input data-related="#cATR" type="text" class="form-control" placeholder="{% trans 'service profit percent' %}" name="rsp" value="{{ u.fk_reseller_profile_user.fk_reseller_profit_option_reseller.service_profit }}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>{% trans 'package profit percent' %}</td>
+                                            <td>
+                                                <input type="text" data-related="#cATR" class="form-control" placeholder="{% trans 'package profit percent' %}" name="rpp" value="{{ u.fk_reseller_profile_user.fk_reseller_profit_option_reseller.package_profit }}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>{% trans 'max negative deposit' %}</td>
+                                            <td>
+                                                <input data-related="#cATR" type="text" class="form-control" placeholder="{% trans 'max negative deposit' %}" name="rmn" value="{{ u.fk_reseller_profile_user.fk_reseller_profit_option_reseller.max_neg_credit }}"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if perms.CRM.change_visitorprofile and not u.is_superuser and u.is_staff %}
+                        <div class="panel panel-primary {% if not profile.is_visitor %}hidden{% endif %}" data-group="#cATV">
+                        <div class="panel-heading text-center">
+                            <a class="panel-title" data-toggle="collapse" data-parent=".panel-group" href="#7"><h5>{% trans 'visitor' %}</h5></a>
+                        </div>
+                        <div class="panel-collapse collapse" id="7">
+                            <div class="panel-body">
+                                <table class="table">
+                                    <tr>
+                                        <td>{% trans 'payment type' %}</td>
+                                        <td>
+                                            <div class="radio radio-inline radio-rtl radio-success no-padding">
+                                                <input {% if u.fk_visitor_profile_user_user.payment_type == 0 %}checked="checked"{% endif %} id="rPTX" type="radio" name="vpt" value="0"/>
+                                                <label for="rPTX">{% trans 'one time' %}</label>
+                                            </div>
+                                            <div class="radio radio-inline radio-rtl radio-success no-padding">
+                                                <input {% if u.fk_visitor_profile_user_user.payment_type == 1 %}checked="checked"{% endif %} id="rPTY" type="radio" name="vpt" value="1"/>
+                                                <label for="rPTY">{% trans 'periodic' %}</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        </div>
+                    {% endif %}
+                    {% if profile.is_dedicated and not u.is_staff and perms.CRM.change_dedicateduserprofile %}
+                        <div class="panel panel-success">
+                            <div class="panel-heading text-center">
+                                <a class="panel-title" data-toggle="collapse" href="#6" data-parent=".panel-group"><h5>{% trans 'dedicated user' %}</h5></a>
+                            </div>
+                            <div class="panel-collapse collapse" id="6">
+                                <div class="panel-body">
+                                    <table class="table">
+                                        <tr>
+                                            <td>{% trans 'contact name' %}</td>
+                                            <td>
+                                                <input type="hidden" value="1" name="de"/>
+                                                <input type="text" value="{{ u.fk_dedicated_user_profile_user.contact }}" name="ds" placeholder="{% trans 'contact name' %}" class="form-control"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% if user.is_staff %}
+                <div class="panel panel-warning">
+                    <div class="panel-heading text-center">
+                        <h3 class="panel-title">{% trans 'state' %}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <span class="form-control">
+                            <input type="radio" name="ivl" value="1" checked="checked" id="rValid"/> <label for="rValid">{% trans 'valid' %}</label>
+                        </span>
+                        <span class="form-control">
+                            <input type="radio" name="ivl" value="0" id="rInvalid"/> <label for="rInvalid">{% trans 'invalid' %}</label>
+                        </span>
+                    </div>
+                </div>
+            {% endif %}
+                </div>
+            </div>
+            {% csrf_token %}
+
+            <div class="col-md-12">
+                <div class="text-center">
+                    <input type="hidden" name="u" value="{{ u.pk }}"/>
+                    <button type="submit" class="btn btn-success"><i class="fa fa-check"></i> <span class="hidden-xs hidden-sm">{% trans 'update' %}</span></button>
+                    <a href="{% url 'show user navigation menu' %}?uid={{ u.pk }}" class="btn btn-primary"><i class="fa fa-chevron-circle-left"></i> <span class="hidden-xs hidden-sm">{% trans 'home' %}</span></a>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block script %}
+    {% assets filters='jsmin', output='udit.js', 'js/system/persianDatepicker/persianDatepicker.min.js', 'js/system/users/edit_user.js' %}
+        <script language="javascript" type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}

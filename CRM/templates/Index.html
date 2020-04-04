@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block body %}
+    {% if user.is_staff and perms.CRM.view_online_users %}
+    <div class="col-lg-2">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <span class="label label-success pull-right">{% trans 'online' %}</span>
+                <h5>{% trans 'customers' %}</h5>
+            </div>
+            <div class="ibox-content">
+                <h1 class="no-margins">{% trans '1350' %}</h1>
+                <small>{% trans 'total' %} : 2500</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <span class="label label-success pull-right">{% trans 'online' %}</span>
+                <h5>{% trans 'personnel' %}</h5>
+            </div>
+            <div class="ibox-content">
+                <h1 class="no-margins"><a href="{% url 'crm_online_users' %}">1 {% trans 'user' %}</a></h1>
+                <small>{% trans 'total' %} : 20</small>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="col-lg-2">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <span class="label label-success pull-right">{% trans 'started' %}</span>
+                <h5>{% trans 'workbench' %}</h5>
+            </div>
+            <div class="ibox-content">
+                <h1 class="no-margins"><a href="{% url 'view_dashboard' %}">110</a></h1>
+                <small><a href="{% url 'calendar_view_all' %}">{% trans 'today quee' %} : 5</a></small>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <span class="label label-success pull-right">{% trans 'orders' %}</span>
+                <h5>{% trans 'equipment' %}</h5>
+            </div>
+            <div class="ibox-content">
+                <h1 class="no-margins"><a href="{% url 'equipment_order_view' %}"><span id="sOrders">10</span></a></h1>
+                <small>{% trans 'making ready' %} : 3</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <span class="label label-success pull-right">{% trans 'new' %}</span>
+                <h5>{% trans 'help' %}</h5>
+            </div>
+            <div class="ibox-content">
+                <h1 class="no-margins"><span id="sOpenTicket">15</span></h1>
+                <small><a href="{% url 'show all tickets' %}">{% trans 'new question' %} : <span id="sTicketNew">2</span></a></small>
+            </div>
+        </div>
+    </div>
+    {% if perms.CRM.view_all_invoices %}
+    <div class="col-lg-2">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <span class="label label-success pull-right">{% trans 'charge' %}</span>
+                <h5>{% trans 'invoice' %}</h5>
+            </div>
+            <div class="ibox-content">
+                <h1 class="no-margins"><a href="{% url 'show all factors' %}?st=5">{% trans 'error' %} : <span id="sInvoiceError">5</span></a></h1>
+                <small>{% trans 'total' %} : <span id="sInvoice">200</span></small>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% if perms.CRM.activate_internet %}
+    <div class="col-lg-2">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <span class="label label-success pull-right">{% trans 'new' %}</span>
+                <h5>{% trans 'users' %}</h5>
+            </div>
+            <div class="ibox-content">
+                <h1 class="no-margins"><a href="{% url 'search for users' %}"><span id="sUsersNew">100</span></a></h1>
+                <small><a href="{% url 'search for users' %}?tp=5">{% trans 'inactive' %} : <span id="sUsersInactive">2</span></a></small>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="row">
+        {% if perms.CRM.view_complete_finance %}
+            <div class="col-md-12">
+                <div class="small pull-left col-md-3 m-l-lg m-t-md">
+                    <strong>{% trans 'month sell rate. package and service' %}</strong>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="flot-chart m-b-xl" style="height: 500px">
+                    <div class="flot-chart-content" id="dSells"></div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'js/plugins/flot/jquery.flot.js' %}"></script>
+    <script src="{% static 'js/plugins/flot/jquery.flot.tooltip.min.js' %}"></script>
+    <script src="{% static 'js/plugins/flot/jquery.flot.spline.js' %}"></script>
+    <script src="{% static 'js/plugins/flot/jquery.flot.resize.js' %}"></script>
+    <script src="{% static 'js/plugins/flot/jquery.flot.navigate.js' %}"></script>
+    <script src="{% static 'js/plugins/flot/jquery.flot.symbol.js' %}"></script>
+    <script src="{% static 'js/plugins/flot/jquery.flot.time.js' %}"></script>
+    <script language="javascript" type="text/javascript" src="{% static 'js/system/index.js' %}"></script>
+{% endblock %}

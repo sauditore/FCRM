@@ -1,0 +1,35 @@
+{% load i18n %}
+<div class="modal fade" id="mChangeState" xmlns="http://www.w3.org/1999/html">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="fChangeState" tabindex="-1">
+                    <div class="form-group">
+                        <select id="sStates" name="st" data-select="1">
+                            <option selected="selected" disabled="disabled">{% trans 'state' %}</option>
+                            <option value="0">{% trans 'unknown' %}</option>
+                            <option value="1">{% trans 'making ready' %}</option>
+                            <option value="2">{% trans 'sending' %}</option>
+                            <option value="3">{% trans 'sent' %}</option>
+                            <option value="4">{% trans 'wait time' %}</option>
+                            <option value="5">{% trans 'time schuled' %}</option>
+                            <option value="6">{% trans 'delivered' %}</option>
+                            <option value="7">{% trans 'checkout done' %}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" value="" name="cd" class="form-control" maxlength="10" placeholder="{% trans 'next date' %}"/>
+                    </div>
+                    <div class="form-group">
+                        <textarea maxlength="500" class="text-area form-control" name="dt" placeholder="{% trans 'description' %}" style="height: 100px"></textarea>
+                    </div>
+                    <input type="hidden" name="pk" value=""/>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-info btn-sm"><i class="fa fa-check"></i> <span class="hidden-sm hidden-xs">{% trans 'update' %}</span></button>
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal"><i class="fa fa-remove"></i> <span class="hidden-xs hidden-sm">{% trans 'cancel' %}</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

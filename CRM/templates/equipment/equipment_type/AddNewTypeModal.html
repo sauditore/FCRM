@@ -1,0 +1,19 @@
+{% load i18n %}
+<div class="modal fade" id="mAddNewEquipmentType">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="fAddNewEquipmentType">
+                    <div class="form-group">
+                        <input type="text" value="" name="n" placeholder="{% trans 'name' %}" class="form-control input-sm"/>
+                        <input type="hidden" value="" name="pk"/>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-sm btn-info"><i class="fa fa-check"></i><span class="hidden-xs hidden-sm"> {% trans 'add' %}</span></button>
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal"><i class="fa fa-remove"></i><span class="hidden-sm hidden-xs"> {% trans 'cancel' %}</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

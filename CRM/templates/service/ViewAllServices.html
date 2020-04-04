@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% load MathTags %}
+{% load TextUtils %}
+{% block title %}
+    {% trans 'manage avalible services' %}
+{% endblock %}
+{% block page %}
+    {% trans 'service management' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'services' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+    <div class="ibox-title">
+        <h5>{% trans 'services' %}</h5>
+        <div class="ibox-tools">
+{#            <a href="{% url 'show_all_service_properties' %}" class="btn btn-xs btn-primary">{% trans 'properties' %}</a>#}
+            <a href="{% url 'service_group_management' %}" class="btn btn-xs btn-primary">{% trans 'groups' %}</a>
+            {% if perms.CRM.view_packages %}
+                <a href="{% url 'view all traffics' %}" class="btn btn-xs btn-primary">{% trans 'packages' %}</a>
+            {% endif %}
+        </div>
+    </div>
+        <div class="ibox-content">
+            <table class="table" data-toggle="grid">
+                <thead>
+                <tr>
+                    <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric" data-identifier="true"><span>#</span></th>
+                    <th data-align="right" data-header-align="right" data-column-id="name"><span>{% trans 'service name' %}</span></th>
+                    <th data-align="right" data-header-align="right" data-column-id="ibs_name"><span>{% trans 'ibs name' %}</span></th>
+                    <th data-align="right" data-header-align="right" data-column-id="description"><span>{% trans 'description' %}</span></th>
+                    <th data-align="right" data-header-align="right" data-column-id="counts"><span>{% trans 'properties count' %}</span></th>
+                    <th data-align="right" data-header-align="right" data-column-id="fk_service_group_service__group__name"><span>{% trans 'group' %}</span></th>
+                    <th data-align="right" data-header-align="right" data-column-id="group_type"><span>{% trans 'type' %}</span></th>
+                    <th data-align="right" data-header-align="right" data-column-id="is_visible" data-formatter="visible"><span>{% trans 'visible' %}</span></th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
+{% block script %}
+    <script language="javascript" type="text/javascript" src="{% static 'js/system/services/ServiceManagement.js' %}"></script>
+{% endblock %}
+{% block modals %}
+    {% if perms.CRM.add_ibsservice %}
+        {% include 'service/CreateService.html' %}
+    {% endif %}
+{% endblock %}
+{% block actions %}
+    {% if perms.CRM.change_ibsservice %}
+        <button data-toggle="modal" data-target="#msc" class="btn btn-sm btn-info" data-need-pk="1"><i class="fa fa-edit"></i>{% trans 'edit' %}</button>
+    {% endif %}
+    {% if perms.CRM.delete_ibsservice %}
+        <button data-action="del" class="btn btn-sm btn-danger" data-url="{% url 'delete service' %}" data-need-pk="1"><i class="fa fa-trash"></i>{% trans 'delete' %}</button>
+    {% endif %}
+    <a href="{% url 'show_all_service_properties' %}?s=" data-action="link" class="btn btn-sm btn-info"><i class="fa fa-gear"></i>{% trans 'properties' %}</a>
+{% endblock %}

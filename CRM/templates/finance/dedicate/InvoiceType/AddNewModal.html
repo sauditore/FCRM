@@ -1,0 +1,19 @@
+{% load i18n %}
+<div class="modal fade" id="mAdd">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="fAdd">
+                    <div class="form-group">
+                        <input type="text" data-float="1" name="n" placeholder="{% trans 'name' %}" class="form-control"/>
+                        <input type="hidden" name="pk" value=""/>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-sm btn-info"><i class="glyphicon glyphicon-plus"></i> <span class="hidden-sm hidden-xs">{% trans 'add' %}</span></button>
+                        <button class="btn btn-sm btn-default" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i><span class="hidden-xs hidden-sm">{% trans 'cancel' %}</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

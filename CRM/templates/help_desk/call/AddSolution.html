@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+{% endblock %}
+{% block bodyblock %}
+    <div class="table-form">
+    <form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="s" value="{{ solution.pk }}"/>
+    <table>
+        <tr><td>{% trans 'short description' %}</td>
+        <td><input name="txtShort" type="text" value="{{ solution.short_text }}" size="30" placeholder="{% trans 'short description' %}"/></td>
+        </tr>
+        <tr>
+            <td>{% trans 'describe the solution' %}</td>
+            <td><textarea name="txtDescription" placeholder="{% trans 'describe the solution' %}">{{ solution.description }}</textarea></td>
+        </tr>
+    </table>
+    <div class="btn-set">
+        <input type="submit" value="{% trans 'send' %}"/>
+    </div>
+    </form>
+    </div>
+{% endblock %}

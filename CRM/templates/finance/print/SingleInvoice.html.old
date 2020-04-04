@@ -1,0 +1,71 @@
+{% load i18n %}
+{% load DateConverter %}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<table>
+    <tr>
+        <td>{% trans 'invoice number' %}</td>
+        <td>{{ invoice.pk }}</td>
+    </tr>
+    <tr>
+        <td>{% trans 'creation date' %}</td>
+        <td>{{ invoice.create_time|convert_date }}</td>
+    </tr>
+    <tr>
+        <td>{% trans 'service name' %}</td>
+        <td>
+            {% if invoice.service_service %}
+            {{ invoice.service_service.name }}
+            {% else %}
+            {{ invoice.traffic.name }}
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>{% trans 'price' %}</td>
+        <td>{{ invoice.price }}</td>
+    </tr>
+   <tr>
+       <td>{% trans 'is paid' %}</td>
+       <td>{{ invoice.is_paid }}</td>
+   </tr>
+    <tr>
+        <td>{% trans 'comment' %}</td>
+        <td>{{ invoice.comment }}</td>
+    </tr>
+    <tr>
+        <td>{% trans 'payment ref' %}</td>
+        <td>{{ invoice.ref_number }}</td>
+    </tr>
+    <tr>
+        <td>{% trans 'username' %}</td>
+        <td>{{ invoice.user.username }}</td>
+    </tr>
+    <tr>
+        <td>{% trans 'address' %}</td>
+        <td>{{ invoice.user.fk_user_profile_user.get.address }}</td>
+    </tr>
+    <tr>
+        <td>{% trans 'telephone' %}</td>
+        <td>{{ invoice.user.fk_user_profile_user.get.telephone }}</td>
+    </tr>
+    <tr>
+        <td>{% trans 'mobile' %}</td>
+        <td>{{ invoice.user.fk_user_profile_user.get.mobile }}</td>
+    </tr>
+    <tr>
+        <td>{% trans 'emial' %}</td>
+        <td>{{ invoice.user.email }}</td>
+    </tr>
+    <tr>
+        <td>{% trans 'ibs id' %}</td>
+        <td>{{ invoice.user.fk_ibs_user_info_user.get.ibs_uid }}</td>
+    </tr>
+</table>
+</body>
+</html>

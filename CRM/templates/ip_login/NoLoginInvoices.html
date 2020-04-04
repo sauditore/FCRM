@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load QUrl %}
+{% load DateConverter %}
+{% load humanize %}
+
+{% block title %}
+    {% trans 'invoices' %}
+{% endblock %}
+
+{% block styles %}
+    <link type="text/css" href="{% static 'css/system/persianDate/persianDatepicker-default.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{% block page %}
+    {% trans 'invoices' %}
+{% endblock %}
+
+{% block sitemap %}
+    <li>{% trans 'ip login' %}</li>
+    <li>{% trans 'invoices' %}</li>
+{% endblock %}
+
+
+{% block body %}
+
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'invoices' %}</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="table-form">
+                <form method="get">
+                    <h4>{% trans 'search invoice' %}</h4>
+                    <table>
+                        <tr>
+                            <td><span>{% trans 'invoice number' %}</span></td>
+                            <td><input type="text" name="txtFID" autocomplete="off" placeholder="{% trans 'invoice number' %}"/></td>
+                        </tr>
+                        <tr>
+                            <td><span>{% trans 'start date' %}</span></td>
+                            <td><input type="text" name="txtStartDate" id="txtStartDate" readonly placeholder="{% trans 'start date' %}"/></td>
+                        </tr>
+                        <tr>
+                            <td><span>{% trans 'end date' %}</span></td>
+                            <td><input type="text" id="txtEndDate" name="txtEndDate" readonly placeholder="{% trans 'end date' %}"/></td>
+                        </tr>
+                        <tr>
+                            <td><span>{% trans 'payment state' %}</span></td>
+                            <td>
+                                <select name="slPayState">
+                                    <option value="0">{% trans 'none' %}</option>
+                                    <option value="1">{% trans 'paid' %}</option>
+                                    <option value="2">{% trans 'unpaid' %}</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="btn-set">
+                        <input type="submit" value="{% trans 'filter' %}"/>
+                        {% csrf_token %}
+                        <input type="hidden" name="u" value="{{ u }}"/>
+                    </div>
+                </form>
+            </div>
+
+            <div class="table-list">
+                <table>
+                    <thead>
+                    <th><span>{% trans 'factor number' %}</span></th>
+                    <th><span>{% trans 'creation time' %}</span></th>
+                    <th><span>{% trans 'package name' %}</span></th>
+                    <th><span>{% trans 'service name' %}</span></th>
+                    <th><span>{% trans 'price' %}</span></th>
+                    <th><span>{% trans 'is paid' %}</span></th>
+                    <th><span>{% trans 'comment' %}</span></th>
+                    <th><span>{% trans 'pay time' %}</span></th>
+                    <th><span>{% trans 'bank reference number' %}</span></th>
+                    <th><span>{% trans 'actions' %}</span></th>
+                    </thead>
+                    {% for f in factors %}
+                        <tr class="{% cycle 'rows0' 'rows1' %}">
+                            <td>
+                                {{ f.pk }}
+                            </td>
+                            <td>{{ f.create_time|convert_date }}</td>
+                            <td>{{ f.traffic.name }}</td>
+                            <td>{{ f.service.name }}</td>
+                            <td>{{ f.price|floatformat:0|intcomma:False }}</td>
+                            <td>{% if f.is_paid %}{% trans 'True' %}{% else %}{% trans 'False' %}{% endif %}</td>
+                            <td>{{ f.comment }}</td>
+                            <td>{{ f.pay_time|convert_date }}</td>
+                            <td>{{ f.ref_number }}</td>
+                            <td>
+                                {% if not f.is_paid%}
+                                    <a href="{% url 'e_payment' %}?f={{ f.pk }}" class="tbtn green">{% trans 'pay' %}</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            {% include 'menu/Pager.html' %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block scriptblock %}
+    <script language="JavaScript" type="text/javascript" src="{% static 'js/system/persianDatepicker/persianDatepicker.min.js' %}"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#txtStartDate").persianDatepicker();
+            $("#txtEndDate").persianDatepicker();
+        });
+
+    </script>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% trans 'please wait' %}</title>
+    <script language="JavaScript" type="text/javascript">
+        document.location="{{ location }}";
+    </script>
+</head>
+<body>
+    <a href="#" onclick="document.location='{{ location }}'">{% trans 'click to continiue' %}</a>
+</body>
+</html>

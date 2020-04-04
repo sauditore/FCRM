@@ -1,0 +1,31 @@
+{% load i18n %}
+{% load assets %}
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>{% trans 'print invoice' %}</title>
+    {% assets 'css_all' %}
+        <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}">
+    {% endassets %}
+    {% assets "js_all" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+</head>
+<body>
+<div class="ibox ibox">
+    <div class="ibox-content">
+        <table class="table table-bordered">
+            <tr>
+                <td>111</td>
+                <td>2222</td>
+                <td>2222</td>
+                <td>2222</td>
+                <td>2222</td>
+                <td>2222</td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>

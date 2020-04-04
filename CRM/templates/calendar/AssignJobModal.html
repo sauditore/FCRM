@@ -1,0 +1,48 @@
+{% load i18n %}
+{% load assets %}
+{% assets filters='jsmin', output='ajm.js', 'js/system/calendar/AssignJob.js' %}
+<script language="javascript" type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+<div class="modal fade" id="mAssignJob" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form method="post" id="fAssignJob">
+                    <input type="hidden" id="jb" name="j" value=""/>
+                    <input type="hidden" id="time" name="t" value=""/>
+                    <input type="hidden" id="date" name="d" value=""/>
+                    <div class="col-md-12">
+                        <div class="form-group col-md-6">
+                            <label for="sEventT">{% trans 'event type' %}</label>
+                            <select name="e" id="sEventT" data-select="1">
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="sPRI">{% trans 'priority' %}</label>
+                            <select id="sPRI" name="pri" data-select="1">
+                                <option value="0">{% trans 'low' %}</option>
+                                <option value="1">{% trans 'medium' %}</option>
+                                <option value="2">{% trans 'high' %}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <table class="table table-striped table-hover table-responsive">
+                        <thead>
+                        <tr>
+                            <th class="text-center">{% trans 'name' %}</th>
+                            <th class="text-center">{% trans 'time' %}</th>
+                            <th class="text-center">{% trans 'date' %}</th>
+                            <th class="text-center">{% trans 'actions' %}</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </form>
+                <div class="text-center">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i><span class="hidden-xs hidden-sm"> {% trans 'cancel' %}</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

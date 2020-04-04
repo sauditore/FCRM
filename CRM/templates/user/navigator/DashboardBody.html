@@ -1,0 +1,94 @@
+{% load i18n %}
+{% load DateConverter %}
+{% load TextUtils %}
+{% if not user.is_staff %}
+    <div class="bhoechie-tab-content active">
+        <div class="text-center">
+            <table class="table table-info">
+                <tr>
+                    <td>{% trans 'name' %}</td>
+                    <td>{{ tu.first_name }}</td>
+                </tr>
+                <tr>
+                    <td>{% trans 'service' %}</td>
+                    <td>{{ current.service.name }}</td>
+                </tr>
+                {% if state.is_limited %}
+                    <tr>
+                        <td>{% trans 'credit' %}</td>
+                        <td class="{% if state.credit < 100 %}text-warning{% elif state.credit %}text-success{% else %}text-danger{% endif %}">{{ state.credit|convert_credit }}</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td>{% trans 'online status' %}</td>
+                    <td>{% if online_state %}<span class="label label-success">{{ assigned_ip }}</span>{% else %}<span class="label label-danger">{% trans 'offline' %}</span>{% endif %}</td>
+                </tr>
+                {% with tu.fk_user_ip_static_user as ip_static %}
+                    {% if ip_static.exists %}
+                        {% with ip_static.get as ip %}
+                            <tr>
+                                <td>{% trans 'ip static' %}</td>
+                                <td>{{ ip.ip }} - {% trans 'expire date : ' %}{% if ip.is_reserved %}<span class="label-danger">{{ ip.expire_date|convert_date }}</span>{% else %}<span class="label {% if ip.expire_date|is_near_expire %}label-warning{% else %}label-success{% endif %}">{{ ip.expire_date|convert_date }}</span>{% endif %}</td>
+                            </tr>
+                        {% endwith %}
+                    {% endif %}
+                {% endwith %}
+                <tr>
+                    <td>{% trans 'state' %}</td>
+                    <td>
+                        {% if state.account_expired %}
+                            <h5 class="text-danger">{% trans 'service has expired' %}</h5>
+                        {% else %}
+                            <h5 class="text-success">{{ state.current_service.expire_date|get_remaining_time }} {% trans 'days left' %}</h5>
+                        {% endif %}
+                        {% if is_limited %}
+                            {% if state.credit < 100 %}
+                                <h5 class="text-danger">{% trans 'user credit is low' %}</h5>
+                            {% endif %}
+                        {% endif %}
+                        {% if can_use_temp %}
+                            <h5 class="text-success">{% trans 'user can use temp recharge' %}</h5>
+                        {% elif state.account_expired %}
+                            <h5 class="text-danger">{% trans 'user can not use temp reccharge' %}</h5>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>{% trans 'contracts' %}</td>
+                    <td>
+                        {% for c in accepted_contracts %}
+                            <span>{{ c.contract.title }} - {{ c.accept_date|convert_date }} | </span>
+                        {% empty %}
+                            <span>-</span>
+                        {% endfor %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="text-center">
+            {% if perms.CRM.buy_service and state.current_service and state.is_limited and not state.account_expired %}
+                <a href="{% if state.is_float_service %}{% url 'service_float_buy' %}?u={{ tu.pk }}{% else %}{% url 'buy traffic' %}?u={{ tu.pk }}&s={{ state.current_service.service_id }}{% endif %}" role="button" class="btn btn-sm btn-info"><i class="fa fa-refresh hidden-xs hidden-sm"></i> <span class="">{% trans 'buy package' %}</span></a>
+            {% endif %}
+            {% if perms.CRM.buy_service and state.current_service.is_float and state.account_expiring and state.active_service %}
+                <form method="post" action="{% url 'service_float_invoice' %}" class="btn-group">
+                    <input type="hidden" value="{{ tu.pk }}" name="u"/>
+                    <input type="hidden" value="{{ state.active_float_template.ext }}" name="utm"/>
+                    <button type="submit" class="btn btn-sm btn-info"><i class="fa fa-cog hidden-xs hidden-sm"></i> <span class="">{% trans 'recharge' %}</span></button>
+                </form>
+            {% endif %}
+            {% if perms.CRM.buy_service and state.account_expiring %}
+                <a role="button" class="btn btn-sm btn-info" href="{% url 'service_float_buy' %}?u={{ tu.pk }}&nv!=:))"><i class="fa fa-cog hidden-xs hidden-sm"></i> <span class="">{% trans 'change service' %}</span></a>
+            {% endif %}
+            {% if can_use_temp  %}
+                <a href="{% url 'temp_charge_charge' %}?u={{ tu.pk }}" class="btn btn-warning btn-sm"><i class="fa fa-cog hidden-xs hidden-sm"></i> <span class="">{% trans 'temp charge' %}</span></a>
+            {% endif %}
+            {% if state.is_float_service and perms.CRM.buy_service and state.account_expiring %}
+                <button data-pk="{{ tu.pk }}" type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#mViewAssigned"><i class="fa fa-cubes hidden-xs hidden-sm"></i> <span>{% trans 'templates' %}</span></button>
+            {% endif %}
+            {% if state.is_normal_service and state.is_unlimited %}
+                <a href="{% url 'create new factor' %}?u={{ tu.pk }}&s={{ state.current_service.service_id }}&pr={{ state.current_service.service_property_id }}" role="button" class="btn btn-sm btn-info"><i class="fa fa-refresh hidden-xs hidden-sm"></i> <span class="">{% trans 'recharge' %}</span></a>
+            {% endif %}
+            <button data-toggle="modal" data-target="#mToturial" type="button" class="btn btn-warning btn-sm btn-info hidden-sm hidden-xs"><i class="fa fa-star hidden-xs hidden-sm"></i> <span>آموزش تغییر تعرفه</span></button>
+        </div>
+    </div>
+{% endif %}

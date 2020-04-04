@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load TextUtils %}
+{% block title %}
+    {% trans 'configure notifications' %}
+{% endblock %}
+{% block page %}
+    {% trans 'configure notifications' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'notifications' %}</li>
+    <li>{% trans 'config' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+    <div class="ibox-title">
+        <h5>{% trans 'configuration' %}</h5>
+    </div>
+        <div class="ibox-content">
+        <div class="row">
+            <table class="table table-bordered">
+                <tr>
+                    <th><span>#</span></th>
+                    <th><span>{% trans 'name' %}</span></th>
+                    <th><span>{% trans 'description' %}</span></th>
+                    <th><span>{% trans 'mail text' %}</span></th>
+                    <th><span>{% trans 'sms text' %}</span></th>
+                    <th><span>{% trans 'inbox text' %}</span></th>
+                    <th><span>{% trans 'enable mail' %}</span></th>
+                    <th><span>{% trans 'enable sms' %}</span></th>
+                    <th><span>{% trans 'enable inbox' %}</span></th>
+                </tr>
+                {% for c in confs %}
+                    <tr>
+                        <td><span><a href="{% url 'edit_notify_config' %}?n={{ c.pk }}">{{ c.pk }}</a></span></td>
+                        <td><span><a href="{% url 'edit_notify_config' %}?n={{ c.pk }}">{{ c.name }}</a></span></td>
+                        <td><span>{{ c.description|snip_text:47 }}</span></td>
+                        <td><span>{{ c.mail_text|snip_text }}</span></td>
+                        <td><span>{{ c.sms_text|snip_text }}</span></td>
+                        <td><span>{{ c.inbox_text|snip_text }}</span></td>
+                        <td><span>{{ c.email_enabled }}</span></td>
+                        <td><span>{{ c.sms_enabled }}</span></td>
+                        <td><span>{{ c.inbox_enabled }}</span></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        </div>
+    </div>
+{% endblock %}

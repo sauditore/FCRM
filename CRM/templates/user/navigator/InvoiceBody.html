@@ -1,0 +1,150 @@
+{% load i18n %}
+{% load DateConverter %}
+{% load humanize %}
+{% if perms.CRM.view_invoices or perms.CRM.view_single_invoice %}
+    <div class="bhoechie-tab-content">
+        <div class="text-center">
+            {% if not is_personnel %}
+                <h4>{% trans 'financial' %}</h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th class="text-center hidden-xs hidden-sm">#</th>
+                            <th class="text-center hidden-xs hidden-sm">{% trans 'invoice id' %}</th>
+                            <th class="text-center hidden-xs hidden-sm">{% trans 'service' %}</th>
+                            <th class="text-center hidden-xs hidden-sm">{% trans 'price' %}</th>
+                            <th class="text-center">{% trans 'pay time' %}</th>
+                            <th class="text-center hidden-xs hidden-sm">{% trans 'bank ref number' %}</th>
+                            {% if perms.CRM.print_invoice %}
+                                <th class="text-center">{% trans 'print' %}</th>
+                            {% endif %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for i in invoices %}
+                            <tr>
+                                <td class="hidden-xs hidden-sm">{{ forloop.counter }}</td>
+                                <td class="hidden-xs hidden-sm">{{ i.pk }}</td>
+                                <td class="hidden-xs hidden-sm">{{ i.service_text }}</td>
+                                <td class="hidden-xs hidden-sm">{{ i.price|floatformat:0|intcomma:False }}</td>
+                                <td>{{ i.pay_time|convert_date }}</td>
+                                <td class="hidden-xs hidden-sm">{{ i.ref_number }}</td>
+                                {% if perms.CRM.print_invoice %}
+                                    <td><a target="_blank" href="{% url 'invoice_print_single' %}?pk={{ i.pk }}"><i class="fa fa-print"></i> <span class="hidden-sm hidden-xs">{% trans 'print' %}</span></a> </td>
+                                {% endif %}
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6"><h3 class="text-danger">{% trans 'no result' %}</h3></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="hidden-xs hidden-sm">
+                    <h4>{% trans 'virtual bank' %}</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th class="text-center">{% trans 'id' %}</th>
+                            <th class="text-center">{% trans 'old value' %}({% trans 'toman' %})</th>
+                            <th class="text-center">{% trans 'new value' %}({% trans 'toman' %})</th>
+                            <th class="text-center">{% trans 'debit subject' %}</th>
+                            <th class="text-center">{% trans 'comment' %}</th>
+                            <th class="text-center">{% trans 'update time' %}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for d in debits %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ d.pk }}</td>
+                                <td><span class="{% if d.old_value < 0 %}text-danger{% endif %}">{{ d.old_value|floatformat:0|intcomma:False }}</span></td>
+                                <td><span class="{% if d.new_value < 0 %}text-danger{% endif %}">{{ d.new_value|floatformat:0|intcomma:False }}</span></td>
+                                <td>{{ d.subject_name }}</td>
+                                <td>{{ d.new_comment }}</td>
+                                <td>{{ d.update_time|convert_date }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="7"><h3 class="text-danger">{% trans 'no result' %}</h3></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="text-center">
+                        {% if not ip_login %}
+                            <a href="{% url 'show all factors' %}?u={{ tu.pk }}" class="btn btn-sm btn-info"><i class="fa fa-list"></i>{% trans 'view' %}</a>
+                        {% endif %}
+                        {% if user.is_staff and perms.CRM.view_user_debit %}
+                            <button type="button" data-need-cpk="1" data-cpk="{{ tu.pk }}" class="btn btn-sm btn-info" data-toggle="modal" data-target="#addNewModal"><i class="fa fa-bank"></i> <span class="hidden-sm hidden-xs">{% trans 'virtual bank' %}</span></button>
+                        {% endif %}
+                        {% if perms.CRM.delete_userdebit %}
+                            <button type="button" data-pk="{{ tu.pk }}" data-url="{% url 'debit_reset' %}" class="btn btn-sm btn-danger" data-action="del"><i class="fa fa-trash"></i> <span class="hidden-xs hidden-sm">{% trans 'checkout' %}</span></button>
+                        {% endif %}
+                        {% if profile.is_dedicated %}
+                            <a href="{% url 'invoice_dedicate_view' %}?u={{ tu.pk }}" role="button" class="btn btn-sm btn-info"><i class="fa fa-plus"></i> <span class="hidden-sm hidden-xs">{% trans 'create invoice' %}</span></a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% elif profile.is_visitor %}
+                <h5>{% trans 'status' %}</h5>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th class="text-center">{% trans 'users' %}</th>
+                        <th class="text-center">{% trans 'one time users' %}</th>
+                        <th class="text-center">{% trans 'periodic users' %}</th>
+                        <th class="text-center">{% trans 'current deposit' %}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{ visitor_users }} {% trans 'person' %}</td>
+                        <td>{{ visitor_one_time }} {% trans 'person' %}</td>
+                        <td>{{ visitor_periodic }} {% trans 'person' %}</td>
+                        <td>{{ visitor_deposit|floatformat:0|intcomma:False }} {% trans 'toman' %}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <hr/>
+                <h5>{% trans 'history' %}</h5>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">{% trans 'update time' %}</th>
+                        <th class="text-center">{% trans 'deposit' %}</th>
+                        <th class="text-center">{% trans 'user' %}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for h in visitor_history %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ h.action_date|convert_date }}</td>
+                            <td>{{ h.deposit|floatformat:0|intcomma:False }} {% trans 'toman' %}</td>
+                            <td>{{ h.action_user.first_name }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4">
+                                {% trans 'no result' %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="text-center">
+                    {% if perms.CRM.visitor_checkout %}
+                        <button data-toggle="modal" data-pk="{{ tu.pk }}" data-target="#mVisitorCheckout" type="button" class="btn btn-warning"><i class="fa fa-shopping-cart"></i> <span class="">{% trans 'checkout' %}</span></button>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}

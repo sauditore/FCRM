@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load DateConverter %}
+{% load MathTags %}
+{% load static %}
+{% load TextUtils %}
+{% block title %}
+    {% trans 'request ip static' %}
+{% endblock %}
+{% block page %}
+    {% trans 'request ip static' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'service' %}</li>
+    <li>{% trans 'ip static' %}</li>
+    <li>{% trans 'request ip' %}</li>
+{% endblock %}
+
+{% block body %}
+    <div class="">
+    <button type="button" class="btn btn-info" data-target="#dvFilter" data-toggle="collapse" aria-controls="dvFilter" aria-expanded="false"><i class="glyphicon glyphicon-search"></i></button>
+    {% if user.is_staff %}
+    <button type="button" class="btn btn-info" data-target="#dvSum" data-toggle="collapse" aria-controls="dvSum" aria-expanded="false"><i class="glyphicon glyphicon-object-align-bottom"></i></button>
+    {% endif %}
+    <div class="collapse" id="dvFilter">
+        <form action="{% url 'view_ip_static_request' %}" method="get">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-inline">
+                        {% if user.is_staff %}
+                        <div class="input-group">
+                            <label class="input-group-addon"><i class="glyphicon glyphicon-user"></i></label> <input class="form-control" type="text" placeholder="{% trans 'ibs id' %}" name="tu" size="7"/>
+                        </div>
+                        {% endif %}
+                        <div class="input-group">
+                            <label class="input-group-addon"><i class="glyphicon glyphicon-globe"></i></label> <input class="form-control" type="text" placeholder="{% trans 'ip' %}" name="ip" size="11"/>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></label>
+                            <input class="form-control" type="text" id="ssd" name="esd" placeholder="{% trans 'expire date from' %}" size="10" maxlength="10"/>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </label>
+                            <input class="form-control" id="dsd" type="text" name="eed" placeholder="{% trans 'expire date to' %}" size="10" maxlength="10"/>
+                        </div>
+                        <div class="input-group">
+                            <label for="jst" class="input-group-addon">
+                                <i class="glyphicon glyphicon-time"></i>
+                            </label>
+                            <select id="jst" class="form-control" name="mn">
+                                <option value="">-</option>
+                                <option value="1">{% trans '1 month' %}</option>
+                                <option value="2">{% trans '2 month' %}</option>
+                                <option value="3">{% trans '3 month' %}</option>
+                                <option value="4">{% trans '4 month' %}</option>
+                                <option value="5">{% trans '5 month' %}</option>
+                                <option value="6">{% trans '6 month' %}</option>
+                                <option value="7">{% trans '7 month' %}</option>
+                                <option value="8">{% trans '8 month' %}</option>
+                                <option value="9">{% trans '9 month' %}</option>
+                                <option value="10">{% trans '10 month' %}</option>
+                                <option value="11">{% trans '11 month' %}</option>
+                                <option value="12">{% trans '12 month' %}</option>
+                            </select>
+                        </div>
+                        {% if user.is_staff %}
+                        <div class="input-group">
+                            <label for="pst" class="input-group-addon">
+                                <i class="glyphicon glyphicon-euro">
+                                </i>
+                            </label>
+                        <select id="pst" name="isPaid" class="form-control">
+                                    <option value="">-</option>
+                                    <option value="0">{% trans 'paid' %}</option>
+                                    <option value="1">{% trans 'free' %}</option>
+                                </select>
+                        </div>
+                        {% endif %}
+                        <button type="submit" class="btn btn-success">{% trans 'filter' %}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    {% if user.is_staff %}
+    <div class="collapse form-inline" id="dvSum">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="input-group">
+                    <label class="input-group-addon">
+                        <i class="glyphicon glyphicon-globe"></i>
+                    </label>
+                    <input type="text" readonly value="{{ total_ips }}" class="form-control"/>
+                </div>
+                <div class="input-group">
+                    <label class="input-group-addon">
+                        <i class="glyphicon glyphicon-remove"></i>
+                    </label>
+                    <input type="text" readonly class="form-control" value="{{ total_used }}"/>
+                </div>
+                <div class="input-group">
+                    <label class="input-group-addon">
+                        <i class="glyphicon glyphicon-record"></i>
+                    </label>
+                    <input type="text" readonly value="{{ total_reserved }}" class="form-control"/>
+                </div>
+                <div class="input-group">
+                    <label class="input-group-addon">
+                        <i class="glyphicon glyphicon-ok"></i>
+                    </label>
+                    <input type="text" readonly value="{{ total_free }}" class="form-control"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    </div>
+    <div class="table-list">
+    <table>
+        <tr>
+            <th>#</th>
+            {% if user.is_staff %}
+                <th>{% trans 'ibs id' %}</th>
+                <th>{% trans 'name' %}</th>
+{#                <th>{% trans 'service' %}</th>#}
+{#                <th>{% trans 'expire date' %}</th>#}
+            {% endif %}
+{#            <th>{% trans 'create time' %}</th>#}
+            <th>{% trans 'start date' %}</th>
+            <th>{% trans 'end date' %}</th>
+            <th>{% trans 'period' %}</th>
+            <th>{% trans 'address' %}</th>
+            <th>{% trans 'actions' %}</th>
+{#            {% if user.is_staff and perms.CRM.accept_ip_request %}#}
+{#                <th>{% trans 'action' %}</th>#}
+{#            {% endif %}#}
+        </tr>
+        {% for r in static_ips %}
+            <tr>
+            <td>{{ page|sub:1|mul:per_page|plus:forloop.counter }}</td>
+            {% if user.is_staff %}
+                <td><a target="_blank" href="{% url 'show user navigation menu' %}?uid={{ r.user_id }}">{{ r.user.fk_ibs_user_info_user.get.ibs_uid }}</a>|{{ r.user.pk }}</td>
+                <td>{{ r.user.first_name }} | {{ r.user.username }}</td>
+            {% endif %}
+            <td>{{ r.start_date|convert_date }}</td>
+            <td>{{ r.expire_date|convert_date }} </td>
+            <td>{% if r.expire_date %}{{ r.expire_date|get_remaining_time }} {% trans 'days' %}{% else %}-{% endif %}</td>
+            <td>{% if r.ip %}{{ r.ip.ip }}{% else %}-{% endif %}</td>
+            <td>
+                {% if perms.CRM.assign_free_ip %}
+                <a data-ajax="1" class="tbtn green" href="{% url 'toggle_free_ip' %}?u={{ r.user.pk }}">{% if r.is_free %}{% trans 'none free' %}{% else %}{% trans 'free' %}{% endif %}</a>
+                {% endif %}
+            </td>
+            </tr>
+        {% endfor %}
+    </table>
+    </div>
+    {% include 'menu/Pager.html' %}
+    <hr/>
+    {% if perms.CRM.add_useripstatic and u %}
+    <div class="table-form">
+    {% with u.fk_user_ip_static_user.get as user_ip %}
+    {% if not user_ip or user_ip.is_reserved or user_ip.expire_date|is_near_expire %}
+        {% if not user_ip.is_free %}
+    <form method="post" action="{% url 'view_ip_static_request' %}">
+        {% csrf_token %}
+        <input type="hidden" value="{{ u.pk }}" name="u"/>
+        <table>
+            <tr>
+                <td><span>{% trans 'username' %}</span></td>
+                <td><span>{{ u.username }} - {{ u.first_name }}</span></td>
+            </tr>
+            <tr>
+                <td>{% trans 'period' %}</td>
+                <td>
+                    <select name="mn">
+                        <option value="1">{% trans '1 month' %}</option>
+                        <option value="2">{% trans '2 month' %}</option>
+                        <option value="3">{% trans '3 month' %}</option>
+                        <option value="4">{% trans '4 month' %}</option>
+                        <option value="5">{% trans '5 month' %}</option>
+                        <option value="6">{% trans '6 month' %}</option>
+                        <option value="7">{% trans '7 month' %}</option>
+                        <option value="8">{% trans '8 month' %}</option>
+                        <option value="9">{% trans '9 month' %}</option>
+                        <option value="10">{% trans '10 month' %}</option>
+                        <option value="11">{% trans '11 month' %}</option>
+                        <option value="12">{% trans '12 month' %}</option>
+                    </select>
+                </td>
+{#                <td><span>{% trans 'description' %}</span></td>#}
+{#                <td><textarea name="r" placeholder="{% trans 'describe your reason' %}"></textarea></td>#}
+            </tr>
+        </table>
+        <input type="submit" value="{% trans 'send' %}"/>
+    </form>
+            {% endif %}
+    {% else %}
+        <a href="{% url 'delete_user_static_ip' %}?u={{ u.pk }}" class="buttons red">{% trans 'cancel service' %}</a>
+
+    {% endif %}
+    {% endwith %}
+    </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block script %}
+    <script language="javascript" src="{% static 'js/persianDatepicker.min.js'%}"></script>
+    <link rel="stylesheet" href="{% static 'css/persianDatepicker-default.css' %}"/>
+    <script language="javascript">
+    $(function(){
+        $('#ssd').persianDatepicker();
+        $('#dsd').persianDatepicker();
+        $('a[data-ajax=1]').on('click', function(e){
+            e.preventDefault();
+            var hrf = e.target.href;
+            $.ajax({
+                url: hrf,
+                method: 'get',
+                success: function(){
+                    location.reload();
+                },
+                error: function(){
+                    location.reload();
+                }
+            });
+        });
+    });
+    </script>
+{% endblock %}

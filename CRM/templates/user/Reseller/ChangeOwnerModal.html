@@ -1,0 +1,40 @@
+{% load i18n %}
+{% load assets %}
+<div class="modal fade" id="dvChangeOwner">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form method="get" id="fChangeOwner">
+                    <div class="form-group">
+                        <select data-select="1" name="o" id="sReseller">
+                            <option selected="selected" disabled="disabled">{% trans 'reseller' %}</option>
+                        </select>
+                        <input type="hidden" name="u"/>
+                    </div>
+                    <div class="form-group">
+                        <select data-select="1" name="v" id="sVis">
+                            <option disabled="disabled" selected="selected">{% trans 'visitor' %}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <div class="radio radio-rtl">
+                            <input type="radio" id="rSingle" value="0" name="rps"/>
+                            <label for="rSingle">{% trans 'one time payment' %}</label>
+                        </div>
+                        <div class="radio radio-rtl">
+                            <input type="radio" id="rPeriodic" name="rps" value="1"/>
+                            <label for="rPeriodic">{% trans 'periodic payment' %}</label>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-sm btn-info" id="bChangeOwner">{% trans 'update' %}</button>
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">{% trans 'cancel' %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% assets filters='jsmin', output='chrsl.js', 'js/system/users/change_reseller.js' %}
+    <script language="javascript" type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}

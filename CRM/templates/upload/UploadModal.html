@@ -1,0 +1,24 @@
+{% load i18n %}
+{% load static %}
+{% load assets %}
+{% assets 'uploader_css' %}
+    <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}"/>
+{% endassets %}
+{% assets 'uploader_js' %}
+    <script language="javascript" type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+<div class="modal fade" id="mUploader" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="">
+                    <form id="cUploader" class="dropzone" action="{{ uploader_address }}">
+                        <div class="dropzone-previews"></div>
+{#                        <button type="submit" class="btn btn-primary pull-right">{% trans 'upload' %}</button>#}
+                        <input type="hidden" name="pk" value=""/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

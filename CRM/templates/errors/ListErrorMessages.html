@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+{% endblock %}
+{% block bodyblock %}
+    <span>{% trans 'operations done and following parameteres had some errors' %}</span>
+    {% for e in errors %}
+        <span style="color:red">{{ e }}</span><br/>
+    {% endfor %}
+    <br/><br/><a class="buttons" href="javascript:window.history.back()">{% trans 'back' %}</a>
+{% endblock %}

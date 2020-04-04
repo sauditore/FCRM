@@ -1,0 +1,38 @@
+{% load i18n %}
+
+ <div class="modal fade" id="mAcceptEquipmentOrder">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form id="fAcceptEquipmentOrder">
+                        <div>
+                            <table class="table table-striped" id="tAcceptOrder">
+                                <thead>
+                                    <tr>
+                                        <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric" data-identifier="true">{% trans 'id' %}</th>
+                                        <th data-align="right" data-header-align="right" data-column-id="description">{% trans 'description' %}</th>
+                                        <th data-align="right" data-header-align="right" data-column-id="serial">{% trans 'serial' %}</th>
+                                        <th data-align="right" data-header-align="right" data-column-id="group__name">{% trans 'group name' %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            <input type="hidden" name="eq"/>
+                            <input type="hidden" name="pk"/>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" value="" name="bc" placeholder="{% trans 'owner tag' %}" class="form-control input-sm"/>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" value="" name="adr" placeholder="{% trans 'address' %}" class="form-control input-sm"/>
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-sm btn-info" type="submit"><i class="fa fa-check "></i> <span class="hidden-sm hidden-xs">{% trans 'add' %}</span></button>
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal"><i class="fa fa-check"></i> <span class="hidden-sm hidden-xs">{% trans 'cancel' %}</span></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+

@@ -1,0 +1,51 @@
+{% load i18n %}
+<script language="javascript" type="text/javascript">
+    $(function(){
+        $('#dvReportTower').on('show.bs.modal', function(e){
+            var btn = $(e.relatedTarget);
+            var m = $(this);
+            clear_on_open(m);
+            m.find('input[name=pk]').val(btn.data('pk'));
+            var frm = $('#fReportTowerProblem');
+            frm.off().on('submit', function(a){
+                a.preventDefault();
+                var d = frm.serialize();
+                $.ajax({
+                    url: frm.attr('action'),
+                    method: 'post',
+                    data: d,
+                    success: function(){
+                        m.modal('hide');
+                        sAlert('گزارش شما با موفقیت ثبت شد', 2);
+                    },
+                    error: function(er){
+                        post_error(er, null, m);
+                    }
+                });
+            });
+        });
+    });
+</script>
+<div id="dvReportTower" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">{% trans 'report tower problem'%}</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="fReportTowerProblem" action="{% url 'tower_report' %}" class="form-horizontal">
+                    <div class="form-group">
+                        <input type="text" value="" class="form-control" name="d" placeholder="{% trans 'description' %}" id="d"/>
+                    </div>
+                    <input type="hidden" name="pk" value=""/>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-sm btn-info" id="bts"><i class="fa fa-check"></i>{% trans 'report' %}</button>
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>{% trans 'close' %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+ </form>

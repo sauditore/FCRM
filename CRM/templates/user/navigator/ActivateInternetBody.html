@@ -1,0 +1,10 @@
+{% load i18n %}
+{% if perms.CRM.activate_internet_user and user.is_staff and not is_reseller %}
+    {% if not is_personnel and not current and not ibs %}
+        <div class="bhoechie-tab-content">
+            <div class="text-center">
+                <a href="{% url 'create_internet_account' %}?u={{ tu.pk }}" role="button" class="btn btn-sm btn-warning"><i class="fa fa-check"></i> <span class="hidden-sm hidden-xs">{% trans 'activate' %}</span></a>
+            </div>
+        </div>
+    {% endif %}
+{% endif %}

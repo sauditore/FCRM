@@ -1,0 +1,25 @@
+{% load i18n %}
+{% load static %}
+<script language="javascript" type="text/javascript" src="{% static 'js/system/workbench/choosePartner.js' %}"></script>
+<div class="modal fade" id="mChoosePartner" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <table class="table table-responsive table-hover">
+                    <thead>
+                    <tr class="text-center">
+                        <th>#</th>
+                        <th>{% trans 'name' %}</th>
+                        <th>{% trans 'actions' %}</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <input type="hidden" value="" id="jn"/>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i><span class="hidden-sm hidden-xs">{% trans 'cancel' %}</span></button>
+            </div>
+        </div>
+    </div>
+</div>

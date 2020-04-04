@@ -1,0 +1,28 @@
+{% load i18n %}
+{% load static %}
+<script language="javascript" type="text/javascript" src="{% static 'js/system/transport/viewTransportTypes.js' %}"></script>
+<div class="modal fade" id="mViewTransportTypes">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>{% trans 'name' %}</th>
+                        <th>{% trans 'actions' %}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <div class="text-center">
+                    {% if perms.CRM.add_transporttype %}
+                        <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#mAddTransportType"><i class="fa fa-plus"></i><span class="hidden-sm hidden-xs">{% trans 'add' %}</span></button>
+                    {% endif %}
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fa fa-remove"></i><span class="hidden-sm hidden-xs">{% trans 'cancel' %}</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,158 @@
+{% load i18n %}
+{% load static %}
+{% load humanize %}
+{% load MathTags %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+    <meta charset="UTF-8" content="text/html">
+    <title>Title</title>
+    <style type="text/css">
+        @page {
+            margin: 0 0 0 0;
+            padding: 0 0 0 0;
+{#            size: 22cm 29.7cm;#}
+{#            width: 22cm;#}
+{#            height: 29.5cm;#}
+{#            @top-center {#}
+{#                content: "Introduction to CSS 2.1";#}
+{#                width: 100%;#}
+{#                vertical-align: bottom;#}
+{#                border-bottom: .5pt solid;#}
+{#                margin-bottom: .7cm;#}
+{#            }#}
+{#            @bottom-right {#}
+{#                font-size: 80%;#}
+{#                content: "Page " counter(page) " of " counter(pages);#}
+{#            }#}
+{#            @left-top {#}
+{#                content: "فاکتور فروش"; font: .5cm/1.5 Vazir Sans;#}
+{#                background: #005a9c; color: #fff; text-align: right;#}
+{#                padding-right: 2em; height: 1.5em; width: 10cm;#}
+{#                transform-origin: 100% 0;#}
+{#                transform: rotate(-90deg);#}
+{#            }#}
+        }
+{#        html, body { font: 12pt/1.25 Vazir, serif !important; -weasy-hyphens: auto }#}
+        body {
+            text-align: right; padding: 0 0 0 0 !important;
+            background: url("file:///var/CRM/CRM/static/images/invoice.jpg") no-repeat; !important;
+            background-size: cover!important;
+        }
+        hr.navbar { display: none }
+        h1 { page-break-before: always !important; -weasy-bookmark-level: none;
+             margin-top: 0 !important; }
+        h1, h2, h3, h4 { font-family: inherit !important }
+        body{
+            font-family: Vazir, monospace;
+            direction: rtl !important;
+{#            float: right;#}
+        }
+        table {
+            width: 93%;
+            margin: 10px 0;
+            direction: rtl !important;
+            border-collapse: collapse;
+            font-size: 12px !important;
+            float: right;
+        }
+
+        table td,th {
+            direction: rtl !important;
+            color: #000;
+            font-weight: normal;
+            padding: 4px 2px;
+            border: 1px solid #CCC;
+        }
+
+        table td span {
+            color: #333;
+            font-weight: normal;
+        }
+        table tfoot td{
+            direction: ltr !important;
+            color: #000;
+            font-weight: normal;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div style="">
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+    <div style="text-align: center;">
+        <h3>{{ i.invoice_type.name }}</h3>
+    </div>
+    <table style="">
+        <tr>
+            <td>{{ i.user.fk_user_profile_user.telephone }}</td>
+            <td>{% trans 'phone' %}</td>
+            <td>{{ i.user.first_name }}</td>
+            <td>{% trans 'name' %}</td>
+        </tr>
+        <tr>
+            <td>{{ i.user.user.fk_user_profile_user.address }}</td>
+            <td>{% trans 'address' %}</td>
+            <td>{{ i.user.user.fk_user_profile_user.mobile }}</td>
+            <td>{% trans 'mobile' %}</td>
+        </tr>
+    </table>
+    <table style="">
+        <tr style="direction: rtl;text-align: center;">
+            <th>{% trans 'service price' %}</th>
+            <th>{% trans 'price' %}</th>
+            <th>{% trans 'service period' %} ({% trans 'month' %})</th>
+            <th>{% trans 'service subject' %}</th>
+            <th>#</th>
+        </tr>
+        {% for x in i.fk_dedicated_invoice_service_invoice.all %}
+            <tr style="text-align: center;direction: rtl">
+                <td>{{ x.price|floatformat:0|intcomma:False }}</td>
+                <td>{{ x.price|dev:x.period|floatformat:0|intcomma:False }}</td>
+                <td>{{ x.period }}</td>
+                <td>{{ x.service.name }}</td>
+                <td>{{ forloop.counter }}</td>
+            </tr>
+        {% endfor %}
+        <tfoot>
+        <tr>
+            <td>{{ tax }}</td>
+            <td>{% trans 'tax' %}</td>
+        </tr>
+        <tr>
+            <td>{{ i.discount|floatformat:0|intcomma:False }}</td>
+            <td>{% trans 'discounnt' %}</td>
+        </tr>
+        <tr>
+            <td>{{ i.price|floatformat:0|intcomma:False }}</td>
+            <td>{% trans 'total service price' %}</td>
+        </tr>
+        </tfoot>
+    </table>
+    <br>
+    <div style="margin-top: 30px;font-family: Vazir, serif"><br><br><br><br><br><br><br><br>
+        {% if extra_data %}
+            <span style="width: 200px">{% trans 'description' %}</span>
+            <hr/>
+        {% endif %}
+        <pre style='font-family: "Vazir", serif;'>{% if extra_data %}{{ extra_data }}{% endif %}</pre></div>
+    <div style="margin-top: 30px;">
+        <span>{% trans 'responsible' %}:{{ i.creator.first_name }}</span>
+        <br/>
+        <span>{% trans 'email' %}:{{ i.creator.emmail }}</span>
+        <br/>
+    </div>
+<br>
+<br>
+<br>
+<br>
+    <div style="float: left;margin-left: 150px">{% trans 'signature' %}</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load DateConverter %}
+{% load MathTags %}
+{% load TextUtils %}
+{% block title %}
+    {% trans 'notifications' %}
+{% endblock %}
+{% block page %}
+    {% trans 'notifications' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'notifications' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+{% block body %}
+{#<div class="table-form">#}
+{#    <form method="get" >#}
+{#        <table>#}
+{#                {% if user.is_staff or user.is_superuser %}#}
+{#                <tr>#}
+{#                    <td><span>{% trans 'user id' %}</span></td>#}
+{#                    <td>#}
+{#                        <input type="text" name="u" size="5" placeholder="{% trans 'id' %}" maxlength="6"/>#}
+{#                    </td>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                <td><span>{% trans 'ibs id' %}</span></td>#}
+{#                <td>#}
+{#                    <input type="text" placeholder="{% trans 'ibs id' %}" name="b"/>#}
+{#                </td>#}
+{#                </tr>#}
+{#                {% endif %}#}
+{#            <tr>#}
+{#                <td><label for="s">{% trans 'sent state' %}</label></td>#}
+{#                <td><select id="s" name="select">#}
+{#                        <option value="">{% trans 'None' %}</option>#}
+{#                        <option value="1">{% trans 'sent' %}</option>#}
+{#                        <option value="2">{% trans 'error' %}</option>#}
+{#                    </select>#}
+{#                </td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <td><label for="t">{% trans 'type' %}</label></td>#}
+{#                <td><select id="t" name="t">#}
+{#                        <option value="">{% trans 'all' %}</option>#}
+{#                        <option value="0">{% trans 'mobile' %}</option>#}
+{#                        <option value="1">{% trans 'email' %}</option>#}
+{#                        <option value="2">{% trans 'system' %}</option>#}
+{#                    </select>#}
+{#                </td>#}
+{#            </tr>#}
+{#        </table>#}
+{#        <div class="btn-set">#}
+{#            <input type="submit" value="{% trans 'search' %}"/>#}
+{#        </div>#}
+{#    </form>#}
+{#</div>#}
+    <div class="ibox">
+    <div class="ibox-title">
+        <h5>{% trans 'notifications' %}</h5>
+    </div>
+    <div class="ibox-content">
+        <table class="table table-bordered">
+            <thead>
+            <th>#</th>
+            {% if user.is_staff or user.is_superuser %}
+                <th><span>{% trans 'ibs id' %}</span></th>
+                <th><span>{% trans 'username' %}</span></th>
+            {% endif %}
+            <th><span>{% trans 'time' %}</span></th>
+            <th><span>{% trans 'destination' %}</span></th>
+            <th><span>{% trans 'text' %}</span></th>
+            <th><span>{% trans 'delivered' %}</span></th>
+            <th><span>{% trans 'is read' %}</span></th>
+            </thead>
+            <tbody>
+            {% for n in notify %}
+                <tr class="{% cycle 'rows0' 'rows1' %}">
+                    <td><a href="{% url 'view_notification' %}?n={{ n.pk }}">{{ page|sub:1|mul:10|plus:forloop.counter }}</a></td>
+                    {% if user.is_staff or user.is_superuser %}
+                        <td>{% if perms.CRM.view_profile %}<a href="{% url 'show user navigation menu' %}?uid={{ n.user.pk }}">{{ n.user.fk_ibs_user_info_user.get.ibs_uid }}</a>
+                        {% else %}
+                            <span>{{ n.user.fk_ibs_user_info_user.get.ibs_uid }}</span>
+                        {% endif %}</td>
+                        <td>{% if perms.CRM.view_profile %}
+                            <a href="{% url 'show user navigation menu' %}?uid={{ n.user.pk }}">{{ n.user.username}}</a>
+                        {% else %}
+                            <span>{{ n.user.username }}</span>
+                        {% endif %}
+                        </td>
+                    {% endif %}
+                    <td><span>{{ n.send_time|convert_date }}</span></td>
+                    <td><span>{{ n.target }}</span></td>
+                    <td><span><a href="{% url 'view_notification' %}?n={{ n.pk }}">{{ n.description|snip_text }}</a></span></td>
+                    <td><span>{{ n.result }}</span></td>
+                    <td><span>{{ n.is_read }}</span></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="row">
+            {% include 'menu/Pager.html' %}
+        </div>
+    </div>
+    </div>
+{% endblock %}

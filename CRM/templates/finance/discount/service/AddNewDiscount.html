@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load i18n%}
+{% load static %}
+{% load ModelTools %}
+{% block title %}
+    {% trans 'add new discount' %}
+{% endblock %}
+{% block scriptblock %}
+    <script language="JavaScript" src="{% static 'js/select2.full.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/select2.min.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/select2-bootstrap.css' %}"/>
+    <script language="JavaScript">
+    $(function(){
+        $('#s').select2();
+    });
+    </script>
+{% endblock %}
+{% block bodyblock%}
+    <form method="post">
+    <div class="table-form">
+    <table>
+        <tr>
+            <td><span>{% trans 'name' %}</span></td>
+            <td>
+                <input type="text" value="{{ d.name }}" placeholder="{% trans 'name' %}" name="n"/>
+            </td>
+        </tr>
+        <tr>
+            <td><span>{% trans 'extended days' %}</span></td>
+            <td>
+                <input type="text" value="{{ d.extended_days }}" name="ed" placeholder="{% trans 'days' %}"/>
+            </td>
+        </tr>
+        <tr>
+            <td><span>{% trans 'price discount' %}</span></td>
+            <td>
+                <input type="text" value="{{ d.price_discount }}" placeholder="{% trans 'price discount' %}" name="p"/>
+            </td>
+        </tr>
+        <tr>
+            <td><span>{% trans 'extra package' %}</span></td>
+            <td>
+                <input type="text" value="{{ d.extra_traffic }}" placeholder="{% trans 'extra traffic' %}" name="e"/>
+            </td>
+        </tr>
+        <tr>
+            <td><span>{% trans 'service' %}</span></td>
+            <td>
+                <select id="s" name="s" title="{% trans 'services' %}" multiple>
+                    {% for s in services %}
+                        <option value="{{ s.pk }}" {% if s.pk == d.service.pk %}selected{% endif %}>{{ s.fk_ibs_service_properties_properties.get.service.name }}|{{ s.name }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+    <tr>
+        <td><label for="r">{% trans 'charge days' %}</label></td>
+        <td>
+            <select name="r" id="r">
+                <option {% if d.charge_days == 1 %}selected{% endif %} value="1">{% trans '1 month' %}</option>
+                <option {% if d.charge_days == 2 %}selected{% endif %} value="2">{% trans '2 month' %}</option>
+                <option {% if d.charge_days == 3 %}selected{% endif %} value="3">{% trans '3 month' %}</option>
+                <option {% if d.charge_days == 4 %}selected{% endif %} value="4">{% trans '4 month' %}</option>
+                <option {% if d.charge_days == 5 %}selected{% endif %} value="5">{% trans '5 month' %}</option>
+                <option {% if d.charge_days == 6 %}selected{% endif %} value="6">{% trans '6 month' %}</option>
+                <option {% if d.charge_days == 7 %}selected{% endif %} value="7">{% trans '7 month' %}</option>
+                <option {% if d.charge_days == 8 %}selected{% endif %} value="8">{% trans '8 month' %}</option>
+                <option {% if d.charge_days == 9 %}selected{% endif %} value="9">{% trans '9 month' %}</option>
+                <option {% if d.charge_days == 10 %}selected{% endif %} value="10">{% trans '10 month' %}</option>
+                <option {% if d.charge_days == 11 %}selected{% endif %} value="11">{% trans '11 month' %}</option>
+                <option {% if d.charge_days == 12 %}selected{% endif %} value="12">{% trans '12 month' %}</option>
+            </select>
+
+        </td>
+    </tr>
+    </table>
+    </div>
+    <div class="btn-set">
+    <input type="submit" value="{% trans 'create' %}" name="create"/>
+    <input type="submit" value="{% trans 'cancel' %}" name="cancel"/>
+    {% csrf_token %}
+    <input type="hidden" value="{{ d.pk }}" name="d"/>
+    </div>
+    </form>
+{% endblock %}

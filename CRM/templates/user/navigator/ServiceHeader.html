@@ -1,0 +1,6 @@
+{% load i18n %}
+{% if not is_personnel and perms.CRM.view_service_summery and current and not is_reseller %}
+    <a href="#" class="list-group-item text-center">
+        <h4 class="fa fa-sliders fa-2x"></h4><p class="hidden-sm hidden-xs">{% trans 'service information' %}</p>
+    </a>
+{% endif %}

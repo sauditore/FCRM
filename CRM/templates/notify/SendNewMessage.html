@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load MathTags %}
+{% block title %}
+    {% trans 'send message to users' %}
+{% endblock %}
+{% block page %}
+    {% trans 'send message to users' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'notification' %}</li>
+    <li>{% trans 'send' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+    <div class="ibox-title">
+        <h5>{% trans 'send configuration' %}</h5>
+    </div>
+        <div class="ibox-content">
+                <div id="dvUsers">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th class="col-chk">#</th>
+                            <th class="col-chk">{% trans 'ibs id' %}</th>
+                            <th class="col-id"><span>{% trans 'user id' %}</span></th>
+                            <th><span>{% trans 'username' %}</span></th>
+                            <th><span>{% trans 'firstname and lastname' %}</span></th>
+                            <th><span>{% trans 'telphone' %}</span></th>
+                            <th><span>{% trans 'email' %}</span></th>
+                            <th><span>{% trans 'is active' %}</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for u in users %}
+                            <tr>
+                                <td class="col-chk">
+                                    {{ page|sub:1|mul:6|plus:forloop.counter }}
+
+                                </td>
+                                <td><span><a href="{% url 'show user navigation menu' %}?uid={{ u.pk }}">{{ u.fk_ibs_user_info_user.get.ibs_uid }}</a></span></td>
+                                <td><span>{{ u.pk }}</span></td>
+                                <td><a href="{% url 'show user navigation menu' %}?uid={{ u.pk }}"><span>{{ u.username }}</span></a></td>
+                                <td><span>{{ u.first_name }}</span></td>
+                                <td><span>{{ u.telephone }}</span></td>
+                                <td><span>{{ u.email }}</span></td>
+
+                                <td><span>{{ u.is_active }}</span></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+        {% if perms.CRM.send_gift %}
+            <div class="ibox-content">
+
+                <div class="row">
+                    <form action="?{{ request.META.QUERY_STRING }}" method="post">
+                        <div class="row">
+                            <div class="col-md-4 col-lg-4">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td><span>{% trans 'add days to service' %}</span></td>
+                                        <td>
+                                            <input class="form-control" name="ad" size="2" type="text" value="" placeholder="{% trans 'days' %}"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>{% trans 'add traffic amount' %}</span></td>
+                                        <td><input class="form-control" name="pa" type="text" value="" placeholder="{% trans 'package amount' %}" size="2"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>{% trans 'limited users' %}</span></td>
+                                        <td>
+                                            <div class="checkbox checkbox-rtl">
+                                                <input type="checkbox" name="sfl" id="sfl"/>
+                                                <label for="sfl">{% trans 'add days for limited users' %}</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="">
+                            <input type="hidden" value="1" name="gift"/>
+                            <button type="submit" class="btn btn-sm btn-info" name="gift">{% trans 'send' %}</button>
+                            <a href="{% url 'search for users' %}?{{ request.META.QUERY_STRING }}" class="btn btn-sm btn-default">{% trans 'cancel' %}</a>
+                        </div>
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+        <div class="ibox-content">
+            <form action="?{{ request.META.QUERY_STRING }}" method="post">
+                <div class="table-form">
+                    <div class="row">
+                        <div class="col-md-4 col-lg-4">
+                            <div class="form-group">
+                                <div class="checkbox checkbox-primary checkbox-inline checkbox-rtl">
+                                    <input type="checkbox" name="s" value="1" id="text"/>
+                                    <label for="text">{% trans 'send text message' %}</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="checkbox checkbox-primary checkbox-inline checkbox-rtl">
+                                    <input type="checkbox" name="e" value="1" id="mail"/>
+                                    <label for="mail">{% trans 'send mail' %}</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="checkbox checkbox-primary checkbox-inline checkbox-rtl">
+                                    <input type="checkbox" name="box" value="1" id="inbox"/>
+                                    <label for="inbox">{% trans 'send to inbox' %}</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <textarea class="form-control" name="msg" placeholder="{% trans 'message' %}"></textarea>
+                            </div>
+                            <div class="">
+                                <input type="hidden" value="1" name="send"/>
+                                <button type="submit" class="btn btn-sm btn-info">{% trans 'send' %}</button>
+                                <a href="{% url 'search for users' %}?{{ request.META.QUERY_STRING }}" class="btn btn-sm btn-default">{% trans 'cancel' %}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="ibox-content">
+            {% include 'menu/Pager.html' %}
+        </div>
+    </div>
+{% endblock %}

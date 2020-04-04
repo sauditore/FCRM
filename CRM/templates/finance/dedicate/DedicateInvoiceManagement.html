@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+{% trans 'dedicate invoice management' %}
+{% endblock %}
+{% block page %}
+    {% trans 'dedicate invoice management' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'financial' %}</li>
+    <li>{% trans 'dedicate' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+{% block styles %}
+<link type="text/css" rel="stylesheet" href="{% static 'css/system/persianDate/persianDatepicker-default.css' %}"/>
+{% endblock %}
+{% block header %}
+    <form id="search">
+    <div class="row">
+        <div class="form-group col-md-2">
+            <input type="text" value="" class="form-control" maxlength="5" data-float="1" name="i" placeholder="{% trans 'ibs id' %}"/>
+        </div>
+        <div class="form-group col-md-2">
+            <input type="text" value="{{ uid }}" maxlength="11" class="form-control" name="u" placeholder="{% trans 'user id' %}"/>
+        </div>
+        <div class="form-group col-md-2">
+            <input type="text" value="" placeholder="{% trans 'invoice number' %}" name="in" class="form-control"/>
+        </div>
+        <div class="form-group col-md-2">
+            <select name="t" data-select="1">
+                <option disabled="disabled" selected="selected">{% trans 'type' %}</option>
+                <option>-</option>
+                {% for t in invoice_type %}
+                    <option value="{{ t.pk }}">{{ t.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group col-md-2">
+            <select name="st" data-select="1">
+                <option disabled="disabled" selected="selected">{% trans 'state' %}</option>
+                <option>-</option>
+                <option value="0">{% trans 'unknown' %}</option>
+                <option value="1">{% trans 'making ready' %}</option>
+                <option value="2">{% trans 'sending' %}</option>
+                <option value="3">{% trans 'sent' %}</option>
+                <option value="4">{% trans 'wait time' %}</option>
+                <option value="5">{% trans 'time schuled' %}</option>
+                <option value="6">{% trans 'delivered' %}</option>
+                <option value="7">{% trans 'checkout done' %}</option>
+            </select>
+        </div>
+    <div class="form-group col-md-2">
+        <select name="stp" data-select="1">
+            <option selected="selected" disabled="disabled">{% trans 'send type' %}</option>
+            <option>-</option>
+            {% for s in send_type %}
+                <option value="{{ s.pk }}">{{ s.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group col-md-2">
+        <input data-date="1" type="text" maxlength="10" name="sds" class="form-control" placeholder="{% trans 'send date' %}"/>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-search"></i> <span class="hidden-sm hidden-xs">{% trans 'search' %}</span></button>
+        </div>
+    </div>
+    </div>
+    </form>
+{% endblock %}
+{% block body %}
+    <input type="hidden" id="si" value=""/>
+    <input type="hidden" id="srx" value=""/>
+    <div class="ibox">
+    <div class="ibox-title">
+        <h5>{% trans 'invoices' %}</h5>
+        <div class="ibox-tools">
+            {% if perms.CRM.add_dedicatedinvoice %}
+                {% if uid %}
+                    <button class="btn btn-primary btn-xs" id="bAddNewInvoice" type="button" data-toggle="modal" data-target="#mAddNewInvoice" data-uid="{{ uid }}"><span>{% trans 'add' %}</span></button>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+        <div class="ibox-content">
+            <table class="table table-condensed" id="tDedicatedInvoice" data-toggle="grid">
+                <thead>
+                <tr>
+                    <th data-align="center" data-header-align="center" data-column-id="pk" data-type="numeric"
+                        data-identifier="true">{% trans 'id' %}
+                    </th>
+                    <th data-align="center" data-header-align="center" data-column-id="user__first_name">{% trans 'name' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="price">{% trans 'price' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="discount">{% trans 'discount' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="system_invoice_number">{% trans 'invoice number' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="invoice_type__name">{% trans 'type' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="fk_dedicated_invoice_state_invoice__state" data-formatter="i_state">{% trans 'state' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="send_type__name">{% trans 'send type' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="send_date">{% trans 'send date' %}</th>
+                    <th data-align="center" data-header-align="center" data-column-id="creator__first_name">{% trans 'creator' %}</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script language="JavaScript" type="text/javascript" src="{% static 'js/system/persianDatepicker/persianDatepicker.min.js' %}"></script>
+    <script language="JavaScript" type="text/javascript" src="{% static 'js/system/invoice/DedicateInvoiceManagement.js' %}"></script>
+{% endblock %}
+{% block modals %}
+    {% include 'finance/dedicate/DownloadInvoiceModal.html' %}
+    {% if perms.CRM.add_dedicatedinvoice %}
+        {% include 'finance/dedicate/AddNewDedicateInvoceModal.html' %}
+    {% endif %}
+    {% if perms.CRM.upload_file %}
+        {% include 'upload/UploadModal.html' %}
+    {% endif %}
+    {% if perms.CRM.view_uploaded_files %}
+        {% include 'upload/ViewFilesModal.html' %}
+    {% endif %}
+    {% if perms.CRM.checkout_invoice %}
+        {% include 'finance/dedicate/PaymentModal.html' %}
+    {% endif %}
+    {% if perms.CRM.change_invoice_state %}
+        {% include 'finance/dedicate/UpdateStateModal.html' %}
+    {% endif %}
+    {% if perms.CRM.update_send_type %}
+        {% include 'finance/dedicate/UpdateSendTypeModal.html' %}
+        {% include 'finance/dedicate/SendType/SetReceiverModal.html' %}
+    {% endif %}
+{% endblock %}
+{% block actions %}
+{% if perms.CRM.delete_dedicatedinvoice %}
+    <button type="button" data-action="del" class="btn btn-sm btn-danger" data-url="{% url 'invoice_dedicate_delete' %}" id="bDelInvoice" data-need-pk="1" data-pk=""><i class="fa fa-trash"></i> <span class="hidden-sm hidden-xs">{% trans 'delete' %}</span></button>
+{% endif %}
+{% if perms.CRM.update_send_type %}
+    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#mUpdateSendType" id="bUpdateSend" data-need-pk="1" data-pk="" ><i class="glyphicon glyphicon-plane"></i> <span class="hidden-sm hidden-xs">{% trans 'send' %}</span></button>
+    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#mSetRSV" id="bSetReceiver" data-manual="1" data-need-pk="1" data-pk=""><i class="glyphicon glyphicon-user"></i> <span class="hidden-sm hidden-xs">{% trans 'receiver' %}</span></button>
+{% endif %}
+{% if perms.CRM.change_invoice_state %}
+    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" id="bUpdateState" data-manual="1" data-target="#mChangeState" data-need-pk="1" data-pk=""><i class="glyphicon glyphicon-refresh"></i> <span class="hidden-sm hidden-xs">{% trans 'state' %}</span></button>
+{% endif %}
+{%  if perms.CRM.checkout_invoice %}
+    <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#mPay" data-manual="1" data-need-pk="1" type="button" id="bCheckout"><i class="glyphicon glyphicon-check"></i> <span class="hidden-sm hidden-xs">{% trans 'checkout' %}</span></button>
+
+    <a target="_blank" class="btn btn-success btn-sm" data-need-pk="1" data-manual="1" role="button" id="aInvoice"><i class="glyphicon glyphicon-check"></i> <span class="hidden-sm hidden-xs">{% trans 'invoice' %}</span></a>
+{% endif %}
+{% if perms.CRM.upload_file %}
+    <button type="button" data-need-pk="1" data-pk="" class="btn btn-info btn-sm" data-toggle="modal" data-target="#mUploader"><i class="glyphicon glyphicon-upload"></i> <span class="hidden-xs hidden-sm">{% trans 'upload' %}</span></button>
+{% endif %}
+{% if perms.CRM.view_uploaded_files %}
+    <button type="button" class="btn btn-info btn-sm" data-need-pk="1" data-pk="" data-manual="1" id="bUploaded" data-toggle="modal" data-target="#mUploaded"><i class="glyphicon glyphicon-time"></i> <span class="hidden-sm hidden-xs">{% trans 'files' %}</span></button>
+{% endif %}
+<button type="button" data-need-pk="1" data-pk="" class="btn btn-sm btn-info" data-toggle="modal" data-target="#mDownload"><i class="glyphicon glyphicon-download"></i> <span class="hidden-sm hidden-xs">{% trans 'download' %}</span></button>
+{% endblock %}

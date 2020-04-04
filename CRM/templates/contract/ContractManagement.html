@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+    {% trans 'contract management' %}
+{% endblock %}
+{% block page %}
+    {% trans 'contract management' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'contract' %}</li>
+    <li>{% trans 'view' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'contracts' %}</h5>
+            <div class="ibox-tools">
+                {% if perms.CRM.add_contracts %}
+                    <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#mAddContract"><span class="">{% trans 'add' %}</span></button>
+                {% endif %}
+            </div>
+        </div>
+        <div class="ibox-content">
+            <table class="table" data-toggle="grid">
+                <thead>
+                <tr>
+                    <th data-align="right" data-header-align="right" data-column-id="pk" data-type="numeric" data-identifier="true">{% trans 'id' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="title">{% trans 'title' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="message">{% trans 'message' %}</th>
+                    <th data-align="right" data-header-align="right" data-formatter="sniper" data-column-id="body">{% trans 'body' %}</th>
+                    <th data-align="right" data-header-align="right" data-column-id="users">{% trans 'users' %}</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script language="javascript" type="text/javascript" src="{% static 'js/system/contract/contract_management.js' %}"></script>
+{% endblock %}
+
+{% block modals %}
+    {% if perms.CRM.add_contract or perms.CRM.change_contract %}
+        {% include 'contract/AddContractModal.html' %}
+    {% endif %}
+{% endblock %}
+{% block actions %}
+    {% if perms.CRM.change_contracts %}
+        <button type="button" class="btn btn-sm btn-info" data-need-pk="1" data-toggle="modal" data-target="#mAddNewEquipmentCode"><i class="fa fa-edit"></i><span class="hidden-sm hidden-xs"> {% trans 'edit' %}</span></button>
+    {% endif %}
+    {% if perms.CRM.delete_contracts %}
+        <button data-action="del" data-url="{% url 'contract_delete' %}" data-need-pk="1" type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> <span class="hidden-sm hidden-xs">{% trans 'delete' %}</span></button>
+    {% endif %}
+{% endblock %}

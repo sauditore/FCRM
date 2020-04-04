@@ -1,0 +1,21 @@
+{% load i18n %}
+<div class="modal fade" id="mCommitDelivery">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="fCommitDelivery">
+                    <div class="form-group">
+                        <textarea class="input-sm form-control" name="c" placeholder="{% trans 'comment' %}"></textarea>
+                        <input type="hidden" value="" name="o"/>
+                        <input type="hidden" value="" name="e"/>
+                        <input type="hidden" value="2" name="s"/>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-sm btn-info"><i class="fa fa-check"></i> <span class="hidden-xs hidden-sm">{% trans 'commit' %}</span></button>
+                        <button class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-remove"></i> <span class="hidden-sm hidden-xs">{% trans 'cancel' %}</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

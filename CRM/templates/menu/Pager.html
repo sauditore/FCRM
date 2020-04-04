@@ -1,0 +1,17 @@
+{% load i18n %}
+{% load QUrl %}
+<div class="text-center">
+        {% ifnotequal page_count page %}
+            <a class="btn btn-sm btn-info" href="{% q_url request.get_full_path nx=next_link %}">{% trans 'next page' %}<i class="fa fa-chevron-left"></i></a>
+        {% endifnotequal %}
+        {% if page > 1 %}
+            <a class="btn btn-sm btn-info" href="{% q_url request.get_full_path nx=back_link %}">{% trans 'back' %}<i class="fa fa-chevron-right"></i></a>
+        {% endif %}
+        {% if perms.CRM.download_files and allow_pdf %}
+        <a href="{% q_url request.get_full_path pdf=1 %}" target="_blank" class="buttons">{% trans 'download pdf' %}<i class="fa fa-download"></i></a>
+        {% endif %}
+        {% if exc %}
+            <a href="{% q_url request.get_full_path x=1 %}" class="buttons" target="_blank">{% trans 'excel' %}<i class="fa fa-download"></i></a>
+        {% endif %}
+    </div>
+    <span>{% trans 'page' %} {{ page }} {% trans 'of' %} {{ page_count }}</span>

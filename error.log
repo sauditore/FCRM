@@ -1,0 +1,1 @@
+[04/Apr/2020 15:42:53] ERROR [CRM.Processors.Finance.InvoiceManagement [invoice_graph_analyze]:296] ('make_aware() takes exactly 2 arguments (1 given)',)

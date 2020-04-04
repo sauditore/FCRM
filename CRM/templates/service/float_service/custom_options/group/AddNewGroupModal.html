@@ -1,0 +1,42 @@
+{% load i18n%}
+
+<div class="modal fade" id="mAddNewGroup">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="fAddNewGroup">
+                    <div class="form-group">
+                        <input type="text" value="" name="n" placeholder="{% trans 'name' %}" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="i" class="form-control" placeholder="{% trans 'view index' %}"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="mt" class="form-control" placeholder="{% trans 'unit metric' %}"/>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" name="gh" placeholder="{% trans 'group help' %}"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox checkbox-primary checkbox-rtl">
+                            <input id="cir" type="checkbox" value="1" name="ir"/>
+                            <label for="cir">{% trans 'needs at least one selection' %}</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox checkbox-primary checkbox-rtl">
+                            <input type="checkbox" name="cr" id="cCR" value="1"/>
+                            <label for="cCR">{% trans 'can recharge during service' %}</label>
+                        </div>
+                    </div>
+                    <input type="hidden" name="pk" value=""/>
+                    <div class="text-center">
+                        <button class="btn btn-sm btn-info" type="submit"><i class="fa fa-plus"></i> <span class="hidden-sm hidden-xs">{% trans 'add' %}</span></button>
+                        <button class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-remove"></i> <span class="hidden-sm hidden-xs">{% trans 'cancel' %}</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,57 @@
+{% load i18n %}
+    <ul class="ca-menu">
+        <li>
+            <a href="/user/show/summery/">
+                <span class="ca-icon"><i class="fa fa-info"></i></span>
+
+                <div class="ca-content">
+                    <h2 class="ca-main">{% trans 'personal information' %}</h2>
+
+                    <h3 class="ca-sub">{% trans 'edit personal information' %}</h3>
+                </div>
+            </a>
+        </li>
+            <li>
+                <a href="/service/summery/">
+                    <span class="ca-icon"><i class="fa fa-cube"></i></span>
+
+                    <div class="ca-content">
+                        <h2 class="ca-main">{% trans 'service informations' %}</h2>
+
+                        <h3 class="ca-sub">{% trans 'review the current services' %}</h3>
+                    </div>
+                </a>
+            </li>
+
+            <li>
+                <a href="/factor/show/all/">
+                    <span class="ca-icon"><i class="fa fa-dollar"></i></span>
+
+                    <div class="ca-content">
+                        <h2 class="ca-main">{% trans 'financial' %}</h2>
+
+                        <h3 class="ca-sub">{% trans 'review financial records' %}</h3>
+                    </div>
+                </a>
+            </li>
+        <li>
+            <a href="{% url 'show all tickets' %}">
+                <span class="ca-icon"><i class="fa fa-support"></i></span>
+
+                <div class="ca-content">
+                    <h2 class="ca-main">{% trans 'help and support' %}</h2>
+
+                    <h3 class="ca-sub">{% trans 'access the help desk' %}</h3>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'internet_user_work_history' %}">
+                <span class="ca-icon"><i class="fa fa-dashboard"></i></span>
+                <div class="ca-content">
+                    <h2 class="ca-main">{% trans 'dashboard' %}</h2>
+                    <h3></h3>
+                </div>
+            </a>
+        </li>
+    </ul>

@@ -1,0 +1,270 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% load MathTags %}
+{% load TextUtils %}
+{% load assets %}
+{% block title %}
+    {% trans 'buy service' %}
+{% endblock %}
+{% block page %}
+    {% trans 'buy service' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'service' %}</li>
+    <li>{% trans 'buy' %}</li>
+{% endblock %}
+{% block styles %}
+    {% assets filters='cssmin', output='float.css', 'css/plugins/steps/jquery.steps.css', 'css/plugins/ionRangeSlider/ion.rangeSlider.css' %}
+        <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
+    {% endassets %}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/plugins/ionRangeSlider/ion.rangeSlider.skinFlat.css' %}"/>
+    <style>
+        .irs-single{
+            font-size: 12px;
+        }
+        .form-control{
+            height: 30px;
+        }
+    </style>
+{% endblock %}
+
+{% block search_header %}
+{% endblock %}
+{% block search %}
+{% endblock %}
+{% block actions %}
+{% endblock %}
+{% block body %}
+    <form id="fService">
+        <input type="hidden" value="{{ template_id }}" name="pk"/>
+        <input type="hidden" value="{{ u }}" name="u"/>
+        {% if is_new_template %}
+            <input type="hidden" value="OH!YES" name="nth"/>
+        {% endif %}
+        {% if auto_post %}
+            <input type="hidden" id="hRCH"/>
+        {% endif %}
+        <div class="row" id="dfData">
+            <div class="col-lg-9 col-md-9 col-sm-8">
+                <div id="wizard">
+                    {% if not just_confirm %}
+                        <h1>{% trans 'speed' %}</h1>
+                        <div class="step-content">
+                            <div class="text-center no-margins">
+                                <h3>سرعت (پهنای باند)</h3>
+                                <div class="row">
+                                    <table data-less-summery="1" class="table table-responsive">
+                                        <thead>
+                                        <tr>
+                                            <th class="text-center">{% trans 'service' %}</th>
+                                            <th class="text-center">{% trans 'unit price' %}</th>
+                                            <th class="text-center">{% trans 'value' %}</th>
+                                            <th class="text-center">{% trans 'final price' %}</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="text-center"></tbody>
+                                    </table>
+                                </div>
+                                {% if recharge %}
+                                    <h3>{{ services.get.name }}</h3>
+                                    <input type="hidden" value="{{ services.get.ext }}" name="s"/>
+                                    <input type="hidden" name="rcm" value="{{ services.get.ext }}"/>
+                                {% else %}
+                                    <div id="dServices"></div>
+                                    <div class="row">
+                                        <input type="number" class="hidden" data-angleArc="250" data-angleOffset="-125" data-rotation="anticlockwise" data-width="110" data-height="110" data-bgColor="#FFFFFF" data-min="1" data-max="20" data-fgColor="#2D5E99" data-skin="tron" data-thickness=".4" min="1" max="20" id="iXX"/>
+                                        <div style="margin-top: -30px" id="dViewService"></div>
+                                    </div>
+                                    <div class="row">
+                                    </div>
+                                    <select name="s" style="display: none" class="form-control" id="sServices">
+                                        {% for s in services %}
+                                            <option data-index="{{ forloop.counter }}" data-text="{{ s.name }}" data-speed="{{ s.max_bw }}" value="{{ s.ext }}" {% if s.ext == template_service %}selected="selected"{% endif %}>{{ s.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% endif %}
+                            </div>
+                            <div id="serviceHolder" class="row no-margins text-center">
+                            </div>
+                            <div class="row">
+                                <hr/>
+                                <div class="text-center">
+                                    <a href="#" class="btn btn-xs btn-success" data-wiz-page="1">{% trans 'next page' %}</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% for g in groups %}
+                            <h1>{{ g.name }}</h1>
+                            <div class="step-content">
+                                <div class="text-center m-t-md" data-xid="{{ g.pk }}" data-toggle="ssc1" style="">
+                                    <h2>{{ g.name }}</h2>
+                                    <div class="row">
+                                        <div class="col-md-12 col-lg-12 col-sm-12">
+                                            <span>{{ g.group_help }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <table data-less-summery="1" class="table">
+                                            <thead>
+                                            <tr>
+                                                <th class="text-center">{% trans 'service' %}</th>
+                                                <th class="text-center">{% trans 'unnit price' %}</th>
+                                                <th class="text-center">{% trans 'value' %}</th>
+                                                <th class="text-center">{% trans 'final price' %}</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                    <div class="row no-margins">
+                                        {% for x in g.fk_custom_option.all %}
+                                            {% if x.is_custom_value %}
+                                                <div class="form-group">
+                                                    <div data-from="{% if x.pk in template_custom_options.keys %}{{ template_custom_options|get_key:x.pk }}{% else %}{{ x.custom_value_min }}{% endif %}" data-toggle="customValue" data-pk="{{ x.pk }}" data-min="{{ x.custom_value_min }}" data-max="{{ x.custom_value_max }}"></div>
+                                                </div>
+                                                <div class="col-md-4 col-lg-4 col-md-offset-4 col-lg-offset-4">
+                                                    <div class="form-group">
+                                                        <input type="number" data-extra="1" min="{{ x.custom_value_min }}" max="{{ x.custom_value_max }}" name="{{ x.pk }}" value="{% if x.pk in template_custom_options.keys %}{{ template_custom_options|get_key:x.pk }}{% else %}{{ x.custom_value_min }}{% endif %}" class="form-control"/>
+                                                    </div>
+                                                </div>
+                                            {% else %}
+                                                <div class="col-md-4 col-sm-4 text-center">
+                                                    <div class="checkbox checkbox-primary checkbox-rtl">
+                                                        <input {% if g.is_required %}data-required="1"{% endif %} data-option="1" data-lock="{{ g.ext }}" data-pk="{{ x.ext }}" id="c{{ x.ext }}" name="{{ x.pk }}" {% if x.pk in template_options %}checked="checked"{% endif %} type="checkbox" value=""/>
+                                                        <label for="c{{ x.ext }}">{{ x.name }}</label>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+
+                                </div>
+                                <div class="text-center m-t-md hidden" data-pid="{{ g.pk }}">
+                                    <h3 class="text-danger">{% trans 'this option is not for your service' %}</h3>
+                                </div>
+                                <div class="row">
+                                    <hr/>
+                                    <div class="text-center {% if g.is_required and not edit_mode %}hidden{% endif %}" data-xre="{{ g.ext }}" data-navx="1">
+                                        <a href="#" class="btn btn-xs btn-success" data-wiz-page="1">{% trans 'next page' %}</a>
+                                        <a href="#" class="btn btn-xs btn-success" data-wiz-page="2">{% trans 'back' %}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {% if not recharge %}
+                            <h1>{% trans 'service period' %}</h1>
+                            <div class="step-content">
+                                <div class="text-center m-t-md">
+                                    <h3>{% trans 'service period' %}({% trans 'month' %})</h3>
+                                    <div class="row">
+                                        <div class="col-md-12 col-lg-12 col-sm-12">
+                                            <span>سرویس 3، 6 و 12 ماه به ترتیب شامل 10، 30، 60 روز سرویس هدیه می باشند</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <table data-less-summery="1" class="table">
+                                            <thead>
+                                            <tr>
+                                                <th class="text-center">{% trans 'service' %}</th>
+                                                <th class="text-center">{% trans 'unit price' %}</th>
+                                                <th class="text-center">{% trans 'value' %}</th>
+                                                <th class="text-center">{% trans 'final price' %}</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="text-center"></tbody>
+                                        </table>
+                                    </div>
+                                    <div class="form-group no-margins">
+                                        <div data-toggle="customValue" data-pk="iMon" data-min="1" data-max="12"></div>
+                                    </div>
+                                    <div class="col-md-4 col-lg-4 col-md-offset-4 col-lg-offset-4">
+                                        <div class="form-group no-margins">
+                                            <input type="number" data-extra="1" min="1" max="12" name="iMon" value="1" class="form-control"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <hr/>
+                                    <div class="col-md-12 col-lg-12">
+                                        <div class="text-center">
+                                            <a href="#" class="btn btn-xs btn-success" data-wiz-page="1">{% trans 'next page' %}</a>
+                                            <a href="#" class="btn btn-xs btn-success" data-wiz-page="2">{% trans 'back' %}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <input type="hidden" value="{{ services.get.ext }}" name="s"/>
+                        {% for g in groups %}
+                            {% for x in g.fk_custom_option.all %}
+                                {% if x.pk in template_options %}
+                                    <input type="hidden" name="{{ x.pk }}" value="{% if x.pk in template_custom_options.keys %}{{ template_custom_options|get_key:x.pk }}{% else %}{{ x.custom_value_min }}{% endif %}"/>
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                    {% endif %}
+                    <h1>{% trans 'confirm' %}</h1>
+                    <div class="step-content">
+                        <div class="text-center m-t-md" data-toggle="ssc1" style="">
+                            <table class="table" data-summery="1" id="tPrices">
+                                <tbody>
+                                </tbody>
+                            </table>
+                            <div class="form-group">
+
+                            </div>
+                            {% if user.is_authenticated %}
+                                {#                                {% if not is_new_template %}#}
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info btn-sm" id="bBuy"><i class="fa fa-check"></i> <span class="hidden-sm hidden-xs">{% trans 'buy service' %}</span></button>
+                                </div>
+                                {#                                {% endif %}#}
+                                {% if not ip_login and not recharge  %}
+                                    <button type="button" class="btn btn-primary btn-sm" id="bTM"><i class="fa fa-gear"></i> <span class="hidden-sm hidden-xs">{% trans 'add sample' %}</span></button>
+                                {% endif %}
+                            {% endif %}
+                            <hr/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden-sm hidden-xs">
+                <div class="text-center">
+                    <div class="col-md-2">
+                        <button data-toggle="modal" data-target=".modal" type="button" class="btn btn-warning btn-block btn-info"><i class="fa fa-star"></i> <span>نحوه شارژ سرویس</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    {% if u %}
+    <div class="text-center">
+    <a role="button" href="{% url 'show user navigation menu' %}?uid={{ u }}" class="btn btn-sm btn-info">{% trans 'cancel' %}</a>
+    </div>
+    {% endif %}
+    <div class="footer hidden-md hidden-lg">
+        <div class="text-center">
+            <div class="col-md-2 col-sm-12 col-xs-12">
+                <button data-toggle="modal" data-target=".modal" type="button" class="btn btn-warning btn-block btn-info"><i class="fa fa-star"></i> <span>نحوه شارژ سرویس</span></button>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <iframe frameborder="0" src="http://faratar.net/ch-help/BUY-temp_player.html?embedIFrameId=embeddedSmartPlayerInstance" width="100%" height="350px"></iframe>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="rx" value="{{ redirect_address }}"/>
+{% endblock %}
+{% block script %}
+    {% assets filters='jsmin', output='float.js', 'js/plugins/steps/jquery.steps.min.js', 'js/plugins/jsKnob/jquery.knob.js', 'js/plugins/ionRangeSlider/ion.rangeSlider.min.js', 'js/system/services/BuyFloatService.js' %}
+        <script language="javascript" type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+{% endblock %}

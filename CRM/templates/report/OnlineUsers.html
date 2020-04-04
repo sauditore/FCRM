@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load DateConverter %}
+{% block title %}
+    {% trans 'online users' %}
+{% endblock %}
+{% block bodyblock %}
+    <div class="table-list">
+        <h2>{% trans 'online users' %}</h2>
+        <table>
+            <thead>
+                <th><span>{% trans 'ibs id' %}</span></th>
+                <th><span>{% trans 'username' %}</span></th>
+                <th><span>{% trans 'ip address'%}</span></th>
+                <th><span>{% trans 'station' %}</span></th>
+                <th><span>{% trans 'ras' %}</span></th>
+                <th><span>{% trans 'isp name' %}</span></th>
+                <th><span>{% trans 'connect time' %}</span></th>
+            </thead>
+            <tbody>
+            {% for u in users %}
+                {% if u.0 %}
+                <tr class="{% cycle 'rows0' 'rows1' %}">
+                    <td><span><a href="{% url 'show user navigation menu' %}?iid={{ u.0.user_id }}">{{ u.0.user_id }}</a></span></td>
+                    <td><span>{{ u.0.normal_username }}</span></td>
+                    <td><span>{{ u.0.attrs.ippool_assigned_ip }}</span></td>
+                    <td><span>{{ u.0.attrs.station_ip }}</span></td>
+                    <td><span>{{ u.0.ras_description }}</span></td>
+                    <td><span>{{ u.0.isp_name }}</span></td>
+                    <td><span>{{ u.0.login_time|convert_date }}</span></td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="btn-set">
+            <a href="{% url 'view_online_users' %}?p=1" class="buttons"><i class="fa fa-print"></i>{% trans 'print' %}</a>
+        </div>
+    </div>
+{% endblock %}

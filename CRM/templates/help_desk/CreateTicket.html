@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'new help request' %}
+{% endblock %}
+{% block page %}
+    {% trans 'new help request' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'help desk' %}</li>
+    <li>{% trans 'new help request' %}</li>
+{% endblock %}
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-content">
+            <form method="post">
+                <div class="row">
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <input class="form-control" placeholder="{% trans 'title' %}" type="text" name="txtTitle" autocomplete="off"/>
+                        </div>
+                        <div class="form-group">
+                            <select name="slDepartment" data-select="1">
+                                {% for d in dep %}
+                                    <option value="{{ d.help_department_id }}">{{ d.department_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12">
+                            <textarea class="form-control" placeholder="{% trans 'describe your problem' %}" name="description" style="width: 100%;height: 200px"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-sm btn-info"><i class="fa fa-check"></i> <span class="hidden-xs hidden-sm">{% trans 'add' %}</span></button>
+                        </div>
+                    </div>
+                </div>
+                {% csrf_token %}
+            </form>
+        </div>
+    </div>
+{% endblock %}

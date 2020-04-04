@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+    {% trans 'calendar' %}
+{% endblock %}
+{% block styles %}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/system/calendar/BSCalendar.css' %}"/>
+{% endblock %}
+{% block page %}
+    {% trans 'calendar' %}
+{% endblock %}
+{% block sitemap %}
+    <li>{% trans 'calendar' %}</li>
+{% endblock %}
+{% trans 'calendar' %}
+
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans calendar %}</h5>
+        </div>
+        <div class="ibox-content">
+
+            <div class="text-center">
+                <h2 class="BSCalendar-Cell-Text" id="sDay"></h2>
+            </div>
+            <div class="" id="dvToday">
+                <button type="button" data-back="1" class="btn"><i class="fa fa-forward"></i></button>
+                <button type="button" data-next=1 class="btn pull-right"><i class="fa fa-backward"></i></button>
+            </div>
+            <div><span>&nbsp;</span></div>
+            <input type="hidden" id="hNext"/>
+            <input type="hidden" id="hBack"/>
+            <input type="hidden" id="hYear"/>
+            <input type="hidden" id="hBackYear"/>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="text-center" data-day="0">{% if perms.CRM.view_working_time %}<a data-toggle="modal" href="#" data-target="#mWeekConfig">{% trans 'saturday' %}</a>{% else %}{% trans 'saturday' %}{% endif %}</th>
+                    <th class="text-center" data-day="1">{% if perms.CRM.view_working_time %}<a data-toggle="modal" href="#" data-target="#mWeekConfig">{% trans 'sunday' %}</a>{% else %}{% trans 'sunday' %}{% endif %}</th>
+                    <th class="text-center" data-day="2">{% if perms.CRM.view_working_time %}<a data-toggle="modal" href="#" data-target="#mWeekConfig">{% trans 'monday' %}</a>{% else %}{% trans 'monday' %}{% endif %}</th>
+                    <th class="text-center" data-day="3">{% if perms.CRM.view_working_time %}<a data-toggle="modal" href="#" data-target="#mWeekConfig">{% trans 'tuesday' %}</a>{% else %}{% trans 'tuesday' %}{% endif %}</th>
+                    <th class="text-center" data-day="4">{% if perms.CRM.view_working_time %}<a data-toggle="modal" href="#" data-target="#mWeekConfig">{% trans 'wednesday' %}</a>{% else %}{% trans 'wednesday' %}{% endif %}</th>
+                    <th class="text-center" data-day="5">{% if perms.CRM.view_working_time %}<a data-toggle="modal" href="#" data-target="#mWeekConfig">{% trans 'thursday' %}</a>{% else %}{% trans 'thursday' %}{% endif %}</th>
+                    <th class="text-center" data-day="6">{% if perms.CRM.view_working_time %}<a data-toggle="modal" href="#" data-target="#mWeekConfig">{% trans 'friday' %}</a>{% else %}{% trans 'friday' %}{% endif %}</th>
+                </tr>
+                </thead>
+                <tbody data-bsc-days="1">
+
+                </tbody>
+            </table>
+            <hr/>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script language="javascript" src="{% static 'js/system/calendar/BSCalendar.js' %}"></script>
+    <script language="javascript">
+        $(function(){
+
+        });
+    </script>
+{% endblock %}
+{% block modals %}
+    {% if perms.CRM.change_workingtime %}
+        {% include 'calendar/WeekDayConfig.html' %}
+    {% endif %}
+{% endblock %}

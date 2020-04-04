@@ -1,0 +1,41 @@
+{% load i18n %}
+{% load DateConverter %}
+{% load TextUtils %}
+<div class="bhoechie-tab-content">
+    <div class="text-center">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th class="text-center">#</th>
+                <th class="text-center">{% trans 'id' %}</th>
+                <th class="text-center">{% trans 'target address' %}</th>
+                <th class="text-center">{% trans 'text' %}</th>
+                <th class="text-center">{% trans 'send time' %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for n in notifications %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ n.pk }}</td>
+                    <td>{{ n.target }}</td>
+                    <td>{{ n.description }}</td>
+                    <td>{{ n.send_time|convert_date }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5"><h3 class="text-danger">{% trans 'no result' %}</h3></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="text-center">
+            <a href="{% url 'show_all_notifies' %}?u={{ tu.pk }}" class="btn btn-sm btn-info"><i class="fa fa-list"></i> <span class="hidden-xs hidden-sm">{% trans 'view' %}</span></a>
+            {% if user.is_staff and perms.CRM.send_notification %}
+                <a href="{% url 'send_new_notification' %}?ci={{ tu.pk }}" class="btn btn-sm btn-info"><i class="fa fa-send"></i> <span class="hidden-sm hidden-xs">{% trans 'send' %}</span></a>
+            {% endif %}
+        </div>
+    </div>
+</div>

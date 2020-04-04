@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load DateConverter %}
+{% block title %}
+    {% trans 'view notification' %}
+{% endblock %}
+
+{% block page %}
+    {% trans 'view notification' %}
+{% endblock %}
+
+{% block sitemap %}
+    <li>{% trans 'notification view' %}</li>
+{% endblock %}
+
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'notification' %}</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <table class="table table-bordered">
+                    {% if user.is_stafff or user.is_superuser %}
+                        <tr>
+                            <td><span>{% trans 'target user' %}</span></td>
+                            <td><span>{{ n.user.username }}</span></td>
+                        </tr>
+                    {% endif %}
+                    <tr>
+                        <td><span>{% trans 'send time' %}</span></td>
+                        <td><span>{{ n.send_time|convert_date }}</span></td>
+                    </tr>
+                    <tr>
+                        <td><span>{% trans 'description' %}</span></td>
+                        <td><span>{{ n.description }}</span></td>
+                    </tr>
+                    <tr>
+                        <td><span>{% trans 'destination' %}</span></td>
+                        <td><span>{{ n.target }}</span></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="row">
+                <div class="text-center">
+                    <a href="{% url 'show_all_notifies' %}" class="btn btn-sm btn-info">{% trans 'back' %}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

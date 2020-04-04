@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+{% trans 'template management' %}
+{% endblock %}
+{% block page %}
+{% trans 'template management' %}
+{% endblock %}
+{% block sitemap %}
+<li>{% trans 'service' %}</li>
+<li>{% trans 'template' %}</li>
+<li>{% trans 'view' %}</li>
+{% endblock %}
+{% block header %}
+
+{% endblock %}
+{% block body %}
+<div class="ibox float-e-margin">
+    <div class="ibox-title">
+        <h5>{% trans 'management' %}</h5>
+        <div class="ibox-tools">
+            {% if perms.CRM.add_userfloattemplate %}
+            <a href="{% url 'service_float_buy' %}" class="btn btn-xs btn-primary">
+                <span>{% trans 'add' %}</span></a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="ibox-content">
+        <table class="table" data-toggle="grid">
+            <thead>
+            <tr>
+                <th data-align="center" data-header-align="center" data-column-id="pk" data-type="numeric"
+                    data-identifier="true">{% trans 'id' %}
+                </th>
+                <th data-align="center" data-header-align="center" data-column-id="name">{% trans 'name' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="service__name">{% trans 'service' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="user__first_name">{% trans 'owner' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="service_period">{% trans 'service period' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="final_price">{% trans 'final price' %}</th>
+                <th data-align="center" data-header-align="center" data-column-id="create_date">{% trans 'create date' %}</th>
+                {% if perms.CRM.change_userfloattemplate and user.is_staff %}
+                    <th data-align="center" data-header-align="center" data-formatter="test_action" data-column-id="is_test">{% trans 'test service' %}</th>
+                    <th data-align="center" data-header-align="center" data-formatter="test_action" data-column-id="is_public_test">{% trans 'public test' %}</th>
+                {% endif %}
+
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript" src="{% static 'js/system/services/TemplateManagement.js' %}"></script>
+{% endblock %}
+{% block modals %}
+    {% include 'service/float_service/template/ViewOptionsModal.html' %}
+    {% if perms.CRM.add_assignedusertemplate or perms.CRM.add_assignedtowertemplate %}
+        {% include 'service/float_service/template/AssignTemplateModal.html' %}
+    {% endif %}
+{% endblock %}
+{% block actions %}
+    {% if perms.CRM.change_userfloattemplate and user.is_staff %}
+        <button type="button" class="btn btn-info btn-sm" data-need-pk="1" data-edit="1"><i class="fa fa-archive"></i> <span>{% trans 'toggle test service' %}</span></button>
+        <button type="button" class="btn btn-info btn-sm hidden" data-need-pk="1" data-edit="2"><i class="fa fa-archive"></i> <span>{% trans 'toggle public test' %}</span></button>
+    {% endif %}
+    <button type="button" class="btn btn-sm btn-primary" data-need-pk="1" data-toggle="modal" data-target="#mView"><i class="fa fa-list"></i> <span class="hidden-sm hidden-xs">{% trans 'options' %}</span></button>
+    {% if perms.CRM.change_userfloattemplate %}
+        <a href="{% url 'service_float_buy' %}?t=" class="btn btn-sm btn-info" data-action="ed" data-need-pk="1"><i class="fa fa-edit"></i> <span class="hidden-xs hidden-sm">{% trans 'edit' %}</span></a>
+    {% endif %}
+    {% if perms.CRM.delete_userfloattemplate %}
+        <button type="button" class="btn btn-danger btn-sm" data-need-pk="1" data-url="{% url 'service_float_template_rm' %}" data-action="del"><i class="fa fa-trash"></i> <span class="hidden-sm hidden-xs">{% trans 'delete' %}</span></button>
+    {% endif %}
+    {% if perms.CRM.add_assignedusertemplate or perms.CRM.add_assignedtowertemplate %}
+        <button type="button" class="btn btn-info btn-sm" data-need-pk="1" data-target="#mAssignTemplate" data-toggle="modal"><i class="fa fa-paperclip"></i> <span>{% trans 'assign user' %}</span></button>
+        {% include 'service/float_service/template/AssignTemplateModal.html' %}
+    {% endif %}
+{% endblock %}
+

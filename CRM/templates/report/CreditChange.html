@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load DateConverter %}
+{% load QUrl %}
+{% block title %}
+    {% trans 'user credit change report' %}
+{% endblock %}
+
+{% block page %}
+    {% trans 'user credit change report' %}
+{% endblock %}
+
+{% block sitemap %}
+    <li>{% trans 'user' %}</li>
+    <li>{% trans 'service' %}</li>
+    <li>{% trans 'credit' %}</li>
+{% endblock %}
+
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'credit' %}</h5>
+        </div>
+        <div class="ibox-content">
+            <table class="table table-bordered">
+                <thead>
+                    <th><span>{% trans '#' %}</span></th>
+                    <th><span>{% trans 'change time' %}</span></th>
+                    <th><span>{% trans 'user credit' %}</span></th>
+                    <th><span>{% trans 'admin name' %}</span></th>
+                    <th><span>{% trans 'comment' %}</span></th>
+                </thead>
+                <tbody>
+                {% for d in data %}
+                    <tr class="{% cycle 'rows0' 'rows1' %}">
+                        <td><span>{{ d.credit_change_id }}</span></td>
+                        <td><span>{{ d.change_time_formatted|convert_date:False }}</span></td>
+                        <td><span>{{ d.per_user_credit }}</span></td>
+                        <td><span>{% if d.admin_name %}{{ d.admin_name }}{% else %}{{ d.admin_id }}{% endif %}</span></td>
+                        <td><span>{{ d.comment }}</span></td>
+                    </tr>
+                    </tbody>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="ibox-content">
+            <div class="text-center">
+                {% if last_page > next_link %}
+                    <a href="{% q_url req.get_full_path nx=next_link%}" class="btn btn-sm btn-info">{% trans 'next' %}<i class="fa fa-chevron-left"></i></a>
+                {% endif %}
+                {% if back_link > -1 %}
+                    <a href="{% q_url req.get_full_path nx=back_link%}" class="btn btn-sm btn-info">{% trans 'back' %}<i class="fa fa-chevron-right"></i></a>
+                {% endif %}
+                <a href="{% url 'show user navigation menu' %}?uid={{ u }}" class="btn btn-primary btn-sm">{% trans 'done' %}</a>
+            </div>
+            <span>{% trans 'total records'%} : {{ last_page }}</span>
+        </div>
+    </div>
+
+{% endblock %}

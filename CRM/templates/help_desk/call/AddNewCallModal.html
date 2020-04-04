@@ -1,0 +1,137 @@
+{% load i18n %}
+{% load static %}
+<link type="text/css" rel="stylesheet" href="{% static 'css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css' %}"/>
+<script language="javascript" type="text/javascript">
+    $(function(){
+        load_problems();
+        $('#mAddNewCall').on('show.bs.modal', function(){
+            var m = $(this);
+            $.ajax({
+                url: "{% url 'call_get_recent_json' %}?u="+$('#u').val(),
+                method: 'get',
+                dataType: 'json',
+                success: function(d){
+                    var tc = $('#tCallLogs');
+                    var r = '';
+                    $('#rCaller').val(d.username).change();
+                    $.each(d.data, function(z, x){
+                        r += '<tr><td>'+ x.pk+'</td><td>'+ x.call_time +'</td><td>'+ x.operator__first_name+'</td><td>'+ x.problem__short_text+'</td><td>'+ x.solution__short_text+'</td></tr>';
+                    });
+                    tc.find('tbody').empty().append(r);
+                },
+                error: function(er){
+                    show_error(er.responseText);
+                }
+            });
+            var fr = $('#fAddNewCall');
+            fr.off('submit');
+            fr.on('submit', function(fe){
+                fe.preventDefault();
+                $.ajax({
+                    url: fr.attr('action'),
+                    method: 'post',
+                    data: fr.serialize(),
+                    dataType: 'json',
+                    success: function(dx){
+                        if(dx.is_ref){
+                            var mx = $('#mRefOther');
+                            mx.find('#rfj').val(dx.data);
+                            mx.modal('show');
+                            mx.off('hide.bs.modal').on('hide.bs.modal', function(){
+                                if($('#cSCH').is(':checked')){
+                                    var vc = $('#mAssignJob');
+                                    vc.find('#jb').val(dx.data);
+                                    vc.modal();
+                                    mx.off('hide.bs.modal');
+                                }
+                            });
+                        }
+                        else{
+                            sAlert('ثبت تماس انجام شد', 2);
+                        }
+
+                        m.modal('hide');
+                    },
+                    error: function(er){
+                        show_error(er.responseText);
+                    }
+                });
+            });
+        });
+    });
+</script>
+<div class="modal fade" id="mAddNewCall">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body col-md-12">
+                    <form method="post" id="fAddNewCall" action="{% url 'add_new_call_log' %}">
+                        <div class="panel panel-default col-md-12">
+                        <div class="panel-body">
+                            <input type="hidden" value="" name="u" id="u"/>
+                            <div class="col-md-12">
+                                <table class="table table-striped table-hover" id="tCallLogs">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>{% trans 'call time' %}</th>
+                                            <th>{% trans 'operator' %}</th>
+                                            <th>{% trans 'problem' %}</th>
+                                            <th>{% trans 'solution' %}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>{% trans 'operator' %}</label>
+                                <input type="text" class="form-control" readonly value="{{ user.username }}" placeholder="{% trans 'operator' %}"/>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>{% trans 'user' %}</label>
+                                <input type="text" class="form-control" id="rCaller" readonly placeholder="{% trans 'caller' %}"/>
+                            </div>
+                            <div class="">
+                                <div class="form-group  col-md-6">
+                                    <label for="slProblem">{% trans 'problem' %}</label>
+                                    <select data-select="1" name="q" id="slProblem" class="form-control" onchange="load_solution();"></select>
+                                </div>
+
+                                <div class="form-group  col-md-6">
+                                    <label for="slSolution">{% trans 'solution' %}</label>
+                                    <select data-select="1" style="width: 100%"  name="s" id="slSolution" onchange="load_description_for(1);"></select>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <h3><span class="label label-default center-block" id="dvPDescription"></span></h3><br/>
+                                <h3><span class="label label-primary center-block" id="dvSDescription"></span></h3><br/>
+                            </div>
+                            {% if perms.CRM.fill_working_time %}
+                            <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <div class="checkbox checkbox-inline checkbox-circle checkbox-info">
+                                        <input name="" type="checkbox" value="1" id="cSCH"/>
+                                        <label for="cSCH">{% trans 'schedule' %}</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="checkbox checkbox-inline checkbox-circle checkbox-info">
+                                        <input name="ref" type="checkbox" value="1" id="cRF"/>
+                                        <label for="cRF">{% trans 'reference' %}</label>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            <div class="col-md-12 text-center">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-info">{% trans 'add' %}</button>
+                                <button type="button" data-dismiss="modal" class="btn btn-default">{% trans 'cancel' %}</button>
+                            </div>
+                        </div>
+
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+

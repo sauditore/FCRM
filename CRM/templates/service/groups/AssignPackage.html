@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'assign package to price list' %}
+{% endblock %}
+{% block bodyblock %}
+    <div class="table-list">
+    <table>
+        <tr>
+            <th>{% trans 'package name' %}</th>
+            <th>{% trans 'state' %}</th>
+        </tr>
+        {% for p in packages %}
+        <tr>
+            <td>{{ p.name }} | {{ p.description }}</td>
+            <td>{% if p.pk not in assigned_packages %}<a href="{% url 'assign_package_to_list' %}?l={{ list_name }}&p={{ p.pk }}&a=a">{% trans 'assign' %}</a>{% else %}
+                <a href="{% url 'assign_package_to_list' %}?l={{ list_name }}&p={{ p.pk }}&a=d">{% trans 'remove' %}</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+{#    {% include 'menu/Pager.html' %}#}
+{% endblock %}

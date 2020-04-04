@@ -1,0 +1,92 @@
+{% load static %}
+{% load i18n %}
+{% load assets %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans 'register' %}-{% trans 'faratar' %}</title>
+        {% assets 'css_all' %}
+            <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}"/>
+        {% endassets %}
+    <link href="{% static 'css/system/Fonts.css' %}" rel="stylesheet">
+
+</head>
+<body class="gray-bg rtls">
+
+<div class="middle-box text-center loginscreen animated fadeInDown">
+        <div>
+            <div>
+                <img src="{% static 'img/logo 180.png' %}" class="logo-name">
+            </div><br/>
+            <h3>{% trans 'Registration Form' %}</h3>
+            <br>
+
+            <form class="m-t" role="form" action="">
+                <div class="form-group">
+                    <div class="radio radio-rtl radio-inline radio-primary radio-circle ">
+                        <input id="company" type="radio" name="ut" value="0">
+                        <label for="company">{% trans 'company' %}</label>
+                    </div>
+                    <div class="radio radio-rtl radio-inline radio-primary radio-circle">
+                        <input id="real" type="radio" name="ut" value="1">
+                        <label for="real">{% trans 'personal' %}</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <input name="n" type="text" class="form-control" placeholder="{% trans 'first name and last name' %}">
+                </div>
+                <div class="form-group">
+                    <input name="t" type="tel" class="form-control" placeholder="{% trans 'telephone' %}">
+                </div>
+                <div class="form-group">
+                    <input name="m" type="tel" class="form-control" placeholder="{% trans 'mobile' %}">
+                </div>
+                <div class="form-group no-padding no-margins">
+                    <div class="checkbox checkbox-rtl checkbox-primary checkbox-inline no-margins pull-left" style="padding-top: 8px">
+                        <input id="tcheck" type="checkbox">
+                        <label for="tcheck">
+                            {% trans 'tower' %}
+                        </label>
+                    </div>
+                    <div class="form-group col-md-8 no-padding pull-right">
+                        <input name="tw" type="text" class="form-control" placeholder="{% trans 'tower name' %}">
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                        <select id="rg" data-select="1" style="width:100%;" tabindex="2">
+                            <option selected="selected" disabled="disabled">{% trans 'region' %}</option>
+{#                            <option value="vanak">vanak</option>#}
+{#                            <option value="arjantin">arjantin</option>#}
+                        </select>
+                </div>
+
+                <div class="row">
+                    <div class="radio radio-inline radio-primary radio-circle ">
+                        <input id="male" type="radio" name="gn" value="1">
+                        <label for="male">{% trans 'male' %}</label>
+                    </div> <!--male-->
+                    <div class="radio  radio-inline radio-primary radio-circle">
+                        <input id="woman" type="radio" name="gn" value="0">
+                        <label for="woman">{% trans 'woman' %}</label>
+                    </div> <!--woman-->
+                </div>
+                <hr>
+                <button type="submit" class="btn btn-primary block full-width m-b">{% trans 'register' %}</button>
+            </form>
+        </div>
+    </div>
+    {% assets 'js_all' %}
+        <script language="javascript" type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+    {% assets filters='jsmin', output='lgin.js', 'js/system/login/register.js' %}
+        <script language="javascript" type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+</body>
+
+
+</html>

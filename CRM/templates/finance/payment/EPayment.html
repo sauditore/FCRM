@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load DateConverter %}
+{% load humanize %}
+{% block title %}
+    {% trans 'invoice payment' %}
+{% endblock %}
+
+{% block page %}
+    {% trans 'invoice payment' %}
+{% endblock %}
+
+{% block sitemap %}
+    <li>{% trans 'financial' %}</li>
+    <li>{% trans 'payment' %}</li>
+{% endblock %}
+
+{% block body %}
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>{% trans 'payment' %}</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-md-5 col-lg-5 col-xs-12 col-sm-12">
+                    <form method="post">
+                        <div class="panel panel-success">
+                            <div class="panel-heading text-center">
+                                {% trans 'pay invoice' %}
+                            </div> <!--panel heading-->
+                            <div class="panel-body">
+                                <div class="table-form">
+                                        <h4>{{ f.service_text }}</h4>
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <td><span>{% trans 'price' %}</span></td>
+                                                <td>{{ f.price|floatformat:0|intcomma:False }} {% trans 'toman' %}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>{% trans 'debit' %}</span></td>
+                                                <td><span>{{ f.user.fk_user_debit_user.get.amount|floatformat:0|intcomma:False }}</span></td>
+                                            </tr>
+                                        </table>
+                                </div>
+                            </div>
+
+                            <div class="panel-footer text-center">
+                                <div class="btn-set">
+                                    <button type="submit" value="" class="btn btn-success"><i class="glyphicon glyphicon-usd"></i><span>{% trans 'pay' %}</span></button>
+                                    {% if f.user.fk_user_debit_user.exists %}
+                                        {% if f.price <= f.user.fk_user_debit_user.get.amount %}
+                                            <button type="submit" name="db" value="1" class="btn btn-success"><i class="glyphicon glyphicon-saved"></i><span>{% trans 'use bank' %}</span></button>
+                                        {% endif %}
+                                    {% endif %}
+                                    {% if user.username == 'exptst' %}
+                                        <input type="submit" value="{% trans 'bank parsian' %}" name="parsian"/>
+
+
+                                        <input type="submit" value="{% trans 'pasargad bank' %}" name="pasargad"/>
+                                    {% endif %}
+                                    <input type="hidden" value="{{ f.pk }}" name="f"/>
+                                    {% csrf_token %}
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

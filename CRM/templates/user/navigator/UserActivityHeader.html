@@ -1,0 +1,7 @@
+{% load i18n %}
+{% if user.is_staff and perms.CRM.view_dashboard %}
+    <a href="#" class="list-group-item text-center">
+        <h4 class="fa fa-2x fa-area-chart"></h4><p class="hidden-sm hidden-xs">{% trans 'view user activity' %}</p>
+    </a>
+{% endif %}
+
